@@ -1,0 +1,135 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\themes\\styles\\button.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\themes\\styles\\button.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\controlls\\uccard.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\uccard.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\controlls\\uccard.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\uccard.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\themes\\styles\\button.xaml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\themes\\styles\\button.xaml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UCCard.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCCard.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCCard.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCCard.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCCard.xaml.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAUwCcAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-21T09:23:45.887Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UCCard.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCCard.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCCard.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCCard.xaml",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCCard.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-21T09:22:03.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Button.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Themes\\Styles\\Button.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Themes\\Styles\\Button.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Themes\\Styles\\Button.xaml",
+              "RelativeToolTip": "WpfMain\\Themes\\Styles\\Button.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-21T02:55:39.074Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Button.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Themes\\Styles\\Button.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Themes\\Styles\\Button.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Themes\\Styles\\Button.xaml",
+              "RelativeToolTip": "WpfMain\\Themes\\Styles\\Button.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-21T02:54:40.446Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\App.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.xaml",
+              "RelativeToolTip": "WpfMain\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-20T08:33:05.433Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
+              "RelativeToolTip": "WpfMain\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACcAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-20T07:14:20.561Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
+              "RelativeToolTip": "WpfMain\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-20T06:03:23.816Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+﻿<hc:Window
+    x:Class="WpfMain.Module.FrmModule"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:petModule="clr-namespace:WpfMain.Module.PetModule"
+    Title="MainWindow"
+    MinWidth="1200"
+    MinHeight="750"
+    ShowNonClientArea="False"
+    ShowTitle="True" 
+    WindowStartupLocation="CenterScreen" 
+    mc:Ignorable="d" WindowStyle="None">
+    <hc:Window.Background>
+        <ImageBrush ImageSource="pack://SiteOfOrigin:,,,/Static/Images/background.jpg"  Opacity="0.9"/>
+    </hc:Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button Margin="5" Click="ButtonBase_OnClick"  hc:IconElement.Geometry="{StaticResource CloseGeometry}" Width="30" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
+        </DockPanel>
+        <petModule:FrmPet Grid.Row="1" />
+    </Grid>
+</hc:Window>
