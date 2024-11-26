@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfMain.Controlls"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d"  >
-    <Grid>
+    <Grid Cursor="Hand">
         <hc:Card  BorderThickness="0" Effect="{StaticResource EffectShadow4}"  hc:BorderElement.CornerRadius="5">
             <hc:Card.Background>
                 <SolidColorBrush Color="AntiqueWhite" Opacity="0.2"/>

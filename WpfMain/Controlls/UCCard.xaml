@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfMain.Controlls"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d"  >
-    <Border BorderThickness="2" CornerRadius="20" Margin="10">
+    <Border BorderThickness="2" CornerRadius="20" Margin="10" Cursor="Hand">
         <Border.BorderBrush>
             <SolidColorBrush Color="#666666" Opacity="0.2"/>
         </Border.BorderBrush>
@@ -16,9 +16,9 @@
                 <SolidColorBrush Color="White" Opacity="0.2"/>
             </hc:Card.Background>
             <hc:SimplePanel>
-                <Grid>
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="120"/>
+                        <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0" x:Name="ImageLogo" Width="80" Height="80" Source="pack://SiteOfOrigin:,,,/Static/Images/pet.png" Stretch="Uniform" VerticalAlignment="Bottom"/>

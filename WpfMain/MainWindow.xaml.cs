@@ -19,7 +19,8 @@ namespace WpfMain
         /// </summary>
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
+                DragMove();
         }
 
         /// <summary>

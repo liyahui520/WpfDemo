@@ -49,15 +49,17 @@
             <DockPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,0"> 
             <controlls:UCMenu/>
             </DockPanel>
-            <controlls:UCCard Grid.Row="2" Grid.Column="1" Logo="pack://SiteOfOrigin:,,,/Static/Images/pet.png" Content="宠物管理" MouseLeftButtonDown="PetModule_OnMouseLeftButtonDown"/>
-            <!--镜检-->
-            <controlls:UCCard Grid.Row="2" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/jingjian.png" Content="镜检" />
+            <controlls:UCCard Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/pet.png" Content="新检查" MouseLeftButtonDown="PetModule_OnMouseLeftButtonDown"/>
+
             <!--病历管理-->
-            <controlls:UCCard Grid.Row="2" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/record.png" Content="病历管理" />
+            <controlls:UCCard Grid.Row="2" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/record.png" Content="历史记录" />
+
+            <!--镜检-->
+            <controlls:UCCard Grid.Row="2" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/jingjian.png" Content="设置" />
             <!--样本制作-->
-            <controlls:UCCard Grid.Row="3" Grid.Column="1" Logo="pack://SiteOfOrigin:,,,/Static/Images/yangben.png" Content="样本制作" />
+            <!--<controlls:UCCard Grid.Row="3" Grid.Column="1" Logo="pack://SiteOfOrigin:,,,/Static/Images/yangben.png" Content="样本制作" />-->
             <!--账户管理-->
-            <controlls:UCCard Grid.Row="3" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/users.png" Content="账户管理" />
+            <controlls:UCCard Grid.Row="3" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/users.png" Content="医院信息" />
             <!--报告模板-->
             <controlls:UCCard Grid.Row="3" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/baogao.png" Content="报告模板" />
            </Grid>

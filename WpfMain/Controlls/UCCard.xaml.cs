@@ -18,7 +18,7 @@ namespace WpfMain.Controlls
     /// <summary>
     /// UCCard.xaml 的交互逻辑
     /// </summary>
-    public partial class UCCard  
+    public partial class UCCard
     {
         public UCCard()
         {
@@ -43,10 +43,10 @@ namespace WpfMain.Controlls
             }
         }
 
-        public static readonly DependencyProperty ContentProperty =
+        public static new readonly DependencyProperty ContentProperty =
             DependencyProperty.Register("Content", typeof(string), typeof(UCCard), new PropertyMetadata(string.Empty, OnContentProperty));
 
-        public string Content
+        public new string Content
         {
             get { return (string)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }

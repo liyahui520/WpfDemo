@@ -8,6 +8,6 @@
     <DockPanel>
         <local:UCImageButton Margin="5" Image="pack://SiteOfOrigin:,,,/Static/Images/help.png" Title="帮助中心"></local:UCImageButton>
         <local:UCImageButton Margin="5" Image="pack://SiteOfOrigin:,,,/Static/Images/password.png" Title="修改密码"></local:UCImageButton>
-        <local:UCImageButton Margin="5" Image="pack://SiteOfOrigin:,,,/Static/Images/setting.png" Title="系统设置"></local:UCImageButton>
+        <local:UCImageButton Margin="5" Visibility="Collapsed" Image="pack://SiteOfOrigin:,,,/Static/Images/setting.png" Title="系统设置"></local:UCImageButton>
     </DockPanel>
 </UserControl>
