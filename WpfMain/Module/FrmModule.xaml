@@ -12,7 +12,7 @@
     ShowNonClientArea="False"
     ShowTitle="True" 
     WindowStartupLocation="CenterScreen" 
-    mc:Ignorable="d" WindowStyle="None">
+    mc:Ignorable="d" WindowStyle="None" WindowState="Maximized">
     <hc:Window.Background>
         <ImageBrush ImageSource="pack://SiteOfOrigin:,,,/Static/Images/background.jpg"  Opacity="0.9"/>
     </hc:Window.Background>
