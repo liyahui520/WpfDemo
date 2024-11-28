@@ -27,7 +27,7 @@ namespace WpfMain.Module
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Hide();
+            Close();
         }
     }
 }

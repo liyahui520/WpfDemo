@@ -49,9 +49,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controlls\PropertyGridDemoCtl.xaml.cs">
+      <DependentUpon>PropertyGridDemoCtl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controlls\UCCard.xaml.cs">
       <DependentUpon>UCCard.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controlls\PropertyGridDemoCtl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controlls\UCCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +107,10 @@
     <Page Include="Module\PetModule\FrmPet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Module\PetModule\Geometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Properties\DesignTimeResources.xaml">
       <Generator>MSBuild:Compile</Generator>
