@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfMain.Module.PetModule"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"  
+             d:DesignHeight="450" d:DesignWidth="800"
              
              >
     <UserControl.Resources>
@@ -16,43 +16,99 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160"/>
-            <ColumnDefinition />
-            <ColumnDefinition Width="260"/>
-        </Grid.ColumnDefinitions>
+    <Border>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="260"/>
+            </Grid.ColumnDefinitions>
+            <!--<Border Grid.Column="0" CornerRadius="10">
+                <Border.Background>
+                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                </Border.Background>
+                <Button x:Name="ButtonShiftOut" Foreground="White" BorderThickness="0" BorderBrush="Transparent"  hc:IconElement.Geometry="{StaticResource LeftGeometry}" Padding="8 8 0 8" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 26 -16 0" Style="{StaticResource ButtonIconCircular}" >
+                    <Button.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Button.Background>
+                </Button>
+            </Border>-->
+               
 
+            <Border Grid.Column="0" CornerRadius="10">
+                <Border.Background>
+                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                </Border.Background> 
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="0,5,0,0" Padding="10" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" FontSize="14">检查拍摄</TextBlock>
+                    <ScrollViewer Grid.Row="1" hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="10,0,10,10">
+                        <StackPanel Orientation="Vertical">
+                            <Expander Header="分辩率" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="Binning" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="曝光控制" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="深度" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="白平衡" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="图像调整" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="直方图" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="温度控制" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
 
-        <StackPanel>
-            <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" FontSize="14">检查拍摄</TextBlock>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-            <Expander Header="分辩率">
-                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-            </Expander>
-        </StackPanel>
+                            <Expander Header="文件保存" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="感兴趣区域（ROI）" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="遮罩" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="图像拼接（动态）" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                            <Expander Header="景深扩展（动态）" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
+                            </Expander>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
 
-        <Grid Grid.Column="1" >
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">视频</TextBlock>
+            <Grid Grid.Column="1" Margin="5,0,5,0">
+                <Border Grid.Column="0" CornerRadius="10">
+                    <Border.Background>
+                        <SolidColorBrush Color="#666666" Opacity="0.6"/>
+                    </Border.Background>
+                    <MediaElement x:Name="mediaElement" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"/>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Border Grid.Column="0" CornerRadius="10">
+                    <Border.Background>
+                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                    </Border.Background>
+                    <hc:PropertyItemsControl Background="Transparent" BorderThickness="0"></hc:PropertyItemsControl>
+                </Border>
+            </Grid>
         </Grid>
+    </Border>
 
-        <hc:PropertyItemsControl Grid.Column="2"></hc:PropertyItemsControl>
-    </Grid>
 </UserControl>
