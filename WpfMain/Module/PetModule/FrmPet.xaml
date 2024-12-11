@@ -21,7 +21,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="320"/>
                 <ColumnDefinition />
-                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="360"/>
             </Grid.ColumnDefinitions>
             <!--<Border Grid.Column="0" CornerRadius="10">
                 <Border.Background>
@@ -101,11 +101,16 @@
                 </Border>
             </Grid>
             <Grid Grid.Column="2">
-                <Border Grid.Column="0" CornerRadius="10">
+                <Border  CornerRadius="10">
                     <Border.Background>
                         <SolidColorBrush Color="White" Opacity="0.2"/>
                     </Border.Background>
-                    <hc:PropertyItemsControl Background="Transparent" BorderThickness="0"></hc:PropertyItemsControl>
+                    <StackPanel>
+                        <Image Width="360" Margin="10" Grid.Column="2"  Source="pack://siteoforigin:,,,/Module/PetModule/微信图片_20241201112721.png" VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+
+                    </StackPanel>
+
+                    <!--<hc:PropertyItemsControl Background="Transparent" BorderThickness="0"></hc:PropertyItemsControl>-->
                 </Border>
             </Grid>
         </Grid>

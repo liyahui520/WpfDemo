@@ -119,6 +119,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Module\PetModule\微信图片_20241201112721.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Static\Images\background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
