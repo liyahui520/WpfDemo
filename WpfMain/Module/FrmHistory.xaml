@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="WpfMain.Module.FrmHistory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfMain.Module"
+             xmlns:langs="https://handyorg.github.io/handycontrol" 
+             mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="32,10,32,30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0"  CornerRadius="10" Margin="0,0,0,5">
+            <Border.Background>
+                <SolidColorBrush Color="White" Opacity="0.2"/>
+            </Border.Background>
+<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Margin="10,0,10,0" VerticalContentAlignment="Center"  langs:InfoElement.ShowClearButton="True"  VerticalAlignment="Center" langs:InfoElement.TitleWidth="80" langs:InfoElement.Placeholder="请入查询条件"  langs:InfoElement.TitlePlacement="Left" langs:InfoElement.Title="请入查询条件" />
+                <Button Content="查询" Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource ButtonPrimary}" HorizontalAlignment="Left"/>
+            </Grid>
+        </Border>
+        <DataGrid Grid.Row="1" langs:DataGridAttach.CanUnselectAllWithBlankArea="True" BorderThickness="0" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False" ItemsSource="{Binding DataList}">
+            <DataGrid.Background>
+                <SolidColorBrush Color="White" Opacity="0.2"/>
+            </DataGrid.Background> 
+            <DataGrid.RowHeaderTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
+                    </DataTemplate>
+                </DataGrid.RowHeaderTemplate>
+                <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding Index}" Header="序号"/>
+                <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
+                <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
+                <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
+                    <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
+                <DataGridTextColumn Binding="{Binding Remark}" Header="备注"/>
+                <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
+                <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
+                <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
+                <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
+                <DataGridTextColumn Binding="{Binding Remark}" Header="备注"/>
+                <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
+                <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
+                <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
+                <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
+                <DataGridTextColumn Binding="{Binding Remark}" Header="备注"/>
+            </DataGrid.Columns>
+            </DataGrid>
+
+        <!--<langs:Pagination Grid.Row="1" MaxPageCount="10" PageIndex="{Binding PageIndex}" IsJumpEnabled="True">
+            <langs:Interaction.Triggers>
+                <langs:EventTrigger EventName="PageUpdated">
+                    <langs:EventToCommand Command="{Binding PageUpdatedCmd}" PassEventArgsToCommand="True" />
+                </langs:EventTrigger>
+            </langs:Interaction.Triggers>
+        </langs:Pagination>-->
+    </Grid>
+</UserControl>

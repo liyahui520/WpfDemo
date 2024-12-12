@@ -20,10 +20,22 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button Margin="5" Click="ButtonBase_OnClick"  hc:IconElement.Geometry="{StaticResource CloseGeometry}" Width="30" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
-        </DockPanel>
-        <petModule:FrmPet Grid.Row="1" />
+        </Grid.RowDefinitions> 
+            <Grid Grid.Row="0" >
+                <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <hc:SimpleText x:Name="title" Foreground="White" FontSize="24" FontWeight="Bold" Margin="20,0,0,0"></hc:SimpleText>
+                </StackPanel>
+            <StackPanel  Grid.Column="1"   HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Margin="5" Click="ButtonBase_OnClick"  hc:IconElement.Geometry="{StaticResource CloseGeometry}" Width="30" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
+                </StackPanel>
+</Grid>
+        <Border  Grid.Row="1" >
+            <UserControl x:Name="Control"></UserControl>
+        </Border>
+        <!--<petModule:FrmPet Grid.Row="1" />-->
     </Grid>
 </hc:Window>

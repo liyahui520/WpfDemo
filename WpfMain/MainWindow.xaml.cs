@@ -49,9 +49,18 @@ namespace WpfMain
 
         private void PetModule_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            FrmModule pet = new FrmModule();
+            FrmModule pet = new FrmModule(new FrmPet());
+            pet.title.Text = "新检查";
             pet.Owner = this;
             pet.ShowDialog();
+        }
+
+        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FrmModule frm = new FrmModule(new FrmHistory());
+            frm.title.Text = "历史记录";
+            frm.Owner = this;
+            frm.ShowDialog();
         }
     }
 }

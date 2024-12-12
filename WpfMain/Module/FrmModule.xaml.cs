@@ -20,9 +20,10 @@ namespace WpfMain.Module
     /// </summary>
     public partial class FrmModule 
     {
-        public FrmModule()
+        public FrmModule(UserControl control)
         {
             InitializeComponent();
+            this.Control.Content = control;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
