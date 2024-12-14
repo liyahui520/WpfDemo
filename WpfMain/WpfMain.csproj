@@ -212,6 +212,9 @@
     <None Include="Module\PetModule\翻转.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Module\play-circle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Module\print.png" />
     <Content Include="Static\Images\background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

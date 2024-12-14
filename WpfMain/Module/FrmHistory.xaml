@@ -52,9 +52,10 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Image Margin="2" Source="pack://siteoforigin:,,,/Module/1_0.png" Width="24" Height="24"></Image>
-                                <Image Margin="2" Source="pack://siteoforigin:,,,/Module/6.png" Width="24" Height="24"></Image>
                                 <Image Margin="2" Source="pack://siteoforigin:,,,/Module/2_0.png" Width="24" Height="24"></Image>
                                 <Image Margin="2" Source="pack://siteoforigin:,,,/Module/3_0.png" Width="24" Height="24"></Image>
+                                <Image Margin="2" Source="pack://siteoforigin:,,,/Module/play-circle.png" Width="24" Height="24"></Image>
+
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
