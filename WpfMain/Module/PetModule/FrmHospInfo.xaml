@@ -113,8 +113,6 @@
                     </Border.Background>
                     <StackPanel>
 
-                            <Controlls:PropertyGridDemoCtl />
-
                         <Image Width="360" Margin="10" Grid.Column="2"  Source="pack://siteoforigin:,,,/Module/PetModule/微信图片_20241201112721.png" VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
 
                     </StackPanel>

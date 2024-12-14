@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WpfMain.Module.PetModule.FrmPet"
+﻿<UserControl xmlns:Controlls="clr-namespace:WpfMain.Controlls"  x:Class="WpfMain.Module.PetModule.FrmPet"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -21,7 +21,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="320"/>
                 <ColumnDefinition />
-                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="410"/>
             </Grid.ColumnDefinitions>
             <!--<Border Grid.Column="0" CornerRadius="10">
                 <Border.Background>
@@ -112,7 +112,8 @@
                         <SolidColorBrush Color="White" Opacity="0.2"/>
                     </Border.Background>
                     <StackPanel>
-                        <Image Width="360" Margin="10" Grid.Column="2"  Source="pack://siteoforigin:,,,/Module/PetModule/微信图片_20241201112721.png" VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+
+                        <Controlls:PropertyGridDemoCtl  Margin="10"/>
 
                     </StackPanel>
 

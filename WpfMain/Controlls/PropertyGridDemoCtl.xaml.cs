@@ -26,11 +26,11 @@ namespace WpfMain.Controlls
             InitializeComponent();
             DemoModel = new PropertyGridDemoModel
             {
-                String = "TestString",
-                Enum = Gender.Female,
-                Boolean = true,
-                Integer = 98,
-                VerticalAlignment = VerticalAlignment.Stretch
+                姓名 = "TestString",
+                Gender = Gender.Female,
+                绝育 = true,
+                电话 = 98,
+                杂项2 = VerticalAlignment.Stretch
             };
         }
 
@@ -48,23 +48,45 @@ namespace WpfMain.Controlls
 
     public class PropertyGridDemoModel
     {
-        [Category("Category1")]
-        public string String { get; set; }
+        [Category("0宠主")]
+        public string 姓名 { get; set; }
 
-        [Category("Category2")]
-        public int Integer { get; set; }
+        [Category("0宠主")]
+        public int 电话 { get; set; }
 
-        [Category("Category2")]
-        public bool Boolean { get; set; }
+        [Category("1宠物信息")]
+        public bool 绝育 { get; set; }
 
-        [Category("Category1")]
-        public Gender Enum { get; set; }
+        [Category("1宠物信息")]
+        public Gender Gender { get; set; }
 
-        public HorizontalAlignment HorizontalAlignment { get; set; }
 
-        public VerticalAlignment VerticalAlignment { get; set; }
+        [Category("2杂项")]
+        public HorizontalAlignment 杂项1 { get; set; }
+        [Category("2杂项")]
+        public VerticalAlignment 杂项2 { get; set; }
+        [Category("2杂项")]
+        public ImageSource 头像 { get; set; }
 
-        public ImageSource ImageSource { get; set; }
+
+
+        [Category("3检查")]
+        public string 检查名称 { get; set; }
+
+        [Category("3检查")]
+        public string 检查医生 { get; set; }
+
+        [Category("3检查")]
+        public string 所见 { get; set; }
+
+        [Category("3检查")]
+        public string 备注 { get; set; }
+
+        [Category("3检查")]
+        public string 大小 { get; set; }
+
+        [Category("3检查")]
+        public int 数量 { get; set; }
     }
 
     public enum Gender

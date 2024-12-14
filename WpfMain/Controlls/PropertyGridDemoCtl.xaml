@@ -10,8 +10,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <hc:PropertyGrid Width="500" SelectedObject="{Binding DemoModel}"/>
-            <StackPanel hc:TitleElement.TitleWidth="168" Grid.Row="1" Margin="20,16,17,10">
+            <hc:PropertyGrid Width="360" SelectedObject="{Binding DemoModel}"/>
+            <!--<StackPanel hc:TitleElement.TitleWidth="168" Grid.Row="1" Margin="20,16,17,10">
                 <TextBox hc:TitleElement.Title="String" hc:TitleElement.TitlePlacement="Left" Style="{StaticResource TextBoxExtend}" Text="{Binding DemoModel.String,Mode=OneWay}" IsReadOnly="True"/>
                 <TextBox hc:TitleElement.Title="Enum" hc:TitleElement.TitlePlacement="Left" Style="{StaticResource TextBoxExtend}" Text="{Binding DemoModel.Enum,Mode=OneWay}" IsReadOnly="True" Margin="0,6,0,0"/>
                 <TextBox hc:TitleElement.Title="Integer" hc:TitleElement.TitlePlacement="Left" Style="{StaticResource TextBoxExtend}" Text="{Binding DemoModel.Integer,Mode=OneWay}" IsReadOnly="True" Margin="0,6,0,0"/>
@@ -21,7 +21,7 @@
                 <GroupBox Style="{StaticResource GroupBoxOriginal}" Header="ImageSource" hc:TitleElement.TitlePlacement="Left" Margin="0,6,0,0">
                     <hc:Gravatar HorizontalAlignment="Left" Source="{Binding DemoModel.ImageSource}"/>
                 </GroupBox>
-            </StackPanel>
+            </StackPanel>-->
         </Grid>
     </hc:TransitioningContentControl>
 </UserControl>

@@ -62,5 +62,13 @@ namespace WpfMain
             frm.Owner = this;
             frm.ShowDialog();
         }
+
+        private void UCCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FrmModule frm = new FrmModule(new Controlls.PropertyGridDemoCtl());
+            frm.title.Text = "测试";
+            frm.Owner = this;
+            frm.ShowDialog();
+        }
     }
 }
