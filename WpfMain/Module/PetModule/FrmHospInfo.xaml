@@ -104,7 +104,7 @@
                     </Border.Background>
                     <MediaElement x:Name="mediaElement" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"/>
                 </Border>
-                <Image Grid.Row="1" Mouse.MouseUp="Image_MouseUp" Source="pack://siteoforigin:,,,/Module/PetModule/微信图片_20241212184200.png" HorizontalAlignment="Left"></Image>
+                <Image Grid.Row="1" Source="pack://siteoforigin:,,,/Module/PetModule/微信图片_20241212184200.png" HorizontalAlignment="Left"></Image>
             </Grid>
             <Grid Grid.Column="2">
                 <Border  CornerRadius="10">

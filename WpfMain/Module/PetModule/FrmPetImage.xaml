@@ -33,12 +33,12 @@
                     </Button.Background>
                 </Button>
             </Border>-->
-               
+
 
             <Border Grid.Column="0" CornerRadius="10">
                 <Border.Background>
                     <SolidColorBrush Color="White" Opacity="0.2"/>
-                </Border.Background> 
+                </Border.Background>
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -47,45 +47,126 @@
                     <TextBlock Margin="0,5,0,0" Padding="10" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" FontSize="14">检查拍摄</TextBlock>
                     <ScrollViewer Grid.Row="1" hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="10,0,10,10">
                         <StackPanel Orientation="Vertical">
-                            <Expander Header="分辩率" Margin="0,4,0,0" >
-                                <Border Height="60" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4"  Padding="10">
+                            <Expander Header="处理" Margin="0,4,0,0" >
+                                <Border  Width="300" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4"  Padding="10">
+
+                                    <StackPanel>
+                                        <hc:ButtonGroup>
+                                            <Button Width="28" Height="28"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/OpenFile.png"/>
+                                                </Button.Background>
+                                            </Button>
+
+                                            <Button Width="28" Height="28"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/add-circle.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="24" Height="24"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/minus-circle.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="24" Height="24"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/fullscreen-expand.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="28" Height="28"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/对比度 (1).png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="28" Height="28"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/对比度.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="28" Height="28"  >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/旋转.png"/>
+                                                </Button.Background>
+                                            </Button>
+
+                                            <Button Width="28" Height="28" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/翻转.png"/>
+                                                </Button.Background>
+                                            </Button>
+
+                                           
+                                        </hc:ButtonGroup>
+
+                                        <hc:ButtonGroup>
+                                            <Button Width="24" Height="24"  ToolTip="鼠标" Tag="Pointer" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/pointer2.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="24" Height="24"  ToolTip="测量" Tag="Ranging" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/ranging2.png"/>
+                                                </Button.Background>
+                                            </Button>
+
+                                            <Button Width="24" Height="24"  ToolTip="面积" Tag="Area">
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/area2.png"/>
+                                                </Button.Background>
+                                            </Button>
+
+                                            <Button Width="24" Height="24"  ToolTip="测角" Tag="Angle" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/angle2.png"/>
+                                                </Button.Background>
+                                            </Button>
+
+                                            <Button Width="24" Height="24"  ToolTip="文字" Tag="Text" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/text2.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="24" Height="24"  ToolTip="清理" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/clear2.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                            <Button Width="24" Height="24"  ToolTip="清理" >
+                                                <Button.Background>
+                                                    <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/clear2.png"/>
+                                                </Button.Background>
+                                            </Button>
+                                        </hc:ButtonGroup>
+
+                                        <hc:UniformSpacingPanel Margin="32" Spacing="32" ChildWrapping="Wrap">
+                                            <hc:UniformSpacingPanel Spacing="10" ItemWidth="300" Orientation="Vertical">
+                                                <ProgressBar Value="20"/>
+                                                <hc:RangeSlider Width="300" hc:TipElement.Visibility="Visible" hc:TipElement.Placement="Bottom" hc:TipElement.StringFormat="#0.00" ValueEnd="5" TickPlacement="Both"/>
+                                 
+                                            </hc:UniformSpacingPanel>
+                                        </hc:UniformSpacingPanel>
+                                        <hc:Shield Subject="打开" Status=">关闭" Color="#1182c3"/>
+
+
+                                    </StackPanel>
+      
+
                                 </Border>
                             </Expander>
-                            <Expander Header="Binning" Margin="0,4,0,0" >
+                            <Expander Header="测量" Margin="0,4,0,0" >
                                 <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
                             </Expander>
-                            <Expander Header="曝光控制" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-                            <Expander Header="深度" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-                            <Expander Header="白平衡" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-                            <Expander Header="图像调整" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-                            <Expander Header="直方图" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-                            <Expander Header="温度控制" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-
-                            <Expander Header="文件保存" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
-                            </Expander>
-                            <Expander Header="感兴趣区域（ROI）" Margin="0,4,0,0" >
+                            <Expander Header="色值" Margin="0,4,0,0" >
                                 <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
                             </Expander>
                             <Expander Header="遮罩" Margin="0,4,0,0" >
                                 <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
                             </Expander>
-                            <Expander Header="图像拼接（动态）" Margin="0,4,0,0" >
+                            <Expander Header="对比" Margin="0,4,0,0" >
                                 <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
                             </Expander>
-                            <Expander Header="景深扩展（动态）" Margin="0,4,0,0" >
+                            <Expander Header="保存" Margin="0,4,0,0" >
                                 <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
                             </Expander>
                         </StackPanel>
