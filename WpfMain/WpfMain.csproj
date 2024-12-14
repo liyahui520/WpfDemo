@@ -97,6 +97,12 @@
     <Compile Include="Module\FrmModule.xaml.cs">
       <DependentUpon>FrmModule.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Module\PetModule\FrmHospInfo.xaml.cs">
+      <DependentUpon>FrmHospInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Module\PetModule\FrmPetImage.xaml.cs">
+      <DependentUpon>FrmPetImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Module\PetModule\FrmPet.xaml.cs">
       <DependentUpon>FrmPet.xaml</DependentUpon>
     </Compile>
@@ -110,6 +116,14 @@
     <Page Include="Module\FrmModule.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Module\PetModule\FrmHospInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Module\PetModule\FrmPetImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Module\PetModule\FrmPet.xaml">
       <SubType>Designer</SubType>
@@ -129,6 +143,28 @@
     <None Include="Module\PetModule\微信图片_20241201112721.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Module\2_1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Module\3_1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Module\1_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Module\6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Module\2_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Module\3_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Module\PetModule\微信图片_20241212184200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Module\print.png" />
     <Content Include="Static\Images\background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -48,6 +48,14 @@ namespace WpfMain.Module.PetModule
         {
             
         }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            FrmModule pet = new FrmModule(new FrmPetImage());
+            pet.title.Text = "查看";
+            
+            pet.ShowDialog();
+        }
     }
 }
 public class PropertyGridDemoModel

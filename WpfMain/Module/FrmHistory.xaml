@@ -38,21 +38,29 @@
                 </DataGrid.RowHeaderTemplate>
                 <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding Index}" Header="序号"/>
-                <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
+                <DataGridTextColumn Binding="{Binding Name}" Header="客户"/>
                 <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
+                <DataGridTextColumn Binding="{Binding Phone}" Header="宠物名"/>
                 <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
                     <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
                 <DataGridTextColumn Binding="{Binding Remark}" Header="备注"/>
                 <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
-                <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
-                <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
-                <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
-                <DataGridTextColumn Binding="{Binding Remark}" Header="备注"/>
-                <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
-                <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
-                <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
-                <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
-                <DataGridTextColumn Binding="{Binding Remark}" Header="备注"/>
+
+                <DataGridTextColumn Width="100" Binding="{Binding Remark}" Header="缩略图"/>
+                <DataGridTemplateColumn Header="操作" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Margin="2" Source="pack://siteoforigin:,,,/Module/1_0.png" Width="24" Height="24"></Image>
+                                <Image Margin="2" Source="pack://siteoforigin:,,,/Module/6.png" Width="24" Height="24"></Image>
+                                <Image Margin="2" Source="pack://siteoforigin:,,,/Module/2_0.png" Width="24" Height="24"></Image>
+                                <Image Margin="2" Source="pack://siteoforigin:,,,/Module/3_0.png" Width="24" Height="24"></Image>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
             </DataGrid.Columns>
             </DataGrid>
 
