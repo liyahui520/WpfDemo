@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="WpfMain.Controlls.UCVideo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+             xmlns:aforge ="clr-namespace:AForge.Controls;assembly=AForge.Controls"
+             xmlns:local="clr-namespace:WpfMain.Controlls"  Loaded="UCVideo_OnLoaded"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid AllowDrop="True"> 
+        <wfi:WindowsFormsHost Grid.Row="0" Margin="5">
+            <aforge:VideoSourcePlayer x:Name="sourcePlayer" >
+            </aforge:VideoSourcePlayer>
+        </wfi:WindowsFormsHost>
+
+<!--<Grid Grid.Column="1">
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Height="60" HorizontalAlignment="Stretch" >
+                <Button Name="button_Play" Height="40" Width="120" Margin="40,10,20,10" Click="button_Play_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Name="image_Play" Width="32" Height="32" />
+                        <Label Name="label_Play" Content="开启摄像头" VerticalContentAlignment="Center" FontSize="14" />
+                    </StackPanel>
+                </Button>
+                <Button Name="button_Capture" Height="40" Width="120" Margin="40,10,40,10" Click="button_Capture_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Name="image_Capture" Width="32" Height="32" />
+                        <Label Content="抓拍图像" VerticalContentAlignment="Center" FontSize="14" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>-->
+    </Grid> 
+</UserControl>

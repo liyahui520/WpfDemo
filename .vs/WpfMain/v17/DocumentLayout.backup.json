@@ -3,44 +3,47 @@
   "WorkspaceRootPath": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\frmhistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmhistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\petmodule\\frmpet.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\frmpet.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpet.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\themes\\styles\\button.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\themes\\styles\\button.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\frmhistory.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmhistory.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\petmodule\\frmpet.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpet.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\controlls\\propertygriddemoctl.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\propertygriddemoctl.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\frmmodule.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\controlls\\propertygriddemoctl.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\propertygriddemoctl.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucvideo.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucvideo.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|WpfMain||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\frmpetimage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpetimage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucvideo.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucvideo.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\fullscreen-expand.png||{177559E0-D141-11D0-92DF-00A0C9138C45}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\fullscreen-expand.png||{177559E0-D141-11D0-92DF-00A0C9138C45}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\frmhistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmhistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\frmmodule.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmmodule.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\frmmodule.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmmodule.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\module\\petmodule\\geometries.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\geometries.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,130 +53,135 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Button.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Themes\\Styles\\Button.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Themes\\Styles\\Button.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Themes\\Styles\\Button.xaml",
-              "RelativeToolTip": "WpfMain\\Themes\\Styles\\Button.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-12T09:12:01.027Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "FrmHistory.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmHistory.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml.cs",
-              "RelativeToolTip": "WpfMain\\Module\\FrmHistory.xaml.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAC0AAACGAAAAAAAAAA==",
+              "Title": "PropertyGridDemoCtl.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAAwB0AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-12T08:15:25.183Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FrmHistory.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmHistory.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
-              "RelativeToolTip": "WpfMain\\Module\\FrmHistory.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-12T08:12:50.056Z",
+              "WhenOpened": "2024-12-19T05:53:36.534Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "WpfMain",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\WpfMain.csproj",
+              "RelativeDocumentMoniker": "WpfMain\\WpfMain.csproj",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\WpfMain.csproj",
+              "RelativeToolTip": "WpfMain\\WpfMain.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-12-18T08:54:51.895Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FrmPetImage.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-18T08:28:20.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "FrmPet.xaml.cs",
               "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
               "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
               "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
               "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACQAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAUwFMAAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-12T08:05:07.626Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
-              "RelativeToolTip": "WpfMain\\MainWindow.xaml.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAA6wDUAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-12T08:00:51.471Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "FrmModule.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmModule.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml.cs",
-              "RelativeToolTip": "WpfMain\\Module\\FrmModule.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-12T08:00:29.629Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Geometries.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\Geometries.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\Geometries.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\Geometries.xaml",
-              "RelativeToolTip": "WpfMain\\Module\\PetModule\\Geometries.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-12T07:57:28.953Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "FrmModule.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmModule.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
-              "RelativeToolTip": "WpfMain\\Module\\FrmModule.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-12T07:57:24.451Z",
+              "WhenOpened": "2024-12-18T08:25:39.027Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
-              "RelativeToolTip": "WpfMain\\MainWindow.xaml",
+              "Title": "PropertyGridDemoCtl.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "RelativeToolTip": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-12T07:57:09.225Z",
+              "WhenOpened": "2024-12-19T05:53:41.325Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "FrmPet.xaml",
               "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml",
               "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPet.xaml",
               "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml",
               "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPet.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-12T07:56:52.181Z",
+              "WhenOpened": "2024-12-17T09:38:13.52Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\fullscreen-expand.png",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\fullscreen-expand.png",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
+              "RelativeToolTip": "WpfMain\\Module\\PetModule\\fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001533|",
+              "WhenOpened": "2024-12-17T09:38:09.614Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "FrmHistory.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmHistory.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\FrmHistory.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-17T09:38:04.464Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "FrmModule.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmModule.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\FrmModule.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-17T09:38:02.084Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UCVideo.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAACQAAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T09:35:40.538Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UCVideo.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCVideo.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCVideo.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-17T08:59:45.746Z",
               "EditorCaption": ""
             }
           ]

@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AForge.Video.DirectShow;
+using HandyControl.Data;
 
 namespace WpfMain.Module.PetModule
 {
@@ -21,27 +23,33 @@ namespace WpfMain.Module.PetModule
     /// </summary>
     public partial class FrmPet : UserControl
     {
-        public List<object> ResolutionDataList = new List<object>();
+        //public List<object> ResolutionDataList = new List<object>();
 
-        public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(
-            nameof(DemoModel), typeof(PropertyGridDemoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyGridDemoModel)));
+        //public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(
+        //    nameof(DemoModel), typeof(PropertyGridDemoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyGridDemoModel)));
 
-        public PropertyGridDemoModel DemoModel
+        //public PropertyGridDemoModel DemoModel
+        //{
+        //    get => (PropertyGridDemoModel)GetValue(DemoModelProperty);
+        //    set => SetValue(DemoModelProperty, value);
+        //}
+
+
+        public PropertyVideoModel VideoEntity = new PropertyVideoModel();
+        public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
+            nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
+
+        public PropertyVideoModel VideoModel
         {
-            get => (PropertyGridDemoModel)GetValue(DemoModelProperty);
-            set => SetValue(DemoModelProperty, value);
+            get => (PropertyVideoModel)GetValue(VideoEntityProperty);
+            set => SetValue(VideoEntityProperty, value);
         }
+
         public FrmPet()
         {
             InitializeComponent();
-            DemoModel = new PropertyGridDemoModel
-            {
-                String = "TestString",
-                Enum = Gender.Female,
-                Boolean = true,
-                Integer = 98,
-                VerticalAlignment = VerticalAlignment.Stretch
-            };
+            VideoModel = new PropertyVideoModel();
+            DataContext = this;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -55,6 +63,37 @@ namespace WpfMain.Module.PetModule
             pet.title.Text = "查看";
             
             pet.ShowDialog();
+        } 
+
+        /// <summary>
+        /// 设置曝光
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()),VideoProcAmpFlags.Manual);
+        }
+
+        /// <summary>
+        /// 自动选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void CameraUCSetting_OnChecked(object sender, RoutedEventArgs e)
+        {
+            VideoEntity.ExposureModel.IsAuto = true;
+            VideoEntity.ExposureModel.IsEdit = false;
+            VideoEntity.ExposureModel.Value = 0;
+            Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, 0, VideoProcAmpFlags.Auto);
+        }
+
+        private void CameraUCSetting_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            VideoEntity.ExposureModel.IsAuto = false;
+            VideoEntity.ExposureModel.IsEdit = true;
+            VideoEntity.ExposureModel.Value = 0;
         }
     }
 }
@@ -83,4 +122,18 @@ public enum Gender
 {
     Male,
     Female
+}
+
+public class PropertyVideoModel
+{
+    public Exposure ExposureModel { get; set; }=new Exposure();
+}
+
+public class Exposure
+{
+    public bool IsAuto { get; set; } = true;
+
+    public bool IsEdit { get; set; } = false;
+
+    public double Value { get; set; } = 0;
 }
