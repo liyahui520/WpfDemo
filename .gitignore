@@ -4,3 +4,4 @@ WpfMain/obj/
 *.vsidx
 /WpfMain/bin/Debug
 /.vs/WpfMain/v17/DocumentLayout.json
+WpfMain/bin/

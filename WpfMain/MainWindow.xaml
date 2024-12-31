@@ -61,7 +61,7 @@
             <!--账户管理-->
             <controlls:UCCard Grid.Row="3" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/users.png" Content="医院信息" />
             <!--报告模板-->
-            <controlls:UCCard Grid.Row="3" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/baogao.png" Content="报告模板" />
+            <controlls:UCCard Grid.Row="3" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/baogao.png" Content="报告模板" MouseLeftButtonDown="UIElement_Print_OnMouseLeftButtonDown"/>
            </Grid>
             </Grid>
 </hc:Window>

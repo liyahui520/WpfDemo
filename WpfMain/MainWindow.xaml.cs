@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using HandyControl.Tools.Extension;
+using WpfMain.Controlls;
 using WpfMain.Module;
 using WpfMain.Module.PetModule;
 
@@ -66,6 +67,14 @@ namespace WpfMain
         private void UCCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             FrmModule frm = new FrmModule(new Controlls.PropertyGridDemoCtl());
+            frm.title.Text = "测试";
+            frm.Owner = this;
+            frm.ShowDialog();
+        }
+
+        private void UIElement_Print_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FrmModule frm = new FrmModule(new UCWpfViewer());
             frm.title.Text = "测试";
             frm.Owner = this;
             frm.ShowDialog();
