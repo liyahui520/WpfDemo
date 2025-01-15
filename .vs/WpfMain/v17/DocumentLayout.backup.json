@@ -3,11 +3,121 @@
   "WorkspaceRootPath": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\controlls\\ucwpfviewer.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucvideo.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucvideo.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\camerarecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\camerarecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\avifile\\videostream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\videostream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\avifile\\recordsound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\recordsound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\avifile\\recorderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\recorderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\record\\avifile\\editablevideostream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\editablevideostream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\record\\avifile\\avistream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\avistream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\record\\avifile\\aviplayer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\aviplayer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\avifile\\avimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\avimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\avifile\\avi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\avi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\avifile\\audiostream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\avifile\\audiostream.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\interfaces\\irecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\interfaces\\irecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\extension\\windowapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\extension\\windowapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\programrecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\programrecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\screenrecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\screenrecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\frmpet.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpet.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\frmpet.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpet.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucvideo.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucvideo.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Record||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\app.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\app.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\global.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\global.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\wavrecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\wavrecorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\record\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|solutionrelative:record\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucwpfviewer.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucwpfviewer.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\controlls\\ucwpfviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucwpfviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucwpfviewer.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
@@ -15,54 +125,31 @@
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmhistory.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\frmmodule.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\frmmodule.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|WpfMain||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\propertygriddemoctl.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\propertygriddemoctl.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\frmpet.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpet.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\propertygriddemoctl.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\propertygriddemoctl.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucvideo.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucvideo.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\frmpetimage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\frmpetimage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\controlls\\ucvideo.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\controlls\\ucvideo.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|D:\\Works\\Wpf\\WpfMain\\WpfMain\\wpfmain\\module\\petmodule\\fullscreen-expand.png||{177559E0-D141-11D0-92DF-00A0C9138C45}",
       "RelativeMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|solutionrelative:wpfmain\\module\\petmodule\\fullscreen-expand.png||{177559E0-D141-11D0-92DF-00A0C9138C45}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{542A76E1-2144-46FC-AC56-508D7259C7A0}|WpfMain\\WpfMain.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\wpfmain\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
+      "AbsoluteMoniker": "D:0:0:{503C2C71-8334-4930-B711-69E286E10B24}|Record\\Record.csproj|d:\\works\\wpf\\wpfmain\\wpfmain\\record\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|a54ad834-9219-4aa6-b589-607af21c3e26"
     }
   ],
   "DocumentGroupContainers": [
@@ -72,23 +159,281 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CameraRecorder.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\CameraRecorder.cs",
+              "RelativeDocumentMoniker": "Record\\CameraRecorder.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\CameraRecorder.cs",
+              "RelativeToolTip": "Record\\CameraRecorder.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAhwIoAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:23:44.786Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
-              "RelativeToolTip": "WpfMain\\MainWindow.xaml",
+              "Title": "RecorderStatus.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\RecorderStatus.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\RecorderStatus.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\RecorderStatus.cs",
+              "RelativeToolTip": "Record\\AviFile\\RecorderStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:27:39.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "FrmPet.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAUwFcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-18T08:25:39.027Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "WavRecorder.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\WavRecorder.cs",
+              "RelativeDocumentMoniker": "Record\\WavRecorder.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\WavRecorder.cs",
+              "RelativeToolTip": "Record\\WavRecorder.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T01:42:42.626Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "FrmPet.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPet.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPet.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-27T05:34:02.656Z",
+              "WhenOpened": "2025-01-06T09:19:33.363Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "App.config",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.config",
+              "RelativeDocumentMoniker": "WpfMain\\App.config",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.config",
+              "RelativeToolTip": "WpfMain\\App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-01-13T02:05:14.939Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RecordSound.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\RecordSound.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\RecordSound.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\RecordSound.cs",
+              "RelativeToolTip": "Record\\AviFile\\RecordSound.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:27:41.168Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "WindowApi.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Extension\\WindowApi.cs",
+              "RelativeDocumentMoniker": "Record\\Extension\\WindowApi.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Extension\\WindowApi.cs",
+              "RelativeToolTip": "Record\\Extension\\WindowApi.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:27:20.503Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ScreenRecorder.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\ScreenRecorder.cs",
+              "RelativeDocumentMoniker": "Record\\ScreenRecorder.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\ScreenRecorder.cs",
+              "RelativeToolTip": "Record\\ScreenRecorder.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAYwKIAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T05:56:03.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ProgramRecorder.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\ProgramRecorder.cs",
+              "RelativeDocumentMoniker": "Record\\ProgramRecorder.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\ProgramRecorder.cs",
+              "RelativeToolTip": "Record\\ProgramRecorder.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAwwC8AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T01:42:45.905Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UCVideo.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCVideo.xaml.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAgwIgAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T09:35:40.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AviPlayer.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AviPlayer.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\AviPlayer.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AviPlayer.cs",
+              "RelativeToolTip": "Record\\AviFile\\AviPlayer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T06:01:46.298Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AviStream.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AviStream.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\AviStream.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AviStream.cs",
+              "RelativeToolTip": "Record\\AviFile\\AviStream.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T06:01:47.565Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "VideoStream.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\VideoStream.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\VideoStream.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\VideoStream.cs",
+              "RelativeToolTip": "Record\\AviFile\\VideoStream.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACkAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:06:02.03Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "EditableVideoStream.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\EditableVideoStream.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\EditableVideoStream.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\EditableVideoStream.cs",
+              "RelativeToolTip": "Record\\AviFile\\EditableVideoStream.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T06:01:49.186Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Global.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Global.cs",
+              "RelativeDocumentMoniker": "Record\\Global.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Global.cs",
+              "RelativeToolTip": "Record\\Global.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABsAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:02:51.869Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IRecorder.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Interfaces\\IRecorder.cs",
+              "RelativeDocumentMoniker": "Record\\Interfaces\\IRecorder.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Interfaces\\IRecorder.cs",
+              "RelativeToolTip": "Record\\Interfaces\\IRecorder.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:30:55.062Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AudioStream.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AudioStream.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\AudioStream.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AudioStream.cs",
+              "RelativeToolTip": "Record\\AviFile\\AudioStream.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:27:31.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Avi.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\Avi.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\Avi.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\Avi.cs",
+              "RelativeToolTip": "Record\\AviFile\\Avi.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:27:34.887Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AviManager.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AviManager.cs",
+              "RelativeDocumentMoniker": "Record\\AviFile\\AviManager.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\AviFile\\AviManager.cs",
+              "RelativeToolTip": "Record\\AviFile\\AviManager.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAAwBcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:04:37.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
+              "RelativeToolTip": "WpfMain\\MainWindow.xaml.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAASwDEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T05:34:49.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
               "Title": "App.xaml",
               "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.xaml",
               "RelativeDocumentMoniker": "WpfMain\\App.xaml",
@@ -100,156 +445,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UCWpfViewer.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
-              "RelativeToolTip": "WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAgwDMAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-27T03:04:43.549Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UCWpfViewer.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCWpfViewer.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml",
-              "RelativeToolTip": "WpfMain\\Controlls\\UCWpfViewer.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-27T03:03:48.8Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PropertyGridDemoCtl.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
-              "RelativeToolTip": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAAwC8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-19T05:53:36.534Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "WpfMain",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\WpfMain.csproj",
-              "RelativeDocumentMoniker": "WpfMain\\WpfMain.csproj",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\WpfMain.csproj",
-              "RelativeToolTip": "WpfMain\\WpfMain.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-12-18T08:54:51.895Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "FrmPetImage.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
-              "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-18T08:28:20.993Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "FrmPet.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
-              "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPet.xaml.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-18T08:25:39.027Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "PropertyGridDemoCtl.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
-              "RelativeToolTip": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-19T05:53:41.325Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FrmHistory.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmHistory.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
-              "RelativeToolTip": "WpfMain\\Module\\FrmHistory.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-17T09:38:04.464Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\fullscreen-expand.png",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\fullscreen-expand.png",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
-              "RelativeToolTip": "WpfMain\\Module\\PetModule\\fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001533|",
-              "WhenOpened": "2024-12-17T09:38:09.614Z",
-              "EditorCaption": " - PNG [48x48, 32 \u4F4D, PNG]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml.cs",
-              "RelativeToolTip": "WpfMain\\MainWindow.xaml.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAgwE8AAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-27T05:34:49.757Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "FrmModule.xaml",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
-              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmModule.xaml",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
-              "RelativeToolTip": "WpfMain\\Module\\FrmModule.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-17T09:38:02.084Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "UCVideo.xaml.cs",
-              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml.cs",
-              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCVideo.xaml.cs",
-              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml.cs",
-              "RelativeToolTip": "WpfMain\\Controlls\\UCVideo.xaml.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAACQAAABkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T09:35:40.538Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "UCVideo.xaml",
               "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCVideo.xaml",
               "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCVideo.xaml",
@@ -258,6 +454,169 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2024-12-17T08:59:45.746Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\App.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\App.xaml.cs",
+              "RelativeToolTip": "WpfMain\\App.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:15:36.828Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Record",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Record.csproj",
+              "RelativeDocumentMoniker": "Record\\Record.csproj",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Record.csproj",
+              "RelativeToolTip": "Record\\Record.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-01-13T02:02:26.347Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Class1.cs",
+              "RelativeDocumentMoniker": "Record\\Class1.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Class1.cs",
+              "RelativeToolTip": "Record\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:02:00.678Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "FrmPetImage.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\PetModule\\FrmPetImage.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-18T08:28:20.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "PropertyGridDemoCtl.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAAwC8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-19T05:53:36.534Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Microsoft.Common.CurrentVersion.targets",
+              "DocumentMoniker": "D:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ToolTip": "D:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ViewState": "AgIAAE8JAAAAAAAAAAAWwGwJAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2025-01-07T03:12:46.423Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "UCWpfViewer.xaml.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCWpfViewer.xaml.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwDYAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-27T03:04:43.549Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "UCWpfViewer.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\UCWpfViewer.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\UCWpfViewer.xaml",
+              "RelativeToolTip": "WpfMain\\Controlls\\UCWpfViewer.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-27T03:03:48.8Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Properties\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "Record\\Properties\\AssemblyInfo.cs",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\Record\\Properties\\AssemblyInfo.cs",
+              "RelativeToolTip": "Record\\Properties\\AssemblyInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-07T03:13:26.718Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "PropertyGridDemoCtl.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "RelativeToolTip": "WpfMain\\Controlls\\PropertyGridDemoCtl.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-19T05:53:41.325Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "FrmHistory.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmHistory.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmHistory.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\FrmHistory.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-17T09:38:04.464Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\fullscreen-expand.png",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\PetModule\\fullscreen-expand.png",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\PetModule\\fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
+              "RelativeToolTip": "WpfMain\\Module\\PetModule\\fullscreen-expand.png - PNG [48x48, 32 \u4F4D, PNG]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001533|",
+              "WhenOpened": "2024-12-17T09:38:09.614Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "FrmModule.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\Module\\FrmModule.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\Module\\FrmModule.xaml",
+              "RelativeToolTip": "WpfMain\\Module\\FrmModule.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-17T09:38:02.084Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "WpfMain\\MainWindow.xaml",
+              "ToolTip": "D:\\Works\\Wpf\\WpfMain\\WpfMain\\WpfMain\\MainWindow.xaml",
+              "RelativeToolTip": "WpfMain\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-27T05:34:02.656Z"
             }
           ]
         }

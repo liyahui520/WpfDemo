@@ -1,4 +1,5 @@
 ﻿using HandyControl.Themes;
+using Record;
 using System.Windows;
 using System.Windows.Media;
 namespace WpfMain
@@ -20,5 +21,13 @@ namespace WpfMain
                 ThemeManager.Current.AccentColor = accent;
             }
         }
-    }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            //初始化DLL配置
+            Global.InitDllPath();
+        }
+}
 }

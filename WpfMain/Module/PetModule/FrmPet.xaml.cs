@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using AForge.Video.DirectShow;
-using HandyControl.Data;
 
 namespace WpfMain.Module.PetModule
 {
@@ -83,10 +73,10 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void CameraUCSetting_OnChecked(object sender, RoutedEventArgs e)
         {
-            VideoEntity.ExposureModel.IsAuto = true;
-            VideoEntity.ExposureModel.IsEdit = false;
-            VideoEntity.ExposureModel.Value = 0;
-            Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, 0, VideoProcAmpFlags.Auto);
+            //VideoEntity.ExposureModel.IsAuto = true;
+            //VideoEntity.ExposureModel.IsEdit = false;
+            //VideoEntity.ExposureModel.Value = 0;
+            //Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, 0, VideoProcAmpFlags.Auto);
         }
 
         private void CameraUCSetting_OnUnchecked(object sender, RoutedEventArgs e)
@@ -94,6 +84,31 @@ namespace WpfMain.Module.PetModule
             VideoEntity.ExposureModel.IsAuto = false;
             VideoEntity.ExposureModel.IsEdit = true;
             VideoEntity.ExposureModel.Value = 0;
+        }
+
+        private void StartCamp_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Video.isStart)
+            {
+                Video?.End();
+                StartCamp.Content = "开始录像";
+            }
+            else
+            {
+
+                Video?.Start();
+                StartCamp.Content = "停止录像";
+            }
+        }
+
+        private void StopCamp_OnClick(object sender, RoutedEventArgs e)
+        {
+            Video?.Stop();
+        }
+
+        private void EndCamp_OnClick(object sender, RoutedEventArgs e)
+        {
+            Video?.End();
         }
     }
 }
