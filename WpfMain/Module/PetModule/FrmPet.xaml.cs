@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
+using WpfMain.Entity;
 
 namespace WpfMain.Module.PetModule
 {
@@ -23,6 +24,11 @@ namespace WpfMain.Module.PetModule
         //    get => (PropertyGridDemoModel)GetValue(DemoModelProperty);
         //    set => SetValue(DemoModelProperty, value);
         //}
+
+        /// <summary>
+        /// 当前有检查信息
+        /// </summary>
+        private TestInfo tInfo;
 
 
         public PropertyVideoModel VideoEntity = new PropertyVideoModel();
@@ -49,7 +55,8 @@ namespace WpfMain.Module.PetModule
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            FrmModule pet = new FrmModule(new FrmPetImage());
+
+            FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
             pet.title.Text = "查看";
             
             pet.ShowDialog();

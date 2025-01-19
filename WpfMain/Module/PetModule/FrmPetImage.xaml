@@ -175,11 +175,11 @@
             </Border>
 
             <Grid Grid.Column="1" Margin="5,0,5,0">
-                <Border Grid.Column="0" CornerRadius="10">
+                <Border Grid.Column="0" CornerRadius="10" Name="BorderImageContent">
                     <Border.Background>
                         <SolidColorBrush Color="#666666" Opacity="0.6"/>
                     </Border.Background>
-                    <Image Source="pack://siteoforigin:,,,/Module/PetModule/微信图片_20241212184200.png" VerticalAlignment="Top" ></Image>
+                    
                 </Border>
             </Grid>
             <Grid Grid.Column="2">

@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="PacsCore.UCImageItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PacsCore"
+             xmlns:dt="clr-namespace:DrawTools;assembly=DrawTools"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+
+        <Grid x:Name="IMG">
+            <Grid.Resources>
+                <TransformGroup x:Key="Imageview">
+                    <ScaleTransform/>
+                    <TranslateTransform/>
+                    <RotateTransform/>
+
+                </TransformGroup>
+            </Grid.Resources>
+
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Focusable="False" x:Name="BackFrame" >
+
+                <Border  Name="BorderImg" BorderBrush="Black" BorderThickness="1" Background="Black" >
+
+                    <Grid RenderTransform="{StaticResource Imageview}"  RenderOptions.BitmapScalingMode="NearestNeighbor">
+                        <Image Name="dicomImage1"   Stretch="Uniform"/>
+                        <dt:DrawingCanvas x:Name="drawingCanvas"  Brush="White" Background="#02FFFFFF"        DrawingToolType="Pointer"  />
+                        <Border  Background="#02FFFFFF" Name="Bordermove" Cursor="SizeAll" 
+                            MouseLeftButtonDown="IMG1_MouseLeftButtonDown"
+                             MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
+                             MouseMove="IMG1_MouseMove"
+                             MouseWheel="IMG1_MouseWheel"
+                            ></Border>
+                    </Grid>
+                </Border>
+            </ScrollViewer>
+
+
+
+        </Grid>
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <!--文件属性-->
+            <StackPanel >
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="FontSize" Value="10" ></Setter>
+                    </Style>
+                </StackPanel.Resources>
+                <StackPanel Name="StackPanelInfo"></StackPanel>
+                <StackPanel>
+                    <TextBlock Name="TextBlockZoom"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+            <!--右标尺-->
+            <Grid  Grid.Row="1" Grid.RowSpan="2"  Width="30"  HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Grid  Name="StackPanelLeftNum" >
+                    <Grid.Resources>
+                        <Style TargetType="Line">
+                            <Setter Property="Stroke" Value="White"/>
+                            <Setter Property="StrokeThickness" Value="1"/>
+                            <Setter Property="X1" Value="0"/>
+                            <Setter Property="X2" Value="15"/>
+                            <Setter Property="Y1" Value="0"/>
+                            <Setter Property="Y2" Value="0"/>
+                        </Style>
+                    </Grid.Resources>
+                    <!--<Line Margin="0,0,0,0"  X1="15" X2="15" Y1="0" Y2="100"   />
+                    <Line Margin="0,0,0,0"     />
+                    <Line Margin="0,4,0,0"  X1="10"   />
+                    <Line Margin="0,8,0,0"   X1="10" />
+                    <Line Margin="0,12,0,0"   X1="10" />
+                    <Line Margin="0,16,0,0"   X1="10" />-->
+
+                </Grid>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Foreground="White" FontSize="9" Name="TextBlockRight">10</TextBlock>
+                    <TextBlock Foreground="White" FontSize="9">cm</TextBlock>
+                </StackPanel>
+
+            </Grid>
+
+
+            <!--下标尺-->
+
+            <Grid  Grid.Row="2" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid  Name="StackPanelButtonNum"  >
+                    <Grid.Resources>
+                        <Style TargetType="Line">
+                            <Setter Property="Stroke" Value="White"/>
+                            <Setter Property="StrokeThickness" Value="1"/>
+                            <Setter Property="X1" Value="0"/>
+                            <Setter Property="Y1" Value="15"/>
+                            <Setter Property="X2" Value="0"/>
+                            <Setter Property="Y2" Value="0"/>
+                        </Style>
+                    </Grid.Resources>
+                    <!--<Line  X1="0" X2="100" Y1="15" Y2="15" />
+                    <Line Margin="0,0,0,0"   Y2="15" />
+                    <Line Margin="4,0,0,0"   Y2="15" />
+                    <Line Margin="8,0,0,0"   Y2="10" />
+                    <Line Margin="12,0,0,0"   Y2="10" />
+                    <Line Margin="16,0,0,0"   Y2="10" />
+                    <Line Margin="20,0,0,0"   Y2="10" />
+                    <Line Margin="24,0,0,0"   Y2="10" />
+                    <Line Margin="28,0,0,0"   Y2="10" />
+                    <Line Margin="32,0,0,0"   Y2="10" />
+                    <Line Margin="36,0,0,0"   Y2="0" />-->
+                </Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                    <TextBlock Foreground="White" FontSize="9" Name="TextBlockButton">10</TextBlock>
+                    <TextBlock Foreground="White" FontSize="9">cm</TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

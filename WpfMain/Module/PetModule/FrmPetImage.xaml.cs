@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfMain.Entity;
 
 namespace WpfMain.Module.PetModule
 {
@@ -21,6 +22,9 @@ namespace WpfMain.Module.PetModule
     /// </summary>
     public partial class FrmPetImage : UserControl
     {
+
+        private TestInfo tInfo;
+
         public List<object> ResolutionDataList = new List<object>();
 
         public static readonly DependencyProperty DemoModel1Property = DependencyProperty.Register(
@@ -31,8 +35,9 @@ namespace WpfMain.Module.PetModule
             get => (PropertyGridDemoModel)GetValue(DemoModel1Property);
             set => SetValue(DemoModel1Property, value);
         }
-        public FrmPetImage()
+        public FrmPetImage(TestInfo info)
         {
+            tInfo = info;
             InitializeComponent();
             DemoModel1 = new PropertyGridDemoModel
             {
@@ -42,6 +47,9 @@ namespace WpfMain.Module.PetModule
                 Integer = 98,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
+
+
+
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
