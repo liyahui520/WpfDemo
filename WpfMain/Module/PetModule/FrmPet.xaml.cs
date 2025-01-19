@@ -26,7 +26,7 @@ namespace WpfMain.Module.PetModule
         //}
 
         /// <summary>
-        /// 当前有检查信息
+        /// 当前检查信息
         /// </summary>
         private TestInfo tInfo;
 

@@ -98,7 +98,7 @@ namespace WpfMain.Entity
         /// </summary>
         Url = 1,
         /// <summary>
-        /// 本机绝对路径
+        /// 本机地址
         /// </summary>
         LocalPath = 2,
     }
