@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using Record;
-
+using System.IO;
 namespace WpfMain.Controlls
 {
     /// <summary>
@@ -39,6 +39,13 @@ namespace WpfMain.Controlls
 
         #endregion
 
+
+
+        static UCVideo()
+        {
+            if (Directory.Exists(videoFileFullPath))
+                Directory.CreateDirectory(videoFileFullPath);
+        }
         public UCVideo()
         {
             InitializeComponent();

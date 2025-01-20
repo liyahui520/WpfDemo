@@ -7,3 +7,6 @@ WpfMain/obj/
 WpfMain/bin/
 Record/bin/
 Record/obj/
+/App
+/WpfDemo/App/Debug
+/WpfDemo/App/WpfDemo/App/Debug

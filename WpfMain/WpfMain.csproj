@@ -14,11 +14,11 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\App\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,7 +34,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>..\WpfDemo\App\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -61,6 +61,9 @@
     </Reference>
     <Reference Include="AForge.Video.FFMPEG">
       <HintPath>..\Record\DLL\AForge.Video.FFMPEG.dll</HintPath>
+    </Reference>
+    <Reference Include="DrawTools">
+      <HintPath>..\Libs\DrawTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -128,6 +131,9 @@
     <Compile Include="Controlls\UCWpfViewer.xaml.cs">
       <DependentUpon>UCWpfViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Entity\ImageInfo.cs" />
+    <Compile Include="Entity\TestInfo.cs" />
+    <Compile Include="Logic\ImageLogic.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -148,6 +154,9 @@
     </Compile>
     <Compile Include="Module\PetModule\FrmPet.xaml.cs">
       <DependentUpon>FrmPet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Module\PetModule\UCImageItemView.xaml.cs">
+      <DependentUpon>UCImageItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -173,6 +182,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Module\PetModule\Geometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Module\PetModule\UCImageItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
