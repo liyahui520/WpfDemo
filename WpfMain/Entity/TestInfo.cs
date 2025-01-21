@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Ink;
-
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
 namespace WpfMain.Entity
 {
 
@@ -40,7 +44,7 @@ namespace WpfMain.Entity
         /// <summary>
         /// 检查结果
         /// </summary>
-        public  TestResult Result { get; set; }
+        public TestResult Result { get; set; }
 
     }
 
@@ -57,7 +61,7 @@ namespace WpfMain.Entity
         /// <summary>
         /// 图片集
         /// </summary>
-        public List<MediaItem> Images { get; set; }
+        public List<ImageItem> Images { get; set; }
 
         /// <summary>
         /// 视频集
@@ -87,6 +91,10 @@ namespace WpfMain.Entity
         public MediaSourceType Type { get; set; }
     }
 
+
+
+
+
     public enum MediaSourceType
     {
         /// <summary>
@@ -103,6 +111,84 @@ namespace WpfMain.Entity
         LocalPath = 2,
     }
 
+
+
+    //图片
+    public class ImageItem : MediaItem
+    {
+        private Bitmap bitmap;
+        private ImageSource imageSource;
+
+        /// <summary>
+        /// 像素间距
+        /// </summary>
+        public double PixelSpacing { get; set; }
+
+        /// <summary>
+        /// 像素间距单拉 毫米mm,纳米 pm
+        /// </summary>
+        public string PixelSpacingUnit { get; set; }
+
+
+
+
+        [JsonIgnore]
+        public Bitmap Bitmap
+        {
+            get
+            {
+                if (bitmap != null)
+                    return bitmap;
+
+                if (Type != MediaSourceType.LocalPath)
+                    return null;
+                if (File.Exists(Source))
+                    bitmap = new Bitmap(Source);
+                return bitmap;
+            }
+            set {
+                bitmap = value;
+            }
+        }
+
+        [JsonIgnore]
+        public ImageSource ImageSource
+        {
+
+            get
+            {
+                if (imageSource != null)
+                    return imageSource;
+
+                if (Bitmap != null)
+                {
+                    MemoryStream stream = new MemoryStream();
+                    bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                    imageSource = (ImageSource)new ImageSourceConverter().ConvertFrom(stream);
+                }
+
+                return imageSource;
+            }
+            set { 
+                imageSource = value;
+                MemoryStream ms = new MemoryStream();
+                BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)value));
+                encoder.Save(ms);
+                bitmap = new Bitmap(ms);
+                ms.Close();
+            }
+        }
+
+
+    }
+
+
+
+
+    /// <summary>
+    /// 检查结果明细
+    /// </summary>
     public class ResultItem
     {
         /// <summary>

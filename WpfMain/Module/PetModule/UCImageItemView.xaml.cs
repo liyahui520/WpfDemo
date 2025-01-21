@@ -28,7 +28,7 @@ namespace PacsCore
         private double zoom = 1;
         private double szoom = 1;
         private int oldthreshold = 0;
-        private ImageInfo dinfo;
+        private ImageItem dinfo;
 
         /// <summary>
         /// 当前检查信息
@@ -38,7 +38,21 @@ namespace PacsCore
         {
             tInfo = info;
             InitializeComponent();
+            if (tInfo?.Result?.Images == null)
+                return;
+
+            dinfo = tInfo.Result.Images[0];
+            dicomImage1.Source = dinfo.ImageSource;
+            Loaded += UCImageItemView_Loaded;
+          
+
         }
+
+        private void UCImageItemView_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetDataset();
+        }
+
         public UCImageItemView()
         {
             InitializeComponent();
@@ -49,11 +63,8 @@ namespace PacsCore
         /// </summary>
         /// <param name="dicomdataset"></param>
         /// <param name="dicomimage"></param>
-        public void SetDataset(ImageInfo dicomdataset)
+        public void SetDataset()
         {
-            dinfo = dicomdataset;
-
-
             LoadDicomImage();
             FileInfo();
             LoadRuler();
@@ -70,12 +81,12 @@ namespace PacsCore
             oldthreshold += threshold;
             if (threshold == 0)
             {
-                dicomImage1.Source = dinfo.Source;
+                dicomImage1.Source = dinfo.ImageSource;
                 return;
             }
 
             // 绘制灰度图
-            System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.ClonedBitmap, threshold);
+            System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.Bitmap, oldthreshold);
             dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
         }
 
@@ -146,6 +157,7 @@ namespace PacsCore
         /// </summary>
         public void Reduction()
         {
+            SetThreshold(0);
             LoadDicomImage();
             LoadRuler();
         }
@@ -196,7 +208,7 @@ namespace PacsCore
         #region 私有
 
         /// <summary>
-        /// 显示dicom信息
+        /// 显示图片信息
         /// </summary>
         private void FileInfo()
         {
@@ -220,7 +232,7 @@ namespace PacsCore
             //每像素0.25mm
             //每毫米一格  共10厘米
             double value = 1;
-            if (dinfo.PixelSpacing==0)
+            if (dinfo.PixelSpacing == 0)
                 return;
 
 
@@ -262,19 +274,18 @@ namespace PacsCore
         private void LoadDicomImage()
         {
 
-            BackFrame.Width = dinfo.Source.Width;
-            BackFrame.Height = dinfo.Source.Height;
-            dicomImage1.Source = dinfo.Source;
+            BackFrame.Width = dinfo.ImageSource.Width;
+            BackFrame.Height = dinfo.ImageSource.Height;
 
             TransformGroup group = IMG.FindResource("Imageview") as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;
-            double w = IMG.ActualWidth / dinfo.Source.Width;
-            double h = IMG.ActualHeight / dinfo.Source.Height;
+            double w = IMG.ActualWidth / dinfo.ImageSource.Width;
+            double h = IMG.ActualHeight / dinfo.ImageSource.Height;
             if (w < 1 || h < 1)
             {
                 zoom = w > h ? h : w;
-                transform.CenterX = (IMG.ActualWidth - (dinfo.Source.Width * zoom)) / 2;
-                transform.CenterY = (IMG.ActualHeight - (dinfo.Source.Height * zoom)) / 2;
+                transform.CenterX = (IMG.ActualWidth - (dinfo.ImageSource.Width * zoom)) / 2;
+                transform.CenterY = (IMG.ActualHeight - (dinfo.ImageSource.Height * zoom)) / 2;
                 transform.ScaleX = zoom;
                 transform.ScaleY = zoom;
             }

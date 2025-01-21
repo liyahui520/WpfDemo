@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DrawTools;
+using PacsCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -24,7 +26,7 @@ namespace WpfMain.Module.PetModule
     {
 
         private TestInfo tInfo;
-
+        private UCImageItemView ucd;
         public List<object> ResolutionDataList = new List<object>();
 
         public static readonly DependencyProperty DemoModel1Property = DependencyProperty.Register(
@@ -48,13 +50,71 @@ namespace WpfMain.Module.PetModule
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-
-
+            ucd = new UCImageItemView(tInfo);
+            BorderImageContent.Child = ucd;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_Zoom(object sender, RoutedEventArgs e)
+        {
+            if (ucd != null)
+                ucd.DowheelZoom(double.Parse(((Control)sender).Tag.ToString()));
+        }
+
+        private void Button_Click_huanyuan(object sender, RoutedEventArgs e)
+        {
+            if (ucd != null)
+                ucd.Reduction();
+        }
+
+        private void Button_Click_Duibi(object sender, RoutedEventArgs e)
+        {
+            if (ucd != null)
+                ucd.SetThreshold(int.Parse(((Control)sender).Tag.ToString()));
+        }
+
+        private void Button_Click_xuanzhuan(object sender, RoutedEventArgs e)
+        {
+            if (ucd != null)
+                ucd.Rotate(90);
+        }
+
+        private void Button_Click_fanzhuan(object sender, RoutedEventArgs e)
+        {
+            ucd.Flip();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (ucd == null)
+                return;
+
+            if (!(sender is Button bt))
+                return;
+
+            string tag = bt.Tag.ToString();
+
+            if (tag == "Clear")
+            {
+                ucd.Clear();
+                return;
+            }
+            ucd.Draw((DrawToolType)Enum.Parse(typeof(DrawToolType), bt.Tag.ToString()));
+        }
+
+        private void Button_Click_save(object sender, RoutedEventArgs e)
+        {
+            if (ucd != null)
+                ucd.SaveImage();
         }
     }
 }
