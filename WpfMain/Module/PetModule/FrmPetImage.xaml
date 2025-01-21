@@ -111,6 +111,14 @@
                                         </Button>
 
 
+                                    </hc:ButtonGroup>
+
+                                </Border>
+                            </Expander>
+                            <Expander Header="测量" Margin="0,4,0,0" >
+                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
+                                    <hc:ButtonGroup>
+
                                         <Button Width="24" Height="24"  ToolTip="鼠标" Tag="Pointer"  Click="Button_Click_1">
                                             <Button.Background>
                                                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Module/PetModule/pointer2.png"/>
@@ -150,11 +158,7 @@
                                             </Button.Background>
                                         </Button>
                                     </hc:ButtonGroup>
-
                                 </Border>
-                            </Expander>
-                            <Expander Header="色值" Margin="0,4,0,0" >
-                                <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
                             </Expander>
                             <Expander Header="遮罩" Margin="0,4,0,0" >
                                 <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" />
