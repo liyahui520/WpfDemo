@@ -57,6 +57,15 @@ namespace WpfMain.Module.PetModule
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            //if (tInfo == null)
+            //{
+            //    tInfo = new TestInfo();
+            //    tInfo.Result = new TestResult();
+            //    tInfo.Result.Images = new System.Collections.Generic.List<ImageItem>
+            //    {
+            //        new ImageItem { ImageSource = ImageTest.Source }
+            //    };
+            //}
 
             FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
             pet.title.Text = "查看";
@@ -144,6 +153,17 @@ namespace WpfMain.Module.PetModule
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            //e.Source
+            //var entity = (VideoImage)(((System.Windows.FrameworkElement)sender).DataContext);
+            if (tInfo == null)
+            {
+                tInfo = new TestInfo();
+                tInfo.Result = new TestResult();
+                tInfo.Result.Images = new System.Collections.Generic.List<ImageItem>
+                {
+                    new ImageItem { ImageSource = ((System.Windows.Controls.Image)e.Source).Source }
+                };
+            }
             FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
             pet.title.Text = "查看";
 
