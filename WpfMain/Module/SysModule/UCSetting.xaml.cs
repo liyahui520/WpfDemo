@@ -25,6 +25,9 @@ namespace WpfMain.Module.SysModule
         public UCSetting()
         {
             InitializeComponent();
+
+           ImagePath.Text= AppStatic.VideoConfig.ImagePath;
+           VideoPath.Text= AppStatic.VideoConfig.VideoPath;
         }
         /// <summary>
         /// 视频路径

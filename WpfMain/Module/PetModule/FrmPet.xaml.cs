@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
+using HandyControl.Tools.Extension;
 using WpfMain.Entity;
+using WpfMain.Module.SysModule;
 
 namespace WpfMain.Module.PetModule
 {
@@ -46,7 +50,7 @@ namespace WpfMain.Module.PetModule
         {
             InitializeComponent();
             VideoModel = new PropertyVideoModel();
-            VideoModel.Images = new List<VideoImage>() { new VideoImage(){Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599" ,Name = "1"}, new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" } };
+            VideoModel.Images = new List<VideoImage>();// { new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" }, new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" } };
             DataContext = this;
         }
 
@@ -99,11 +103,24 @@ namespace WpfMain.Module.PetModule
 
         private void CameraUCSetting_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            VideoEntity.ExposureModel.IsAuto = false; 
+            VideoEntity.ExposureModel.IsAuto = false;
         }
 
         private void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
+            {
+                if (HandyControl.Controls.MessageBox.Show("视频路径未设置！请先配置", "系统提示", MessageBoxButton.OKCancel,
+                        MessageBoxImage.Warning) == MessageBoxResult.OK)
+                {
+
+                    UCSetting setting = new UCSetting();
+                    setting.Owner = AppStatic.MainWindow;
+                    setting.ShowDialog();
+                    Video.SetAviFilePath();
+                    return;
+                }
+            }
             if (Video.isStart)
             {
                 Video?.End();
@@ -127,8 +144,42 @@ namespace WpfMain.Module.PetModule
         //拍照
         private void EndCamp_OnClick(object sender, RoutedEventArgs e)
         {
-            System.Drawing.Image img = Video?.Capture();
+            if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
+            {
+                if (HandyControl.Controls.MessageBox.Show("拍照路径未设置！请先配置", "系统提示", MessageBoxButton.OKCancel,
+                        MessageBoxImage.Warning) == MessageBoxResult.OK)
+                {
 
+                    UCSetting setting = new UCSetting();
+                    setting.Owner = AppStatic.MainWindow;
+                    setting.ShowDialog();
+                    return;
+                }
+            }
+            EndCamp.IsEnabled = false;
+            System.Drawing.Image img = Video?.Capture();
+            if (img != null)
+            {
+                string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp.jpg";
+                string fullPath = Path.Combine(AppStatic.VideoConfig.ImagePath, fullName);
+                try
+                {
+                    img.Save(fullPath, ImageFormat.Jpeg);
+                    var old = VideoModel.Images.Clone();
+                    old.Add(new VideoImage() { Path = fullPath, Name = fullName });
+                    VideoModel.Images = old;
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+                finally
+                {
+                    img.Dispose();
+                    EndCamp.IsEnabled = true;
+                }
+
+            }
         }
 
         /// <summary>
@@ -153,8 +204,6 @@ namespace WpfMain.Module.PetModule
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //e.Source
-            //var entity = (VideoImage)(((System.Windows.FrameworkElement)sender).DataContext);
             if (tInfo == null)
             {
                 tInfo = new TestInfo();
