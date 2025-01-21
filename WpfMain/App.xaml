@@ -10,7 +10,8 @@
                 <hc:Theme/>
                 <ResourceDictionary Source="pack://application:,,,/Themes/Styles/Button.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Themes/Styles/Geometries.xaml"/>
-</ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Themes/Styles/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

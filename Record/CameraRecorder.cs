@@ -85,6 +85,8 @@ namespace Record
                 wavRecorder = new WavRecorder(AppDomain.CurrentDomain.BaseDirectory + Guid.NewGuid().ToString().Replace("-", "") + ".wav");
         }
 
+        public void SetAviFilePath(string aviFilePath) => AviFilePath = aviFilePath;
+
         /// <summary>
         /// 初始化
         /// </summary>

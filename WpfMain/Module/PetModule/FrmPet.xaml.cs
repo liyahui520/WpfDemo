@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,12 +46,13 @@ namespace WpfMain.Module.PetModule
         {
             InitializeComponent();
             VideoModel = new PropertyVideoModel();
+            VideoModel.Images = new List<VideoImage>() { new VideoImage(){Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599" ,Name = "1"}, new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" } };
             DataContext = this;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
@@ -58,9 +60,9 @@ namespace WpfMain.Module.PetModule
 
             FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
             pet.title.Text = "查看";
-            
+
             pet.ShowDialog();
-        } 
+        }
 
         /// <summary>
         /// 设置曝光
@@ -69,7 +71,7 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()),VideoProcAmpFlags.Manual);
+            Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()), VideoProcAmpFlags.Manual);
         }
 
         /// <summary>
@@ -88,9 +90,7 @@ namespace WpfMain.Module.PetModule
 
         private void CameraUCSetting_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            VideoEntity.ExposureModel.IsAuto = false;
-            VideoEntity.ExposureModel.IsEdit = true;
-            VideoEntity.ExposureModel.Value = 0;
+            VideoEntity.ExposureModel.IsAuto = false; 
         }
 
         private void StartCamp_OnClick(object sender, RoutedEventArgs e)
@@ -98,12 +98,14 @@ namespace WpfMain.Module.PetModule
             if (Video.isStart)
             {
                 Video?.End();
+                VideoEntity.ExposureModel.IsEnable = true;
                 StartCamp.Content = "开始录像";
             }
             else
             {
 
                 Video?.Start();
+                VideoEntity.ExposureModel.IsEnable = false;
                 StartCamp.Content = "停止录像";
             }
         }
@@ -113,9 +115,39 @@ namespace WpfMain.Module.PetModule
             Video?.Stop();
         }
 
+        //拍照
         private void EndCamp_OnClick(object sender, RoutedEventArgs e)
         {
-            Video?.End();
+            System.Drawing.Image img = Video?.Capture();
+
+        }
+
+        /// <summary>
+        /// 选中录音
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            VideoModel.ExposureModel.IsAuto = true;
+        }
+
+        /// <summary>
+        /// 取消录音
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            VideoModel.ExposureModel.IsAuto = false;
+        }
+
+        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
+            pet.title.Text = "查看";
+
+            pet.ShowDialog();
         }
     }
 }
@@ -144,18 +176,4 @@ public enum Gender
 {
     Male,
     Female
-}
-
-public class PropertyVideoModel
-{
-    public Exposure ExposureModel { get; set; }=new Exposure();
-}
-
-public class Exposure
-{
-    public bool IsAuto { get; set; } = true;
-
-    public bool IsEdit { get; set; } = false;
-
-    public double Value { get; set; } = 0;
 }

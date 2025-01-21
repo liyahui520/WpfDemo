@@ -6,6 +6,8 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using Record;
 using System.IO;
+using Image = System.Drawing.Image;
+
 namespace WpfMain.Controlls
 {
     /// <summary>
@@ -14,7 +16,6 @@ namespace WpfMain.Controlls
     public partial class UCVideo : UserControl
     {
         VideoCaptureDevice CaptureDevice;
-        private static string videoFileFullPath = @"D:\video\"; //视频文件全路径
         private string videoFileName = string.Empty; //视频文件名
         public bool isStart = false;
         #region 自定义事件
@@ -43,14 +44,14 @@ namespace WpfMain.Controlls
 
         static UCVideo()
         {
-            if (Directory.Exists(videoFileFullPath))
-                Directory.CreateDirectory(videoFileFullPath);
+            if (Directory.Exists(AppStatic.VideoConfig.VideoPath))
+                Directory.CreateDirectory(AppStatic.VideoConfig.VideoPath);
         }
         public UCVideo()
         {
             InitializeComponent();
             videoFileName = DateTime.Now.ToString("yyyy.MM.dd HH.mm.ss") + ".avi";
-            recorder = new CameraRecorder(videoFileFullPath+ videoFileName, 20,true);
+            recorder = new CameraRecorder(AppStatic.VideoConfig.VideoPath + videoFileName, 20, true);
         }
 
         private void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
@@ -71,6 +72,11 @@ namespace WpfMain.Controlls
             }
 
         }
+        //重新设置视频保存路径
+        public void SetAviFilePath()
+        {
+            recorder.SetAviFilePath(AppStatic.VideoConfig.VideoPath);
+        }
 
         public void Start()
         {
@@ -88,6 +94,22 @@ namespace WpfMain.Controlls
         {
             recorder.End();
             isStart = false;
+        }
+
+
+        /// <summary>
+        /// 拍照
+        /// </summary>
+        public Image Capture()
+        {
+            if (sourcePlayer.VideoSource == null)
+            {
+                throw new Exception("请检查摄像头是否连接正常");
+            }
+            else
+            {
+                return sourcePlayer.GetCurrentVideoFrame();
+            }
         }
 
         /// <summary>
@@ -108,7 +130,7 @@ namespace WpfMain.Controlls
                         int yPos = 10;
                         string drawDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         g.DrawString(drawDate, drawFont, drawBrush, xPos, yPos);
-                      
+
                     }
                     if (isStart)
                     {
@@ -122,10 +144,10 @@ namespace WpfMain.Controlls
 
                             }
                         }
-                        
+
                     }
                 }
-            } 
+            }
 
         }
 
