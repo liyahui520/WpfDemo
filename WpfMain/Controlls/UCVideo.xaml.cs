@@ -7,6 +7,7 @@ using AForge.Video.DirectShow;
 using Record;
 using System.IO;
 using Image = System.Drawing.Image;
+using System.Windows.Media.Media3D;
 
 namespace WpfMain.Controlls
 {
@@ -50,32 +51,51 @@ namespace WpfMain.Controlls
         public UCVideo()
         {
             InitializeComponent();
-            videoFileName = DateTime.Now.ToString("yyyy.MM.dd HH.mm.ss") + ".avi";
-            recorder = new CameraRecorder(AppStatic.VideoConfig.VideoPath + videoFileName, 20, true);
         }
 
         private void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
 
-            // 设定初始视频设备
-            FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (videoDevices.Count > 0)
-            {   // 默认设备
-                //CaptureDevice = new VideoCaptureDevice(videoDevices[0].MonikerString);
-                CaptureDevice = recorder.initCapture(videoDevices[0].MonikerString);
+            videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
+            recorder = new CameraRecorder(AppStatic.VideoConfig.VideoPath + videoFileName, 20, true);
+            InitVideo();
+
+        }
+
+        public void InitVideo()
+        {
+            if (!string.IsNullOrWhiteSpace(AppStatic.VideoConfig.VideoDecive))
+            {
+                CaptureDevice = recorder.initCapture(AppStatic.VideoConfig.VideoDecive);
                 sourcePlayer.VideoSource = CaptureDevice;
                 //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
                 button_Play_Click(this, null);
             }
             else
             {
+                // 设定初始视频设备
+                FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                if (videoDevices.Count > 0)
+                {   // 默认设备
+                    //CaptureDevice = new VideoCaptureDevice(videoDevices[0].MonikerString);
+                    CaptureDevice = recorder.initCapture(videoDevices[0].MonikerString);
+                    sourcePlayer.VideoSource = CaptureDevice;
+                    //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
+                    button_Play_Click(this, null);
+                }
             }
-
+            
         }
         //重新设置视频保存路径
         public void SetAviFilePath()
         {
-            recorder.SetAviFilePath(AppStatic.VideoConfig.VideoPath);
+            videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
+            recorder.SetAviFilePath(AppStatic.VideoConfig.VideoPath + videoFileName);
+        }
+
+        public void AutoWavRecorder(bool isOpen)
+        {
+            recorder?.AutoWavRecorder(isOpen);
         }
 
         public void Start()
@@ -94,6 +114,21 @@ namespace WpfMain.Controlls
         {
             recorder.End();
             isStart = false;
+        }
+
+        public void Close()
+        { 
+            if (CaptureDevice != null)
+            {
+                if (CaptureDevice.IsRunning)
+                {
+                    CaptureDevice.SignalToStop(); // 请求停止摄像头数据接收
+                    CaptureDevice.WaitForStop();  // 等待摄像头停止
+                }
+
+                CaptureDevice = null; // 重置videoSource对象
+            }
+            recorder.CamClose();
         }
 
 
@@ -163,6 +198,7 @@ namespace WpfMain.Controlls
 
         private void button_Play_Click(object sender, RoutedEventArgs e)
         {
+            SetAviFilePath();
             sourcePlayer.Start();
         }
 

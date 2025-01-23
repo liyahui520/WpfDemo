@@ -110,22 +110,30 @@ namespace Record
 		/// 
 		private void RecStop()
 		{
-			mRecBuffer.Stop();      // 调用缓冲区的停止方法，停止采集声音
-			if (null != mNotificationEvent)
-				mNotificationEvent.Set();       //关闭通知
-			mNotifyThread.Abort();  //结束线程
-			RecordCapturedData();   // 将缓冲区最后一部分数据写入到文件中
+			try
+			{
 
-			// 写WAV文件尾
-			mWriter.Seek(4, SeekOrigin.Begin);
-			mWriter.Write((int)(mSampleCount + 36));   // 写文件长度
-			mWriter.Seek(40, SeekOrigin.Begin);
-			mWriter.Write(mSampleCount);                // 写数据长度
+				mRecBuffer.Stop();      // 调用缓冲区的停止方法，停止采集声音
+				if (null != mNotificationEvent)
+					mNotificationEvent.Set();       //关闭通知
+				mNotifyThread.Abort();  //结束线程
+				RecordCapturedData();   // 将缓冲区最后一部分数据写入到文件中
 
-			mWriter.Close();
-			mWaveFile.Close();
-			mWriter = null;
-			mWaveFile = null;
+				// 写WAV文件尾
+				mWriter.Seek(4, SeekOrigin.Begin);
+				mWriter.Write((int)(mSampleCount + 36));   // 写文件长度
+				mWriter.Seek(40, SeekOrigin.Begin);
+				mWriter.Write(mSampleCount);                // 写数据长度
+
+				mWriter.Close();
+				mWaveFile.Close();
+				mWriter = null;
+				mWaveFile = null;
+            }
+			catch (Exception e)
+			{
+				Console.WriteLine(e); 
+			}
 		}
 		#endregion
 

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Windows;
 using System.Windows.Input;
 using HandyControl.Tools.Extension;
@@ -46,12 +47,13 @@ namespace WpfMain
         /// </summary>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Application.Current.Shutdown();
         }
 
         private void PetModule_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            FrmModule pet = new FrmModule(new FrmPet());
+            var video = new FrmPet();
+            FrmModule pet = new FrmModule(video);
             pet.title.Text = "新检查";
             pet.Owner = this;
             pet.ShowDialog();

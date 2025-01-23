@@ -27,7 +27,7 @@ namespace WpfMain.Controlls
             DemoModel = new PropertyGridDemoModel
             {
                 姓名 = "TestString",
-                Gender = Gender.Female,
+                性别 = Gender.犬,
                 绝育 = true,
                 电话 = 98,
                 杂项2 = VerticalAlignment.Stretch
@@ -58,7 +58,7 @@ namespace WpfMain.Controlls
         public bool 绝育 { get; set; }
 
         [Category("1宠物信息")]
-        public Gender Gender { get; set; }
+        public Gender 性别 { get; set; }
 
 
         [Category("2杂项")]
@@ -91,7 +91,7 @@ namespace WpfMain.Controlls
 
     public enum Gender
     {
-        Male,
-        Female
+        犬,
+        猫
     }
 }

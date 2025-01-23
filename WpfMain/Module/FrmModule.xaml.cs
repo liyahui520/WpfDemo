@@ -30,6 +30,8 @@ namespace WpfMain.Module
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
+            if (this.Control.Content is ICustom)
+                ((ICustom)this.Control.Content)?.Closed();
         }
 
         /// <summary>
@@ -43,6 +45,8 @@ namespace WpfMain.Module
             UCSetting setting = new UCSetting();
             setting.Owner = this;
             setting.ShowDialog();
+            if (this.Control.Content is ICustom)
+                ((ICustom)this.Control.Content)?.Refresh();
         }
     }
 }

@@ -17,21 +17,30 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" TabStripPlacement="Left" FontSize="14">
-            <TabItem Header="录像设置" HeaderStringFormat="{}{0}" Width="120">
-                <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
+            <TabItem Header="视频设置" HeaderStringFormat="{}{0}" Width="120">
+                <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap"> 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="380" hc:InfoElement.TitleWidth="80" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="视频路径"  x:Name="VideoPath" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
+                        <ComboBox Width="380" SelectedValuePath="VideoString" DisplayMemberPath="Name" x:Name="device" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认设备" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="视频路径"  x:Name="VideoPath" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
                         <Button Content="选择路径" Click="VideoPath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="380" hc:InfoElement.TitleWidth="80" hc:InfoElement.TitlePlacement="Left" x:Name="ImagePath" hc:InfoElement.Title="拍照路径" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
-                        <Button Content="选择路径" Click="ImagePath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
+                        <ComboBox Width="380" SelectedValuePath="Name" DisplayMemberPath="Name" x:Name="videoType" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认视频格式" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                 </hc:UniformSpacingPanel>
             </TabItem>
-            <TabItem Header="系统设置" HeaderStringFormat="{}{0}" Width="120">
-                <Border>
-                </Border>
+            <TabItem Header="图片设置" HeaderStringFormat="{}{0}" Width="120">
+                <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap"> 
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="ImagePath" hc:InfoElement.Title="拍照路径" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
+                        <Button Content="选择路径" Click="ImagePath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ComboBox Width="380" SelectedValuePath="Name" DisplayMemberPath="Name" x:Name="imageType" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认图片格式" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                </hc:UniformSpacingPanel>
             </TabItem>
         </TabControl>
         <hc:UniformSpacingPanel Grid.Row="1" Orientation="Vertical" HorizontalSpacing="10" HorizontalAlignment="Right" Spacing="32">

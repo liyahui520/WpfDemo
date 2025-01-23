@@ -17,7 +17,7 @@ namespace WpfMain.Module.PetModule
     /// <summary>
     /// FrmPet.xaml 的交互逻辑
     /// </summary>
-    public partial class FrmPet : UserControl
+    public partial class FrmPet : UserControl, ICustom
     {
         //public List<object> ResolutionDataList = new List<object>();
 
@@ -50,6 +50,7 @@ namespace WpfMain.Module.PetModule
         {
             InitializeComponent();
             VideoModel = new PropertyVideoModel();
+            VideoModel.ExposureModel = new Exposure();
             VideoModel.Images = new List<VideoImage>();// { new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" }, new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" } };
             DataContext = this;
         }
@@ -85,26 +86,7 @@ namespace WpfMain.Module.PetModule
         private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()), VideoProcAmpFlags.Manual);
-        }
-
-        /// <summary>
-        /// 自动选择
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void CameraUCSetting_OnChecked(object sender, RoutedEventArgs e)
-        {
-            //VideoEntity.ExposureModel.IsAuto = true;
-            //VideoEntity.ExposureModel.IsEdit = false;
-            //VideoEntity.ExposureModel.Value = 0;
-            //Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, 0, VideoProcAmpFlags.Auto);
-        }
-
-        private void CameraUCSetting_OnUnchecked(object sender, RoutedEventArgs e)
-        {
-            VideoEntity.ExposureModel.IsAuto = false;
-        }
+        } 
 
         private void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
@@ -121,17 +103,18 @@ namespace WpfMain.Module.PetModule
                     return;
                 }
             }
+            Video?.SetAviFilePath();
             if (Video.isStart)
             {
-                Video?.End();
-                VideoEntity.ExposureModel.IsEnable = true;
+                Video?.End(); 
+                VideoModel.ExposureModel=new Exposure(){IsAuto = VideoModel.ExposureModel.IsAuto,IsEnable = true};
                 StartCamp.Content = "开始录像";
             }
             else
             {
 
                 Video?.Start();
-                VideoEntity.ExposureModel.IsEnable = false;
+                VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = false };
                 StartCamp.Content = "停止录像";
             }
         }
@@ -160,7 +143,7 @@ namespace WpfMain.Module.PetModule
             System.Drawing.Image img = Video?.Capture();
             if (img != null)
             {
-                string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp.jpg";
+                string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp."+AppStatic.VideoConfig.ImageType;
                 string fullPath = Path.Combine(AppStatic.VideoConfig.ImagePath, fullName);
                 try
                 {
@@ -189,7 +172,8 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            VideoModel.ExposureModel.IsAuto = true;
+            VideoModel.ExposureModel = new Exposure() { IsAuto = true, IsEnable = VideoModel.ExposureModel.IsEnable };
+            Video?.AutoWavRecorder(true);
         }
 
         /// <summary>
@@ -199,7 +183,8 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void ToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            VideoModel.ExposureModel.IsAuto = false;
+            VideoModel.ExposureModel = new Exposure() { IsAuto = false, IsEnable = VideoModel.ExposureModel.IsEnable };
+            Video?.AutoWavRecorder(false);
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -217,6 +202,16 @@ namespace WpfMain.Module.PetModule
             pet.title.Text = "查看";
 
             pet.ShowDialog();
+        }
+
+        public void Closed()
+        {
+            Video?.Close();
+        }
+
+        public void Refresh()
+        {
+            Video?.InitVideo();
         }
     }
 }

@@ -87,6 +87,32 @@ namespace Record
 
         public void SetAviFilePath(string aviFilePath) => AviFilePath = aviFilePath;
 
+        public void AutoWavRecorder(bool open = true)
+        {
+            if (open)
+            {
+                wavRecorder = new WavRecorder(AppDomain.CurrentDomain.BaseDirectory + Guid.NewGuid().ToString().Replace("-", "") + ".wav");
+            }
+            else
+            {
+                wavRecorder = null;
+            }
+        }
+
+        public void CamClose()
+        {
+            if (Camera != null)
+            {
+                if (Camera.IsRunning)
+                {
+                    Camera.SignalToStop(); // 请求停止摄像头数据接收
+                    Camera.WaitForStop();  // 等待摄像头停止
+                }
+
+                Camera = null; // 重置videoSource对象
+            } 
+        }
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -182,11 +208,11 @@ namespace Record
                     WindowApi.ClearMemory();
                 }
             }
-            catch 
+            catch
             {
 
             }
-          
+
         }
 
         /// <summary>
@@ -194,21 +220,28 @@ namespace Record
         /// </summary>
         public virtual void End()
         {
-            this.RecorderStatus = RecorderStatus.End;
-            //设置回调,aforge会不断从这个回调推出图像数据
-            Camera.NewFrame -= Camera_NewFrame;
-            VideoStreamer?.Stop();
-            VideoWriter.Close();
-            //是否需要录制声音
-            if (wavRecorder != null)
+            try
             {
-                wavRecorder.End();
-                //获取和保存音频流到文件(桌面录制)
-                AviManager aviManager = new AviManager(AviFilePath, true);
-                aviManager.AddAudioStream(wavRecorder.WavFilePath, 0);
-                aviManager.Close();
-                //删除临时音频文件
-                try { File.Delete(wavRecorder.WavFilePath); } catch { }
+                this.RecorderStatus = RecorderStatus.End;
+                //设置回调,aforge会不断从这个回调推出图像数据
+                Camera.NewFrame -= Camera_NewFrame;
+                VideoStreamer?.Stop();
+                VideoWriter.Close();
+                //是否需要录制声音
+                if (wavRecorder != null)
+                {
+                    wavRecorder.End();
+                    //获取和保存音频流到文件(桌面录制)
+                    AviManager aviManager = new AviManager(AviFilePath, true);
+                    aviManager.AddAudioStream(wavRecorder.WavFilePath, 0);
+                    aviManager.Close();
+                    //删除临时音频文件
+                    try { File.Delete(wavRecorder.WavFilePath); } catch { }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e); 
             }
         }
 

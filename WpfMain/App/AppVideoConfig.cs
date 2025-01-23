@@ -15,6 +15,11 @@ namespace WpfMain
     public class AppVideoConfig
     {
         /// <summary>
+        /// 设备信息
+        /// </summary>
+        public string VideoDecive { get; set; }
+
+        /// <summary>
         /// 配置路径
         /// </summary>
         private static readonly string ConfigPath;
@@ -34,12 +39,22 @@ namespace WpfMain
         /// <summary>
         /// 视频保存路径
         /// </summary>
-        public string VideoPath { get; set; }
+        public string VideoPath { get; set; }= AppDomain.CurrentDomain.BaseDirectory + "VideoFile\\";
+
+        /// <summary>
+        /// 视频类型
+        /// </summary>
+        public string VideoType { get; set; } = "avi";
 
         /// <summary>
         /// 拍照保存路径
         /// </summary>
-        public string ImagePath { get; set; }
+        public string ImagePath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "VideoImgFile\\";
+
+        /// <summary>
+        /// 图片类型
+        /// </summary>
+        public string ImageType { get; set; } = "jpge";
 
         public static AppVideoConfig GetConfig()
         {
