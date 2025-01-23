@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border>
+
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
@@ -33,7 +33,7 @@
                     </Button.Background>
                 </Button>
             </Border>-->
-            <hc:ColorPicker Name="ColorPicker" Margin="10" Panel.ZIndex="1" Visibility="Visible"/>
+        <hc:ColorPicker Grid.Column="1" Name="ColorPicker" Margin="5,40,0,0" Panel.ZIndex="1"  Visibility="Hidden" HorizontalAlignment="Left"/>
 
             <Border Grid.Column="0" CornerRadius="10">
                 <Border.Background>
@@ -183,9 +183,9 @@
                                             </hc:ButtonGroup>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <hc:NumericUpDown Minimum="1" Width="70"  Maximum="30" Value="1"/>
+                                            <hc:NumericUpDown ValueChanged="NumericUpDown_ValueChanged" Minimum="1" Width="70"  Maximum="30" Value="1"/>
                                             <Border  BorderThickness="2">
-                                                <Button Width="25" Height="25"  ToolTip="画笔色" Tag="Pointer"  Click="Button_Click_1" Background="Black"  />
+                                            <Button Name="ButtonColor" Width="25" Height="25"  ToolTip="画笔色" Tag="Pointer"  Click="Button_Click_Coloe" Background="Black"  />
                                             </Border>
                                         </StackPanel>
                                     </StackPanel>
@@ -246,6 +246,6 @@
                 </Border>
             </Grid>
         </Grid>
-    </Border>
+
 
 </UserControl>
