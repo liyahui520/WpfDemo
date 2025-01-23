@@ -27,7 +27,7 @@ namespace WpfMain.Entity
         } 
     }
 
-    public class Exposure
+    public class Exposure : ObservableObject
     {
         public bool IsAuto { get; set; } = true;
 
@@ -35,10 +35,20 @@ namespace WpfMain.Entity
 
     }
 
-    public class VideoImage
+    public class VideoImage : ObservableObject
     {
         public string Path { get; set; }
 
         public string Name { get; set; }
+    }
+
+    /// <summary>
+    /// 视频类型
+    /// </summary>
+    public class VideoType
+    {
+        public string Name { get; set; }
+
+        public string VideoString { get; set; }
     }
 }

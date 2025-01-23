@@ -97,8 +97,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="App\AppHospital.cs" />
     <Compile Include="App\AppStatic.cs" />
     <Compile Include="App\AppVideoConfig.cs" />
+    <Compile Include="App\ICustom.cs" />
     <Compile Include="Controlls\PropertyGridDemoCtl.xaml.cs">
       <DependentUpon>PropertyGridDemoCtl.xaml</DependentUpon>
     </Compile>
@@ -364,6 +366,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Enum\" />
+    <Folder Include="Tools\Converters\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

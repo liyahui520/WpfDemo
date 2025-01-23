@@ -1,10 +1,12 @@
 ﻿
+using System;
 using System.Windows;
 using System.Windows.Input;
 using HandyControl.Tools.Extension;
 using WpfMain.Controlls;
 using WpfMain.Module;
 using WpfMain.Module.PetModule;
+using WpfMain.Module.SysModule;
 
 namespace WpfMain
 {
@@ -46,12 +48,13 @@ namespace WpfMain
         /// </summary>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Application.Current.Shutdown();
         }
 
         private void PetModule_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            FrmModule pet = new FrmModule(new FrmPet());
+            var video = new FrmPet();
+            FrmModule pet = new FrmModule(video);
             pet.title.Text = "新检查";
             pet.Owner = this;
             pet.ShowDialog();
@@ -67,10 +70,9 @@ namespace WpfMain
 
         private void UCCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            FrmModule frm = new FrmModule(new Controlls.PropertyGridDemoCtl());
-            frm.title.Text = "测试";
-            frm.Owner = this;
-            frm.ShowDialog();
+            UCSetting setting = new UCSetting();
+            setting.Owner = this;
+            setting.ShowDialog();
         }
 
         private void UIElement_Print_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

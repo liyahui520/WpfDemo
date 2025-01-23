@@ -17,32 +17,86 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" TabStripPlacement="Left" FontSize="14">
-            <TabItem Header="录像设置" HeaderStringFormat="{}{0}" Width="120">
+            <TabItem Header="医院信息" HeaderStringFormat="{}{0}" Width="120" Height="28" VerticalAlignment="Top">
                 <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="380" hc:InfoElement.TitleWidth="80" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="视频路径"  x:Name="VideoPath" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
-                        <Button Content="选择路径" Click="VideoPath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalName" hc:InfoElement.Title="医院名称" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="380" hc:InfoElement.TitleWidth="80" hc:InfoElement.TitlePlacement="Left" x:Name="ImagePath" hc:InfoElement.Title="拍照路径" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
-                        <Button Content="选择路径" Click="ImagePath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalContacts" hc:InfoElement.Title="联系人" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalPhone" hc:InfoElement.Title="联系电话" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="13" Margin="10,0,0,0" Text="医院LOGO"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <hc:SimplePanel  DataContext="{Binding}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                                    <TextBlock Text="点击上传" FontSize="12" Foreground="{DynamicResource BorderBrush}" Style="{StaticResource TextBlockTitle}"/>
+                                    <Image  Width="100" Height="100"   HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="img" />
+                                    <Rectangle Width="100" Height="100" RadiusX="4" RadiusY="4" Stroke="{DynamicResource BorderBrush}" StrokeDashArray="2,2"/>
+                                    <Border Width="100" Height="100" Background="Transparent">
+                                        <Border.ContextMenu>
+                                            <ContextMenu Width="100">
+                                                <MenuItem Header="预览" >
+                                                </MenuItem>
+                                            </ContextMenu>
+                                            <!--<ContextMenu ItemsSource="{Binding DataList}">
+               <ContextMenu.ItemTemplate>
+                   <HierarchicalDataTemplate ItemsSource="{Binding DataList}">
+                       <TextBlock Text="{Binding Name}"/>
+                   </HierarchicalDataTemplate>
+               </ContextMenu.ItemTemplate>
+           </ContextMenu>-->
+                                        </Border.ContextMenu>
+                                    </Border>
+                                </hc:SimplePanel>
+                            </StackPanel>
+                        </Grid>
                     </StackPanel>
                 </hc:UniformSpacingPanel>
             </TabItem>
-            <TabItem Header="系统设置" HeaderStringFormat="{}{0}" Width="120">
-                <Border>
-                </Border>
+            <TabItem Header="视频设置" HeaderStringFormat="{}{0}" Width="120">
+                <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ComboBox Width="380" SelectedValuePath="VideoString" DisplayMemberPath="Name" x:Name="device" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认设备" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="视频路径"  x:Name="VideoPath" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
+                        <Button Content="选择路径" Click="VideoPath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ComboBox Width="380" SelectedValuePath="Name" DisplayMemberPath="Name" x:Name="videoType" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认视频格式" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                </hc:UniformSpacingPanel>
             </TabItem>
+            <TabItem Header="图片设置" HeaderStringFormat="{}{0}" Width="120">
+                <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="ImagePath" hc:InfoElement.Title="拍照路径" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
+                        <Button Content="选择路径" Click="ImagePath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ComboBox Width="380" SelectedValuePath="Name" DisplayMemberPath="Name" x:Name="imageType" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认图片格式" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                </hc:UniformSpacingPanel>
+            </TabItem>
+          
         </TabControl>
         <hc:UniformSpacingPanel Grid.Row="1" Orientation="Vertical" HorizontalSpacing="10" HorizontalAlignment="Right" Spacing="32">
-            <WrapPanel> 
+            <WrapPanel>
                 <StackPanel>
-                    <Button Content="保存" Margin="5" Style="{StaticResource ButtonPrimary}" x:Name="Save" Click="Save_OnClick"/> 
+                    <Button Content="保存" Margin="5" Style="{StaticResource ButtonPrimary}" x:Name="Save" Click="Save_OnClick"/>
                 </StackPanel>
                 <StackPanel>
-                    <Button Content="取消" Margin="5"/> 
-                </StackPanel> 
+                    <Button Content="取消" Margin="5" Click="ButtonBase_OnClick"/>
+                </StackPanel>
             </WrapPanel>
-            </hc:UniformSpacingPanel>
+        </hc:UniformSpacingPanel>
     </Grid>
 </hc:Window>
