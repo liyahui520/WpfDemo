@@ -180,9 +180,6 @@ namespace PacsCore
 
         public void SaveImage()
         {
-
-
-
             var renderBitmap = new RenderTargetBitmap((int)dicomImage1.ActualWidth, (int)dicomImage1.ActualHeight, 96, 96, PixelFormats.Pbgra32);
             renderBitmap.Render(dicomImage1);
 
@@ -333,11 +330,6 @@ namespace PacsCore
         /// <param name="e"></param>
         private void IMG1_MouseMove(object sender, MouseEventArgs e)
         {
-            //var img = sender as Border;// ContentControl;
-            //if (img == null)
-            //{
-            //    return;
-            //}
             if (mouseDown)
             {
                 Domousemove(this.BorderImg, e);
@@ -408,6 +400,23 @@ namespace PacsCore
             transform.X += position.X - mouseXY.X;
             transform.Y += position.Y - mouseXY.Y;
             mouseXY = position;
+        }
+
+        public void SetDrawingCanvasPinfo(string pname, object pvalue)
+        {
+            switch (pname)
+            {
+                case "Brush":
+                    drawingCanvas.Brush = (SolidColorBrush)pvalue;
+                    break;
+                case "StrokeThickness":
+                    drawingCanvas.StrokeThickness = Convert.ToUInt32(pvalue);
+                    break;
+                case "FontSize":
+                    drawingCanvas.FontSize = Convert.ToDouble(pvalue);
+                    break;
+            }
+
         }
         #endregion
     }

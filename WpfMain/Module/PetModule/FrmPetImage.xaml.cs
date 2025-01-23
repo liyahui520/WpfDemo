@@ -53,10 +53,12 @@ namespace WpfMain.Module.PetModule
 
             ucd = new UCImageItemView(tInfo);
             BorderImageContent.Child = ucd;
-            //ColorPicker
 
+            ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
 
         }
+
+
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
@@ -147,6 +149,34 @@ namespace WpfMain.Module.PetModule
         private void Button_Click_CloseCmp(object sender, RoutedEventArgs e)
         {
             GridRowContent2.Height = new GridLength(0, GridUnitType.Star);
+        }
+
+        /// <summary>
+        /// 拾色器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_Coloe(object sender, RoutedEventArgs e)
+        {
+            ColorPicker.Visibility = ColorPicker.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
+        {
+            ButtonColor.Background = ColorPicker.SelectedBrush;
+            if(ucd!=null)
+            ucd.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
+        }
+
+        private void NumericUpDown_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        {
+            if (ucd != null)
+                ucd.SetDrawingCanvasPinfo("StrokeThickness", e.Info);
         }
     }
 }

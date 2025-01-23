@@ -10,6 +10,7 @@ using System.Windows.Media;
 using AForge.Video.DirectShow;
 using HandyControl.Tools.Extension;
 using WpfMain.Entity;
+using WpfMain.Logic;
 using WpfMain.Module.SysModule;
 
 namespace WpfMain.Module.PetModule
@@ -193,9 +194,9 @@ namespace WpfMain.Module.PetModule
             {
                 tInfo = new TestInfo();
                 tInfo.Result = new TestResult();
-                tInfo.Result.Images = new System.Collections.Generic.List<ImageItem>
+                tInfo.Result.Images = new List<ImageItem>
                 {
-                    new ImageItem { ImageSource = ((System.Windows.Controls.Image)e.Source).Source }
+                    new ImageItem { ImageSource = ((Image)e.Source).Source }
                 };
             }
             FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
@@ -212,6 +213,16 @@ namespace WpfMain.Module.PetModule
         public void Refresh()
         {
             Video?.InitVideo();
+        }
+
+        /// <summary>
+        /// 保存检查
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_SaveTest(object sender, RoutedEventArgs e)
+        {
+            TestLogic.Save(tInfo);
         }
     }
 }

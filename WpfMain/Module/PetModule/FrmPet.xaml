@@ -74,6 +74,9 @@
                                             <Button Content="开始录像" Margin="5" x:Name="StartCamp" Click="StartCamp_OnClick" Style="{StaticResource ButtonInfo}" Foreground="White"/>
                                             <Button Content="拍照" Margin="5" x:Name="EndCamp" Click="EndCamp_OnClick" Style="{StaticResource ButtonSuccess}" Foreground="White"/>
                                         </VirtualizingStackPanel>
+
+                                        <Button Content="保存" Margin="5" Click="Button_Click"/>
+
                                     </StackPanel>
                                 </Border>
                             </Expander>
