@@ -43,6 +43,7 @@ namespace WpfMain
             base.OnStartup(e); 
             ConfigHelper.Instance.SetLang("zh-cn"); 
             AppStatic.VideoConfig = AppVideoConfig.GetConfig();
+            AppStatic.AppHospital = AppHospital.GetConfig();
             ConfigHelper.Instance.SetWindowDefaultStyle();
             ConfigHelper.Instance.SetNavigationWindowDefaultStyle();
             //初始化DLL配置
