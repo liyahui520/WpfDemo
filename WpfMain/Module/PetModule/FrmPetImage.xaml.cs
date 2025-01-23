@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -115,6 +116,34 @@ namespace WpfMain.Module.PetModule
         {
             if (ucd != null)
                 ucd.SaveImage();
+        }
+
+
+
+        /// <summary>
+        /// 打开对比图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_Comparison(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog odf = new System.Windows.Forms.OpenFileDialog();
+            odf.Filter = "png文件(*.png;*.PNG)|*.png;*.PNG|JPG(*.jpg;*.jpeg)|*.jpg;*.jpeg";
+            if (odf.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            BorderImageDuibi.Background = new ImageBrush { ImageSource = new BitmapImage(new Uri(odf.FileName)) };
+            GridRowContent2.Height = new GridLength(5, GridUnitType.Star);
+        }
+
+        /// <summary>
+        /// 关闭图片对比
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_CloseCmp(object sender, RoutedEventArgs e)
+        {
+            GridRowContent2.Height = new GridLength(0, GridUnitType.Star);
         }
     }
 }
