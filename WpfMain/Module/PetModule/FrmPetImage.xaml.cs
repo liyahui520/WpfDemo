@@ -53,6 +53,9 @@ namespace WpfMain.Module.PetModule
 
             ucd = new UCImageItemView(tInfo);
             BorderImageContent.Child = ucd;
+            //ColorPicker
+
+
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
