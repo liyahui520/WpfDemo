@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
@@ -517,5 +518,61 @@ namespace WpfMain.Extend
         {
             return encoder.GetBytes(str);
         }
+
+        public static BitmapImage FromStream(this string path)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(memoryStream);
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin); // 重置流的位置  
+
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = memoryStream; // 从流解码  
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+            }
+            return bitmapImage;
+        }
+
+        public static MemoryStream ToStream(this BitmapImage bitmapImage)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage)); // 将 BitmapImage 添加到编码器  
+            encoder.Save(memoryStream); // 保存到 MemoryStream   
+            memoryStream.Seek(0, SeekOrigin.Begin); // 重置流的位置以供后续使用  
+            return memoryStream;
+        }
+
+        public static BitmapImage FromByteArray(this byte[] byteArray)
+        {
+            using (MemoryStream memoryStream = new MemoryStream(byteArray))
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+                return bitmapImage;
+            }
+        }
+
+        public static byte[] ToByteArray(this BitmapImage bitmapImage)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                PngBitmapEncoder encoder = new PngBitmapEncoder();   // 选择合适的编码器  
+                encoder.Frames.Add(BitmapFrame.Create(bitmapImage)); // 将 BitmapImage 添加到编码器  
+                encoder.Save(memoryStream);     // 保存到 MemoryStream  
+                return memoryStream.ToArray();  // 转换为 byte[]  
+            }
+        } 
+
     }
 }

@@ -187,9 +187,7 @@
                         <SolidColorBrush Color="White" Opacity="0.2"/>
                     </Border.Background>
                     <StackPanel>
-
                         <Controlls:PropertyGridDemoCtl  Margin="10" Background="Transparent"/>
-
                     </StackPanel>
 
                     <!--<hc:PropertyItemsControl Background="Transparent" BorderThickness="0"></hc:PropertyItemsControl>-->

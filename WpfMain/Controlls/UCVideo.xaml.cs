@@ -64,6 +64,17 @@ namespace WpfMain.Controlls
 
         public void InitVideo()
         {
+            if (CaptureDevice != null)
+            {
+                if (CaptureDevice.IsRunning)
+                {
+                    CaptureDevice.SignalToStop(); // 请求停止摄像头数据接收
+                    CaptureDevice.WaitForStop();  // 等待摄像头停止
+                }
+
+                CaptureDevice = null; // 重置videoSource对象
+            }
+            recorder.CamClose();
             if (!string.IsNullOrWhiteSpace(AppStatic.VideoConfig.VideoDecive))
             {
                 CaptureDevice = recorder.initCapture(AppStatic.VideoConfig.VideoDecive);

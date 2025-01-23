@@ -97,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="App\AppHospital.cs" />
     <Compile Include="App\AppStatic.cs" />
     <Compile Include="App\AppVideoConfig.cs" />
     <Compile Include="App\ICustom.cs" />

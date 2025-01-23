@@ -43,10 +43,10 @@ namespace WpfMain.Module
         private void ButtonSetting_OnClick(object sender, RoutedEventArgs e)
         {
             UCSetting setting = new UCSetting();
-            setting.Owner = this;
-            setting.ShowDialog();
-            if (this.Control.Content is ICustom)
-                ((ICustom)this.Control.Content)?.Refresh();
+            setting.Owner = AppStatic.MainWindow;
+            if (setting.ShowDialog() == true)
+                if (this.Control.Content is ICustom)
+                    ((ICustom)this.Control.Content)?.Refresh();
         }
     }
 }
