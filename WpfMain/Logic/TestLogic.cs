@@ -38,7 +38,7 @@ namespace WpfMain.Logic
             File.WriteAllText(fileName, JsonConvert.SerializeObject(tInfo));
 
             //将检查数据由内存或临时目录保存到结果目录
-            { 
+            {
             
             }
 

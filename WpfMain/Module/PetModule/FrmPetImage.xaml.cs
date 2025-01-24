@@ -191,7 +191,7 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Screenshot_Snapped(object sender, HandyControl.Data.FunctionEventArgs<ImageSource> e)
         {
-
+            tInfo.Result.Images.Add(new ImageItem { Name=$"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource=e.Info });
         }
     }
 }
