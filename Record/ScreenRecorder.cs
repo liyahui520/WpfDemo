@@ -128,7 +128,7 @@ namespace Record
         /// <summary>
         /// 结束
         /// </summary>
-        public virtual void End()
+        public virtual string End()
         {
             this.RecorderStatus = RecorderStatus.End;
             VideoStreamer.Stop();
@@ -144,6 +144,8 @@ namespace Record
                 //删除临时音频文件
                 try { File.Delete(wavRecorder.WavFilePath); } catch { }
             }
+
+            return AviFilePath;
         }
 
         /// <summary>
