@@ -9,7 +9,7 @@ namespace Record.Interfaces
 
         void Pause();
 
-        void End();
+        string End();
 
         /// <summary>
         /// 初始化摄像头

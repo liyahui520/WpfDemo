@@ -95,9 +95,10 @@ namespace Record
 		/// <summary>
 		/// 结束
 		/// </summary>
-		public override void End()
+		public override string End()
 		{
 			base.End();
+			return null;
 		}
 	}
 }

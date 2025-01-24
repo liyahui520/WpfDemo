@@ -16,8 +16,8 @@ namespace WpfMain.Entity
 
     /// <summary>
     /// 检查信息
-    /// </summary>
-    public class TestInfo
+    /// </summary> 
+    public class TestInfo:ObservableObject
     {
         public string Id { get; set; }
 
@@ -48,7 +48,7 @@ namespace WpfMain.Entity
         /// <summary>
         /// 检查结果
         /// </summary>
-        public TestResult Result { get; set; }
+        private TestResult result;
 
 
         public TestInfo()
@@ -57,11 +57,15 @@ namespace WpfMain.Entity
             TestName = "镜检";
             Id = Guid.NewGuid().ToString();
         }
+
+        public TestResult Result
+        {
+            get => result;
+            set => SetProperty(ref result, value, nameof(Result));
+        }
     }
-
-
-
-    public class TestResult
+     
+    public class TestResult : ObservableObject
     {
         /// <summary>
         /// 结果集
