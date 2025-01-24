@@ -19,6 +19,8 @@ namespace WpfMain.Entity
     /// </summary>
     public class TestInfo
     {
+        public string Id { get; set; }
+
         /// <summary>
         /// 检查名称
         /// </summary>
@@ -48,6 +50,13 @@ namespace WpfMain.Entity
         /// </summary>
         public TestResult Result { get; set; }
 
+
+        public TestInfo()
+        {
+            TestDate = DateTime.Now;
+            TestName = "镜检";
+            Id = Guid.NewGuid().ToString();
+        }
     }
 
 
