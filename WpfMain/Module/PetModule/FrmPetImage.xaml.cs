@@ -55,7 +55,7 @@ namespace WpfMain.Module.PetModule
             BorderImageContent.Child = ucd;
 
             ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
-
+            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
         }
 
 
@@ -152,7 +152,7 @@ namespace WpfMain.Module.PetModule
         }
 
         /// <summary>
-        /// 拾色器
+        /// 打开/并闭 拾色器
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -161,7 +161,7 @@ namespace WpfMain.Module.PetModule
             ColorPicker.Visibility = ColorPicker.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
         }
         /// <summary>
-        /// 
+        /// 设置涂鸦画笔颜色
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -169,14 +169,29 @@ namespace WpfMain.Module.PetModule
         private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
         {
             ButtonColor.Background = ColorPicker.SelectedBrush;
-            if(ucd!=null)
-            ucd.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
+            if (ucd != null)
+                ucd.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
         }
 
+        /// <summary>
+        /// 设置涂鸦画笔 粗细
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NumericUpDown_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
         {
             if (ucd != null)
                 ucd.SetDrawingCanvasPinfo("StrokeThickness", e.Info);
+        }
+
+        /// <summary>
+        /// 保存自带的截图功能的图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Screenshot_Snapped(object sender, HandyControl.Data.FunctionEventArgs<ImageSource> e)
+        {
+
         }
     }
 }

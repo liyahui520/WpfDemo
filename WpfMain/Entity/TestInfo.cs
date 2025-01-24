@@ -9,6 +9,8 @@ using System.Windows.Ink;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
+using WpfMain.Extend;
+
 namespace WpfMain.Entity
 {
 
@@ -128,8 +130,6 @@ namespace WpfMain.Entity
         /// 像素间距单拉 毫米mm,纳米 pm
         /// </summary>
         public string PixelSpacingUnit { get; set; }
-
-
 
 
         [JsonIgnore]
