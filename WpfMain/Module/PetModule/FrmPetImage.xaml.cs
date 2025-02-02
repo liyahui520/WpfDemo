@@ -26,7 +26,7 @@ namespace WpfMain.Module.PetModule
     public partial class FrmPetImage : UserControl
     {
 
-        private TestInfo tInfo;
+        //private TestInfo tInfo;
         private UCImageItemView ucd;
         public List<object> ResolutionDataList = new List<object>();
 
@@ -38,9 +38,21 @@ namespace WpfMain.Module.PetModule
             get => (PropertyGridDemoModel)GetValue(DemoModel1Property);
             set => SetValue(DemoModel1Property, value);
         }
+
+
+        public static readonly DependencyProperty TestInfoProperty = DependencyProperty.Register(
+            nameof(tInfos), typeof(TestInfo), typeof(FrmPet), new PropertyMetadata(default(TestInfo)));
+
+        public TestInfo tInfos
+        {
+            get => (TestInfo)GetValue(TestInfoProperty);
+            set => SetValue(TestInfoProperty, value);
+        }
+
+
         public FrmPetImage(TestInfo info)
         {
-            tInfo = info;
+            tInfos = info;
             InitializeComponent();
             DemoModel1 = new PropertyGridDemoModel
             {
@@ -51,11 +63,12 @@ namespace WpfMain.Module.PetModule
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            ucd = new UCImageItemView(tInfo);
+            ucd = new UCImageItemView(tInfos);
             BorderImageContent.Child = ucd;
 
             ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
             HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
+            DataContext = this;
         }
 
 
@@ -191,7 +204,7 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Screenshot_Snapped(object sender, HandyControl.Data.FunctionEventArgs<ImageSource> e)
         {
-            tInfo.Result.Images.Add(new ImageItem { Name=$"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource=e.Info });
+            tInfos.Result.Images.Add(new ImageItem { Name=$"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource=e.Info });
         }
     }
 }

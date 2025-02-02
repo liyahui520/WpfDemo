@@ -15,8 +15,8 @@ namespace WpfMain.Logic
     /// </summary>
     public static class TestLogic
     {
-        private static string TempPath = "Temp";
-        private static string DataPath = "data";
+        public static string TempPath = "Temp";
+        public static string DataPath = "data";
         private static List<TestInfo> infos;
         private static DateTime? stime;
 

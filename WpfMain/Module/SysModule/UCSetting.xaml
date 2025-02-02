@@ -46,13 +46,6 @@
                                                 <MenuItem Header="预览" >
                                                 </MenuItem>
                                             </ContextMenu>
-                                            <!--<ContextMenu ItemsSource="{Binding DataList}">
-               <ContextMenu.ItemTemplate>
-                   <HierarchicalDataTemplate ItemsSource="{Binding DataList}">
-                       <TextBlock Text="{Binding Name}"/>
-                   </HierarchicalDataTemplate>
-               </ContextMenu.ItemTemplate>
-           </ContextMenu>-->
                                         </Border.ContextMenu>
                                     </Border>
                                 </hc:SimplePanel>

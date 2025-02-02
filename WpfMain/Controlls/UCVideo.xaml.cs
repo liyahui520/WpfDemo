@@ -8,6 +8,7 @@ using Record;
 using System.IO;
 using Image = System.Drawing.Image;
 using System.Windows.Media.Media3D;
+using WpfMain.Logic;
 
 namespace WpfMain.Controlls
 {
@@ -45,8 +46,8 @@ namespace WpfMain.Controlls
 
         static UCVideo()
         {
-            if (Directory.Exists(AppStatic.VideoConfig.VideoPath))
-                Directory.CreateDirectory(AppStatic.VideoConfig.VideoPath);
+            if (Directory.Exists(TestLogic.TempPath))
+                Directory.CreateDirectory(TestLogic.TempPath);
         }
         public UCVideo()
         {
@@ -57,7 +58,7 @@ namespace WpfMain.Controlls
         {
 
             videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder = new CameraRecorder(AppStatic.VideoConfig.VideoPath + videoFileName, 20, true);
+            recorder = new CameraRecorder(TestLogic.TempPath + videoFileName, 20, true);
             InitVideo();
 
         }
@@ -101,7 +102,7 @@ namespace WpfMain.Controlls
         public void SetAviFilePath()
         {
             videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder.SetAviFilePath(AppStatic.VideoConfig.VideoPath + videoFileName);
+            recorder.SetAviFilePath(TestLogic.TempPath + videoFileName);
         }
 
         public void AutoWavRecorder(bool isOpen)
@@ -121,10 +122,11 @@ namespace WpfMain.Controlls
             isStart = false;
         }
 
-        public void End()
+        public string End()
         {
-            recorder.End();
+           
             isStart = false;
+           return recorder.End();
         }
 
         public void Close()

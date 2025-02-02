@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using AForge.Video.DirectShow;
 using HandyControl.Tools.Extension;
 using WpfMain.Entity;
+using WpfMain.Extend;
 using WpfMain.Logic;
 using WpfMain.Module.SysModule;
 
@@ -34,10 +36,9 @@ namespace WpfMain.Module.PetModule
         /// <summary>
         /// 当前检查信息
         /// </summary>
-        private TestInfo tInfo;
+        //public TestInfo tInfo = new TestInfo();
 
 
-        public PropertyVideoModel VideoEntity = new PropertyVideoModel();
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
             nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
 
@@ -47,12 +48,25 @@ namespace WpfMain.Module.PetModule
             set => SetValue(VideoEntityProperty, value);
         }
 
+        public static readonly DependencyProperty TestInfoProperty = DependencyProperty.Register(
+            nameof(tInfo), typeof(TestInfo), typeof(FrmPet), new PropertyMetadata(default(TestInfo)));
+
+        public TestInfo tInfo
+        {
+            get => (TestInfo)GetValue(TestInfoProperty);
+            set => SetValue(TestInfoProperty, value);
+        }
+
         public FrmPet()
         {
             InitializeComponent();
             VideoModel = new PropertyVideoModel();
             VideoModel.ExposureModel = new Exposure();
             VideoModel.Images = new List<VideoImage>();// { new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" }, new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" } };
+
+            tInfo = new TestInfo();
+            tInfo.Result = new TestResult();
+            tInfo.Result.Images = new List<ImageItem>();
             DataContext = this;
         }
 
@@ -87,7 +101,7 @@ namespace WpfMain.Module.PetModule
         private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()), VideoProcAmpFlags.Manual);
-        } 
+        }
 
         private void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
@@ -107,8 +121,16 @@ namespace WpfMain.Module.PetModule
             Video?.SetAviFilePath();
             if (Video.isStart)
             {
-                Video?.End(); 
-                VideoModel.ExposureModel=new Exposure(){IsAuto = VideoModel.ExposureModel.IsAuto,IsEnable = true};
+                string videoPath = Video?.End();
+                if (tInfo.Result.Vedios == null)
+                    tInfo.Result.Vedios = new List<MediaItem>();
+                var old = tInfo.Result;
+                tInfo.Result = new TestResult();
+                var sp = videoPath.Split('\\');
+                var fileName = sp[sp.Length - 1];
+                old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
+                tInfo.Result = old;
+                VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
                 StartCamp.Content = "开始录像";
             }
             else
@@ -144,14 +166,15 @@ namespace WpfMain.Module.PetModule
             System.Drawing.Image img = Video?.Capture();
             if (img != null)
             {
-                string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp."+AppStatic.VideoConfig.ImageType;
-                string fullPath = Path.Combine(AppStatic.VideoConfig.ImagePath, fullName);
+                string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;
                 try
                 {
-                    img.Save(fullPath, ImageFormat.Jpeg);
-                    var old = VideoModel.Images.Clone();
-                    old.Add(new VideoImage() { Path = fullPath, Name = fullName });
-                    VideoModel.Images = old;
+                    if (tInfo.Result.Images == null)
+                        tInfo.Result.Images = new List<ImageItem>();
+                    var old = tInfo.Result;
+                    tInfo.Result = new TestResult();
+                    old.Images.Add(new ImageItem() { ImageSource = (new Bitmap(img)).BitmapToImageSource(), Name = fullName });
+                    tInfo.Result = old;
                 }
                 catch (Exception exception)
                 {
@@ -196,7 +219,7 @@ namespace WpfMain.Module.PetModule
                 tInfo.Result = new TestResult();
                 tInfo.Result.Images = new List<ImageItem>
                 {
-                    new ImageItem { ImageSource = ((Image)e.Source).Source }
+                    new ImageItem { ImageSource = ((ImageSource)e.Source) }
                 };
             }
             FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
@@ -224,6 +247,21 @@ namespace WpfMain.Module.PetModule
         {
             TestLogic.Save(tInfo);
         }
+
+        /// <summary>
+        /// 图片点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void UCFiles_OnImagesClick(object sender, TestInfo e)
+        {
+            FrmModule pet = new FrmModule(new FrmPetImage(e));
+            pet.title.Text = "查看";
+
+            pet.ShowDialog();
+        }
+         
     }
 }
 public class PropertyGridDemoModel

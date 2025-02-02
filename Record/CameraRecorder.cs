@@ -218,7 +218,7 @@ namespace Record
         /// <summary>
         /// 结束
         /// </summary>
-        public virtual void End()
+        public virtual string End()
         {
             try
             {
@@ -236,13 +236,27 @@ namespace Record
                     aviManager.AddAudioStream(wavRecorder.WavFilePath, 0);
                     aviManager.Close();
                     //删除临时音频文件
-                    try { File.Delete(wavRecorder.WavFilePath); } catch { }
+                    try
+                    {
+                        File.Delete(wavRecorder.WavFilePath);
+                    }
+                    catch
+                    {
+                    }
                 }
+
+                return AviFilePath;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e); 
+                Console.WriteLine(e);
+                return AviFilePath;
             }
+            finally
+            {
+            }
+
+            return AviFilePath;
         }
 
         /// <summary>

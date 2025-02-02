@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using AForge.Video.FFMPEG;
+using System.Windows.Interop;
+using System.Windows.Controls;
 
 namespace WpfMain.Extend
 {
@@ -572,7 +579,187 @@ namespace WpfMain.Extend
                 encoder.Save(memoryStream);     // 保存到 MemoryStream  
                 return memoryStream.ToArray();  // 转换为 byte[]  
             }
-        } 
+        }
 
+
+        #region Bitmap与ImageSource互转
+        /// <summary>
+        /// Bitmap 转为ImageSource
+        /// </summary>
+        /// <param name="bitmap">Bitmap 对象</param>
+        /// <returns>ImageSource 位图对象</returns>
+        public static ImageSource BitmapToImageSource(this System.Drawing.Bitmap bitmap)
+        {
+            try
+            {
+                IntPtr intPtr = bitmap.GetHbitmap();
+                ImageSource imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(intPtr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                return imageSource;
+            }
+            catch (Exception ex)
+            { 
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// ImageSource 转为Bitmap
+        /// </summary>
+        /// <param name="imageSource">imageSource 对象</param>
+        /// <returns>返回 Bitmap 对象</returns>
+        public static System.Drawing.Bitmap ImageSourceToBitmap(this ImageSource imageSource)
+        {
+            try
+            {
+                BitmapSource bitmapSource = (BitmapSource)imageSource;
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapSource.PixelWidth, bitmapSource.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                System.Drawing.Imaging.BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(System.Drawing.Point.Empty, bitmap.Size), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                bitmapSource.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+                bitmap.UnlockBits(data);
+                return bitmap;
+            }
+            catch (Exception ex)
+            { 
+            }
+            return null;
+        }
+        #endregion
+
+        #region  Bitmap与BitmapImage互转
+        //将Bitmap对象转换成bitmapImage对象
+        public static BitmapImage ConvertBitmapToBitmapImage(this Bitmap bitmap)
+        {
+            MemoryStream stream = new MemoryStream();
+            bitmap.Save(stream, ImageFormat.Bmp);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = stream;
+            image.EndInit();
+            return image;
+        }
+
+        //将bitmapImage对象转换成Bitmap对象
+        public static System.Drawing.Bitmap BitmapImage2Bitmap(this BitmapImage bitmapImage)
+        {
+            using (System.IO.MemoryStream outStream = new System.IO.MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                enc.Save(outStream);
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+                return bitmap;
+            }
+        }
+        #endregion
+
+        #region BitmapImage 转为byte[]
+        /// <summary>
+        /// BitmapImage 转为byte[]
+        /// </summary>
+        /// <param name="bitmapImage">BitmapImage 对象</param>
+        /// <returns>byte[] 数组</returns>
+        public static byte[] BitmapImageToByteArray(this BitmapImage bitmapImage)
+        {
+            byte[] buffer = new byte[] { };
+            try
+            {
+                Stream stream = bitmapImage.StreamSource;
+                if (stream != null && stream.Length > 0)
+                {
+                    stream.Position = 0;
+                    using (BinaryReader binary = new BinaryReader(stream))
+                    {
+                        buffer = binary.ReadBytes((int)stream.Length);
+                    }
+                }
+            }
+            catch (Exception ex)
+            { 
+            }
+            return buffer;
+        }
+        #endregion
+
+        #region 图片压缩
+        /// <summary>
+        /// 图片压缩
+        /// </summary>
+        /// <param name="bitmap">要压缩的源图像</param>
+        /// <param name="height">要求的高</param>
+        /// <param name="width">要求的宽</param>
+        /// <returns></returns>
+        public static System.Drawing.Bitmap GetPicThumbnail(this System.Drawing.Bitmap bitmap, int height, int width)
+        {
+            try
+            {
+                lock (bitmap)
+                {
+                    System.Drawing.Bitmap iSource = bitmap;
+                    System.Drawing.Imaging.ImageFormat imageFormat = iSource.RawFormat;
+                    int sw = width, sh = height;
+                    //按比例缩放
+                    System.Drawing.Bitmap ob = new System.Drawing.Bitmap(width, height);
+                    System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(ob);
+                    graphics.Clear(System.Drawing.Color.WhiteSmoke);
+                    graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                    graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    graphics.DrawImage(iSource, new System.Drawing.Rectangle((width - sw) / 2, (height - sh) / 2, sw, sh), 0, 0, iSource.Width, iSource.Height, System.Drawing.GraphicsUnit.Pixel);
+                    graphics.Dispose();
+                    return ob;
+                }
+            }
+            catch (Exception ex)
+            { 
+            }
+            return bitmap;
+        }
+        #endregion
+
+        /// <summary>
+        /// 保存再内存中
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static BitmapImage ToBitmapImage(this System.Drawing.Image image)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                image.Save(memory, image.RawFormat);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad; // 缓存选项，根据需要选择
+                bitmapimage.EndInit();
+                bitmapimage.Freeze(); // 防止后续修改，提高性能
+                return bitmapimage;
+            }
+        }
+
+        /// <summary>
+        ///视频获取缩略图
+        /// </summary>
+        /// <param name="mp4">视频路径</param>
+        /// <param name="jpg">输出图片路径</param>
+        /// <param name="frames">视频帧数</param>
+        public static void ffmpeg(string mp4, string jpg, int frames)
+        {
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "/ffmpeg/" + "\\ffmpeg.exe";
+                process.StartInfo.Arguments = $@"-i {mp4} -ss {frames} -f image2 {jpg}";
+                process.Start();
+                process.WaitForExit();
+                process.Close();
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+            }
+        }
     }
 }
