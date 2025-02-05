@@ -29,12 +29,12 @@ namespace WpfMain.Logic
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
             if (!Directory.Exists(DataPath))
-                Directory.CreateDirectory(TempPath);
+                Directory.CreateDirectory(DataPath);
         }
 
         public static bool Save(TestInfo tInfo)
         {
-            string fileName = Path.Combine(DataPath, $"{tInfo.TestDate:yyyyMMddHHmmss}|{tInfo.Id}.json");
+            string fileName = Path.Combine(DataPath, $"{tInfo.TestDate:yyyyMMddHHmmss}--{tInfo.Id}.json");
             File.WriteAllText(fileName, JsonConvert.SerializeObject(tInfo));
 
             //将检查数据由内存或临时目录保存到结果目录

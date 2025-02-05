@@ -27,6 +27,21 @@ namespace WpfMain.Entity
         public string TestName { get; set; }
 
         /// <summary>
+        /// 所见
+        /// </summary>
+        public string See { get; set; }
+         
+        /// <summary>
+        /// 大小
+        /// </summary>
+        public string Size { get; set; }
+          
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public string Count { get; set; }
+
+        /// <summary>
         /// 检查医生姓名
         /// </summary>
         public string DCOperation { get; set; }
@@ -37,9 +52,20 @@ namespace WpfMain.Entity
         public string Pet { get; set; }
 
         /// <summary>
+        /// 性别
+        /// </summary>
+        public string Gender { get; set; } 
+
+        /// <summary>
         /// 宠主
         /// </summary>
         public string Customer { get; set; }
+
+        /// <summary>
+        /// 电话
+        /// </summary>
+        public string CustomerPhone { get; set; }
+
         /// <summary>
         /// 检查时间
         /// </summary>
@@ -54,7 +80,9 @@ namespace WpfMain.Entity
         public TestInfo()
         {
             TestDate = DateTime.Now;
-            TestName = "镜检";
+            Customer = "测试用户";
+            TestName = "镜检"; 
+            Gender = Controlls.Gender.犬.ToString();
             Id = Guid.NewGuid().ToString();
         }
 
@@ -62,7 +90,7 @@ namespace WpfMain.Entity
         {
             get => result;
             set => SetProperty(ref result, value, nameof(Result));
-        }
+        } 
     }
      
     public class TestResult : ObservableObject

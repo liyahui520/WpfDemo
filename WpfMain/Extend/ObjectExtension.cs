@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using AForge.Video.FFMPEG;
 using System.Windows.Interop;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace WpfMain.Extend
 {
@@ -192,7 +193,7 @@ namespace WpfMain.Extend
             // 获取指定日期所在的年内周数
             int GetWeekNumber(DateTime date)
             {
-                Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+                System.Globalization.Calendar calendar = CultureInfo.InvariantCulture.Calendar;
                 return calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Friday);
             }
 
@@ -760,6 +761,18 @@ namespace WpfMain.Extend
             {
                 string msg = ex.Message;
             }
+        }
+
+        public static string GetDescription(Enum value)
+        {
+            FieldInfo field = value.GetType().GetField(value.ToString());
+            DescriptionAttribute attribute = field.GetCustomAttribute<DescriptionAttribute>();
+            return attribute == null ? value.ToString() : attribute.Description;
+        }
+
+        public static List<string> GetEnumDescriptions<T>() where T : Enum
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>().Select(e => GetDescription(e)).ToList();
         }
     }
 }
