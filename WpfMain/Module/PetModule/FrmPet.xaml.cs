@@ -118,7 +118,6 @@ namespace WpfMain.Module.PetModule
                     return;
                 }
             }
-            Video?.SetAviFilePath();
             if (Video.isStart)
             {
                 string videoPath = Video?.End();
@@ -136,6 +135,7 @@ namespace WpfMain.Module.PetModule
             else
             {
 
+                Video?.SetAviFilePath();
                 Video?.Start();
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = false };
                 StartCamp.Content = "停止录像";
@@ -257,9 +257,11 @@ namespace WpfMain.Module.PetModule
         private void UCFiles_OnImagesClick(object sender, TestInfo e)
         {
             FrmModule pet = new FrmModule(new FrmPetImage(e));
-            pet.title.Text = "查看";
+            pet.title.Text = "查看"; 
+            pet.ShowDialog(); 
+            tInfo=new TestInfo();
+            tInfo = e; 
 
-            pet.ShowDialog();
         }
          
     }

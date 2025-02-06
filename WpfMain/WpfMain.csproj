@@ -161,6 +161,8 @@
     <Compile Include="Entity\ImageInfo.cs" />
     <Compile Include="Entity\TestInfo.cs" />
     <Compile Include="Entity\VideoEntity.cs" />
+    <Compile Include="Extend\Converters\EnumValueToEnumNameConverter.cs" />
+    <Compile Include="Extend\Converters\StrToIsCheckedConverter.cs" />
     <Compile Include="Extend\ObjectExtension.cs" />
     <Compile Include="Extend\ObservableObject.cs" />
     <Compile Include="Logic\ImageLogic.cs" />

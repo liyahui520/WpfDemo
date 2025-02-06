@@ -14,21 +14,21 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <hc:Divider Content="拍照" HorizontalContentAlignment="Left" Foreground="White"/>
-            <ListBox hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Images, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <hc:Divider Content="拍照" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
+            <ListBox hc:ScrollViewer.IsInertiaEnabled="False" Margin="0" BorderThickness="0"  Height="180"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Images, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ListBox.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type entity:ImageItem}">
-                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="140" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120"  Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
                             </hc:Card.Background>
                             <Border CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
-                                <Image Width="140" Height="100" Source="{Binding ImageSource}" Stretch="Uniform"/>
+                                <Image Width="120" Height="100" Source="{Binding ImageSource}" Stretch="Uniform"/>
                                 <Border.ContextMenu>
-                                    <ContextMenu Width="140">
+                                    <ContextMenu Width="120">
                                         <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">
                                         </MenuItem>
                                     </ContextMenu>
@@ -48,21 +48,21 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <hc:Divider Content="视频" HorizontalContentAlignment="Left" Foreground="White"/>
-            <ListBox  Grid.Row="1" hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Vedios, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <hc:Divider Content="视频" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
+            <ListBox  Grid.Row="1" hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  Height="180"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Vedios, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ListBox.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type entity:ImageItem}">
-                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="140" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
                             </hc:Card.Background>
                             <Border CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
-                                <MediaElement Width="140" Height="100" Source="{Binding Source}" Stretch="Uniform"/>
+                                <MediaElement Width="120" Height="100" Source="{Binding Source}" Stretch="Uniform"/>
                                 <Border.ContextMenu>
-                                    <ContextMenu Width="140">
+                                    <ContextMenu Width="120">
                                         <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">
                                         </MenuItem>
                                     </ContextMenu>

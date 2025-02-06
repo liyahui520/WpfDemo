@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfMain.Entity;
+using WpfMain.Extend;
 
 namespace WpfMain.Controlls
 {
@@ -21,6 +23,16 @@ namespace WpfMain.Controlls
     /// </summary>
     public partial class PropertyGridDemoCtl : UserControl
     {
+
+        public static readonly DependencyProperty ParentDataProperty = DependencyProperty.Register(
+            "ParentData", typeof(TestInfo), typeof(PropertyGridDemoCtl), new PropertyMetadata(default(TestInfo)));
+
+        public TestInfo ParentData
+        {
+            get => (TestInfo)GetValue(ParentDataProperty);
+            set => SetValue(ParentDataProperty, value);
+        } 
+
         public PropertyGridDemoCtl()
         {
             InitializeComponent();
@@ -31,7 +43,8 @@ namespace WpfMain.Controlls
                 绝育 = true,
                 电话 = 98,
                 杂项2 = VerticalAlignment.Stretch
-            };
+            }; 
+            gender.ItemsSource = ObjectExtension.GetEnumDescriptions<Gender>();
         }
 
         public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(
