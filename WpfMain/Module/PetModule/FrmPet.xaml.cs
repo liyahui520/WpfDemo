@@ -10,10 +10,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
 using HandyControl.Tools.Extension;
+using WpfMain.Controlls;
 using WpfMain.Entity;
 using WpfMain.Extend;
 using WpfMain.Logic;
 using WpfMain.Module.SysModule;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WpfMain.Module.PetModule
 {
@@ -245,7 +247,13 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Button_SaveTest(object sender, RoutedEventArgs e)
         {
+            if (Video.isStart)
+            {
+                MessageBox.Show(AppStatic.MainWindow, "正在录像中，请先停止！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             TestLogic.Save(tInfo);
+            MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
         }
 
         /// <summary>
@@ -257,13 +265,18 @@ namespace WpfMain.Module.PetModule
         private void UCFiles_OnImagesClick(object sender, TestInfo e)
         {
             FrmModule pet = new FrmModule(new FrmPetImage(e));
-            pet.title.Text = "查看"; 
-            pet.ShowDialog(); 
-            tInfo=new TestInfo();
-            tInfo = e; 
+            pet.title.Text = "查看";
+            pet.ShowDialog();
+            tInfo = new TestInfo();
+            tInfo = e;
 
         }
-         
+
+        private void UCFiles_OnVideoClick(object sender, MediaItem e)
+        {
+            UCLocalVideo pet =  new UCLocalVideo(e.Source); 
+            pet.ShowDialog();
+        }
     }
 }
 public class PropertyGridDemoModel

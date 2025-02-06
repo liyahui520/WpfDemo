@@ -55,7 +55,7 @@
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type entity:ImageItem}">
-                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_Video_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
                             </hc:Card.Background>

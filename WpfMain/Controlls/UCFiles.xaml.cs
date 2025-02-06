@@ -18,11 +18,19 @@ namespace WpfMain.Controlls
 
         #region 点击事件
 
-        public event EventHandler<TestInfo> ImagesClick;
+        public event EventHandler<TestInfo> ImagesClick; 
 
         private void RaiseSomeActionTriggered(TestInfo entity)
         {
             ImagesClick?.Invoke(this, entity);
+        }
+
+
+        public event EventHandler<MediaItem> VideoClick;
+
+        private void RaiseVideoActionTriggered(MediaItem entity)
+        {
+            VideoClick?.Invoke(this, entity);
         }
 
         #endregion
@@ -51,6 +59,13 @@ namespace WpfMain.Controlls
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         { 
             RaiseSomeActionTriggered(ParentData);
+        }
+
+
+        private void UIElement_Video_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var wntity = (MediaItem)((System.Windows.FrameworkElement)sender).Tag;
+            RaiseVideoActionTriggered(wntity);
         }
     }
 }

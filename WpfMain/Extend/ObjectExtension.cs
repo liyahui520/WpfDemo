@@ -774,5 +774,30 @@ namespace WpfMain.Extend
         {
             return Enum.GetValues(typeof(T)).Cast<T>().Select(e => GetDescription(e)).ToList();
         }
+
+        /// <summary>
+        /// 获取文件夹下所有文件
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns></returns>
+        public static List<string> GetAllFiles(this string folderPath)
+        {
+            List<string> filePaths = new List<string>();
+
+            try
+            {
+                // 获取文件夹下的所有文件（包括子文件夹中的文件）
+                string[] files = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
+
+                // 将文件路径添加到列表中
+                filePaths.AddRange(files);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred: {ex.Message}");
+            }
+
+            return filePaths;
+        }
     }
 }

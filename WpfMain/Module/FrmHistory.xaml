@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0"  CornerRadius="10" Margin="0,0,0,5">
             <Border.Background>
-                <SolidColorBrush Color="White" Opacity="0.2"/>
+                <SolidColorBrush Color="White" Opacity="0.4"/>
             </Border.Background>
 <Grid>
                 <Grid.ColumnDefinitions>
@@ -27,25 +27,30 @@
                 <Button Content="查询" Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource ButtonPrimary}" HorizontalAlignment="Left"/>
             </Grid>
         </Border>
-        <DataGrid Grid.Row="1" langs:DataGridAttach.CanUnselectAllWithBlankArea="True" BorderThickness="0" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False" ItemsSource="{Binding DataList}">
+        <DataGrid Grid.Row="1" IsReadOnly="True" VirtualizingPanel.ScrollUnit="Pixel" BorderThickness="0"  VirtualizingStackPanel.IsVirtualizing ="True"  HeadersVisibility="All" RowHeaderWidth="60" langs:DataGridAttach.ShowRowNumber="False"  ScrollViewer.HorizontalScrollBarVisibility="Auto"  ItemsSource="{Binding DataList}"  AutoGenerateColumns="False">
             <DataGrid.Background>
-                <SolidColorBrush Color="White" Opacity="0.2"/>
-            </DataGrid.Background> 
-            <DataGrid.RowHeaderTemplate>
+                <SolidColorBrush Color="White" Opacity="0.4"/> 
+            </DataGrid.Background>  
+            <!--<DataGrid.RowHeaderTemplate>
                     <DataTemplate>
                         <CheckBox IsChecked="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
                     </DataTemplate>
-                </DataGrid.RowHeaderTemplate>
+                </DataGrid.RowHeaderTemplate>-->
                 <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding Index}" Header="序号"/>
-                <DataGridTextColumn Binding="{Binding Name}" Header="客户"/>
-                <DataGridTextColumn Binding="{Binding Phone}" Header="手机号"/>
-                <DataGridTextColumn Binding="{Binding Phone}" Header="宠物名"/>
-                <DataGridTextColumn Binding="{Binding Sex}" Header="性别"/>
-                <DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>
-                <DataGridTextColumn Binding="{Binding Name}" Header="名称"/>
+                <!--<DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding }" Header="序号"/>-->
+                <DataGridTextColumn Binding="{Binding Customer}" Header="客户"/>
+                <DataGridTextColumn Binding="{Binding CustomerPhone}" Header="手机号"/>
+                <DataGridTextColumn Binding="{Binding Pet}" Header="宠物名"/>
+                <DataGridTextColumn Binding="{Binding Gender}" Header="性别"/>
+                <!--<DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>-->
+                <DataGridTextColumn Binding="{Binding TestName}" Header="名称"/>
+                <DataGridTextColumn Binding="{Binding See}" Header="所见"/>
+                <DataGridTextColumn Binding="{Binding Size}" Header="大小"/>
+                <DataGridTextColumn Binding="{Binding Count}" Header="数量"/>
+                <DataGridTextColumn Binding="{Binding DCOperation}" Header="检查医生"/>
+                <DataGridTextColumn Binding="{Binding TestDate}" Header="检查时间"/>
 
-                <DataGridTextColumn Binding="{Binding Remark}" Width="*" Header="备注"/>
+                <DataGridTextColumn Binding="{Binding Result.Remark}" Width="*" Header="备注"/>
                 <DataGridTextColumn Width="100" Header="缩略图"/>
 
                 <DataGridTemplateColumn Header="操作" Width="170">

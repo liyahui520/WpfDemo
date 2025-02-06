@@ -81,8 +81,7 @@ namespace Record
             this.VideoWriter = new VideoFileWriter();
             this.FolderBrowser = new FolderBrowserDialog();
             this.VideoCodec = videoCodec;
-            this.BitRate = 3000000;
-
+            this.BitRate = 3000000; 
             //是否需要录制声音
             if (isLoopingWav)
                 wavRecorder = new WavRecorder(wavFilePath);

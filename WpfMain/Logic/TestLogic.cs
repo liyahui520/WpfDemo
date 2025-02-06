@@ -34,12 +34,12 @@ namespace WpfMain.Logic
 
         public static bool Save(TestInfo tInfo)
         {
-            string fileName = Path.Combine(DataPath, $"{tInfo.TestDate:yyyyMMddHHmmss}--{tInfo.Id}.json");
+            string fileName = Path.Combine(DataPath, $"{tInfo.TestDate:yyyyMMddHHmmss}&{tInfo.Id}.json");
             File.WriteAllText(fileName, JsonConvert.SerializeObject(tInfo));
 
             //将检查数据由内存或临时目录保存到结果目录
             {
-            
+
             }
 
             //添加缓存
@@ -51,7 +51,7 @@ namespace WpfMain.Logic
         public static List<TestInfo> Load(DateTime startTime, DateTime endTime)
         {
             FillTest(startTime);
-            return infos.Where(o=>o.TestDate>=startTime && o.TestDate<=endTime).ToList();
+            return infos.Where(o => o.TestDate >= startTime && o.TestDate <= endTime).ToList();
         }
 
 
@@ -68,12 +68,13 @@ namespace WpfMain.Logic
             string[] files = Directory.GetFiles(DataPath, "*.json");
             foreach (string file in files)
             {
-                string[] names = file.Split('|');
+                string[] names = file.Replace(DataPath + "\\", "").Split('&');
                 if (DateTime.ParseExact(names[0], "yyyyMMddHHmmss", null) < startTime)
                     continue;
                 if (infos.Any(o => o.Id == names[1]))
                     continue;
-                infos.Add(JsonConvert.DeserializeObject<TestInfo>(File.ReadAllText(file)));
+                if (!string.IsNullOrWhiteSpace(File.ReadAllText(file)))
+                    infos.Add(JsonConvert.DeserializeObject<TestInfo>(File.ReadAllText(file)));
             }
 
         }
