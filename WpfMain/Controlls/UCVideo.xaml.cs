@@ -60,8 +60,8 @@ namespace WpfMain.Controlls
         private void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
 
-            videoFileName = Path.Combine(TestLogic.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
-            wavFileName = Path.Combine(TestLogic.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
+            videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
+            wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
             recorder = new CameraRecorder(videoFileName, wavFileName, 30, true,VideoCodec.MSMPEG4v3);
             InitVideo();
 
@@ -106,7 +106,7 @@ namespace WpfMain.Controlls
         public void SetAviFilePath()
         {
             videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder.SetAviFilePath(TestLogic.TempPath + videoFileName);
+            recorder.SetAviFilePath(AppVideoConfig.TempPath + videoFileName);
         }
 
         public void AutoWavRecorder(bool isOpen)

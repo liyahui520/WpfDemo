@@ -104,7 +104,8 @@ namespace WpfMain.Module.PetModule
         private void Button_Click_Duibi(object sender, RoutedEventArgs e)
         {
             if (UCD != null)
-                UCD.SetThreshold(int.Parse(((Control)sender).Tag.ToString()));
+                UCD.Threshold+=int.Parse(((Control)sender).Tag.ToString());
+
         }
 
         private void Button_Click_xuanzhuan(object sender, RoutedEventArgs e)

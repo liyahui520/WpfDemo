@@ -1,7 +1,10 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,7 +23,7 @@ namespace PacsCore
     /// <summary>
     /// UserControl1.xaml 的交互逻辑
     /// </summary>
-    public partial class UCImageItemView : UserControl
+    public partial class UCImageItemView : UserControl  
     {
 
 
@@ -29,14 +32,44 @@ namespace PacsCore
         private Point imageSize;
         private double zoom = 1;
         private double szoom = 1;
-        private int oldthreshold = 0;
+        private int oldthreshold;
         private ImageItem dinfo;
+        private bool iszoom;
 
+        /// <summary>
+        /// 对比度
+        /// </summary>
+        public int Threshold
+        {
+            get => (int)GetValue(ThresholdProperty);
+            set
+            {
+                if (value == 0)
+                {
+                    //还原
+                    dicomImage1.Source = dinfo.ImageSource;
+                }
+                else
+                {
+                    // 绘制灰度图
+                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.Bitmap, value);
+                    dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
+                }
+
+                SetValue(ThresholdProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// 缩放比例
+        /// </summary>
         public double Zoom
         {
             get => (double)GetValue(ZoomProperty);
             set
             {
+                //if (!iszoom)
+                //    return;
                 //if (value == zoom)
                 //    return;
                 //DowheelZoom(zoom > value ? 0.25 : -0.25);
@@ -46,11 +79,14 @@ namespace PacsCore
         }
 
         public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(nameof(Zoom), typeof(double), typeof(UCImageItemView));
+        public static readonly DependencyProperty ThresholdProperty = DependencyProperty.Register(nameof(Threshold), typeof(int), typeof(UCImageItemView));
 
         /// <summary>
         /// 当前检查信息
         /// </summary>
         private TestInfo tInfo;
+
+
         public UCImageItemView(TestInfo info)
         {
             tInfo = info;
@@ -85,7 +121,7 @@ namespace PacsCore
             LoadDicomImage();
             FileInfo();
             LoadRuler();
-
+            iszoom = true;
         }
 
         /// <summary>
@@ -95,16 +131,7 @@ namespace PacsCore
         /// <param name="e"></param>
         public void SetThreshold(int threshold)
         {
-            oldthreshold += threshold;
-            if (threshold == 0)
-            {
-                dicomImage1.Source = dinfo.ImageSource;
-                return;
-            }
 
-            // 绘制灰度图
-            System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.Bitmap, oldthreshold);
-            dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
         }
 
         /// <summary>
@@ -112,7 +139,7 @@ namespace PacsCore
         /// </summary>
         /// <param name="point"></param>
         /// <param name="delta"></param>
-        public void DowheelZoom(Point point, double delta, bool zoomcheck = true)
+        public void DowheelZoom(Point point, double delta)
         {
             TransformGroup group = IMG.FindResource("Imageview") as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;
@@ -124,17 +151,12 @@ namespace PacsCore
             transform.CenterY = point.Y;
             transform.ScaleX += delta;
             transform.ScaleY += delta;
-
             zoom = transform.ScaleX * szoom;
-            Zoom = zoom;
-            //SetValue(ZoomProperty, zoom);
- 
-
             LoadRuler();
         }
-        public void DowheelZoom(double delta, bool zoomcheck = true)
+        public void DowheelZoom(double delta)
         {
-            DowheelZoom(new Point(IMG.ActualWidth / 2, IMG.ActualHeight / 2), delta, zoomcheck);
+            DowheelZoom(new Point(IMG.ActualWidth / 2, IMG.ActualHeight / 2), delta);
         }
         /// <summary>
         /// 旋转
@@ -177,7 +199,7 @@ namespace PacsCore
         /// </summary>
         public void Reduction()
         {
-            SetThreshold(0);
+            Threshold = 0;
             LoadDicomImage();
             LoadRuler();
         }
