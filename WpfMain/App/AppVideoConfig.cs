@@ -14,6 +14,12 @@ namespace WpfMain
     /// </summary>
     public class AppVideoConfig
     {
+
+        /// <summary>
+        /// 系统临时文件路径
+        /// </summary>
+        public static string TempPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "Temp\\";
+
         /// <summary>
         /// 设备信息
         /// </summary>
@@ -30,6 +36,9 @@ namespace WpfMain
 
         static AppVideoConfig()
         {
+            if (Directory.Exists(TempPath))
+                Directory.CreateDirectory(TempPath);
+
             ConfigPath = AppDomain.CurrentDomain.BaseDirectory + "Config\\";
             if (!Directory.Exists(ConfigPath))
                 Directory.CreateDirectory(ConfigPath);
@@ -39,7 +48,7 @@ namespace WpfMain
         /// <summary>
         /// 视频保存路径
         /// </summary>
-        public string VideoPath { get; set; }= AppDomain.CurrentDomain.BaseDirectory + "VideoFile\\";
+        public string VideoPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "VideoFile\\";
 
         /// <summary>
         /// 视频类型
@@ -58,24 +67,17 @@ namespace WpfMain
 
         public static AppVideoConfig GetConfig()
         {
-            try
-            {
-                if (File.Exists(ConfigFullPath))
-                    return ObjectExtension.GetObjectByXml<AppVideoConfig>(ConfigFullPath);
-                else
-                {
-                    return new AppVideoConfig();
-                }
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            if (File.Exists(ConfigFullPath))
+                return ObjectExtension.GetObjectByXml<AppVideoConfig>(ConfigFullPath);
+            return new AppVideoConfig();
         }
 
         public void Save()
         {
             this.ObjectSaveToXml(ConfigFullPath);
         }
+
+
+
     }
 }

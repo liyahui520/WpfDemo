@@ -25,14 +25,17 @@ namespace WpfMain.Module.PetModule
     /// </summary>
     public partial class FrmPetImage : UserControl
     {
-
-        //private TestInfo tInfo;
-        private UCImageItemView ucd;
         public List<object> ResolutionDataList = new List<object>();
-
-        public static readonly DependencyProperty DemoModel1Property = DependencyProperty.Register(
-            nameof(DemoModel1), typeof(PropertyGridDemoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyGridDemoModel)));
-
+        //private TestInfo tInfo;
+        public UCImageItemView UCD {
+            get => (UCImageItemView)GetValue(UCDProperty);
+            set => SetValue(UCDProperty, value);
+        }
+        public TestInfo tInfos
+        {
+            get => (TestInfo)GetValue(TestInfoProperty);
+            set => SetValue(TestInfoProperty, value);
+        }
         public PropertyGridDemoModel DemoModel1
         {
             get => (PropertyGridDemoModel)GetValue(DemoModel1Property);
@@ -40,14 +43,15 @@ namespace WpfMain.Module.PetModule
         }
 
 
+
+        public static readonly DependencyProperty DemoModel1Property = DependencyProperty.Register(
+            nameof(DemoModel1), typeof(PropertyGridDemoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyGridDemoModel)));
+
         public static readonly DependencyProperty TestInfoProperty = DependencyProperty.Register(
             nameof(tInfos), typeof(TestInfo), typeof(FrmPet), new PropertyMetadata(default(TestInfo)));
 
-        public TestInfo tInfos
-        {
-            get => (TestInfo)GetValue(TestInfoProperty);
-            set => SetValue(TestInfoProperty, value);
-        }
+        public static readonly DependencyProperty UCDProperty = DependencyProperty.Register(
+    nameof(UCD), typeof(UCImageItemView), typeof(FrmPetImage));
 
 
         public FrmPetImage(TestInfo info)
@@ -63,8 +67,8 @@ namespace WpfMain.Module.PetModule
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            ucd = new UCImageItemView(tInfos);
-            BorderImageContent.Child = ucd;
+            UCD = new UCImageItemView(tInfos);
+            BorderImageContent.Child = UCD;
 
             ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
             HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
@@ -85,36 +89,38 @@ namespace WpfMain.Module.PetModule
 
         private void Button_Click_Zoom(object sender, RoutedEventArgs e)
         {
-            if (ucd != null)
-                ucd.DowheelZoom(double.Parse(((Control)sender).Tag.ToString()));
+            //if (UCD != null)
+            //    UCD.Zoom += double.Parse(((Control)sender).Tag.ToString());
+            if (UCD != null)
+                UCD.DowheelZoom(double.Parse(((Control)sender).Tag.ToString()));
         }
 
         private void Button_Click_huanyuan(object sender, RoutedEventArgs e)
         {
-            if (ucd != null)
-                ucd.Reduction();
+            if (UCD != null)
+                UCD.Reduction();
         }
 
         private void Button_Click_Duibi(object sender, RoutedEventArgs e)
         {
-            if (ucd != null)
-                ucd.SetThreshold(int.Parse(((Control)sender).Tag.ToString()));
+            if (UCD != null)
+                UCD.SetThreshold(int.Parse(((Control)sender).Tag.ToString()));
         }
 
         private void Button_Click_xuanzhuan(object sender, RoutedEventArgs e)
         {
-            if (ucd != null)
-                ucd.Rotate(90);
+            if (UCD != null)
+                UCD.Rotate(90);
         }
 
         private void Button_Click_fanzhuan(object sender, RoutedEventArgs e)
         {
-            ucd.Flip();
+            UCD.Flip();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (ucd == null)
+            if (UCD == null)
                 return;
 
             if (!(sender is Button bt))
@@ -124,16 +130,16 @@ namespace WpfMain.Module.PetModule
 
             if (tag == "Clear")
             {
-                ucd.Clear();
+                UCD.Clear();
                 return;
             }
-            ucd.Draw((DrawToolType)Enum.Parse(typeof(DrawToolType), bt.Tag.ToString()));
+            UCD.Draw((DrawToolType)Enum.Parse(typeof(DrawToolType), bt.Tag.ToString()));
         }
 
         private void Button_Click_save(object sender, RoutedEventArgs e)
         {
-            if (ucd != null)
-                ucd.SaveImage();
+            if (UCD != null)
+                UCD.SaveImage();
         }
 
 
@@ -182,8 +188,8 @@ namespace WpfMain.Module.PetModule
         private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
         {
             ButtonColor.Background = ColorPicker.SelectedBrush;
-            if (ucd != null)
-                ucd.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
+            if (UCD != null)
+                UCD.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
         }
 
         /// <summary>
@@ -193,8 +199,8 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void NumericUpDown_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
         {
-            if (ucd != null)
-                ucd.SetDrawingCanvasPinfo("StrokeThickness", e.Info);
+            if (UCD != null)
+                UCD.SetDrawingCanvasPinfo("StrokeThickness", e.Info);
         }
 
         /// <summary>

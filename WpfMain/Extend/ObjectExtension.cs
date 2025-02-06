@@ -192,7 +192,7 @@ namespace WpfMain.Extend
             // 获取指定日期所在的年内周数
             int GetWeekNumber(DateTime date)
             {
-                Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+                System.Globalization.Calendar calendar = CultureInfo.InvariantCulture.Calendar;
                 return calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Friday);
             }
 

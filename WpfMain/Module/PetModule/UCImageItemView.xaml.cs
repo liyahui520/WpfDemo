@@ -10,8 +10,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DrawTools;
 using DrawTools.Utils;
+using Newtonsoft.Json.Linq;
 using WpfMain.Entity;
 using WpfMain.Logic;
+using WpfMain.Module.PetModule;
 
 namespace PacsCore
 {
@@ -30,6 +32,21 @@ namespace PacsCore
         private int oldthreshold = 0;
         private ImageItem dinfo;
 
+        public double Zoom
+        {
+            get => (double)GetValue(ZoomProperty);
+            set
+            {
+                //if (value == zoom)
+                //    return;
+                //DowheelZoom(zoom > value ? 0.25 : -0.25);
+
+                SetValue(ZoomProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(nameof(Zoom), typeof(double), typeof(UCImageItemView));
+
         /// <summary>
         /// 当前检查信息
         /// </summary>
@@ -44,7 +61,7 @@ namespace PacsCore
             dinfo = tInfo.Result.Images[0];
             dicomImage1.Source = dinfo.ImageSource;
             Loaded += UCImageItemView_Loaded;
-          
+
 
         }
 
@@ -95,7 +112,7 @@ namespace PacsCore
         /// </summary>
         /// <param name="point"></param>
         /// <param name="delta"></param>
-        public void DowheelZoom(Point point, double delta)
+        public void DowheelZoom(Point point, double delta, bool zoomcheck = true)
         {
             TransformGroup group = IMG.FindResource("Imageview") as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;
@@ -109,12 +126,15 @@ namespace PacsCore
             transform.ScaleY += delta;
 
             zoom = transform.ScaleX * szoom;
+            Zoom = zoom;
+            //SetValue(ZoomProperty, zoom);
+ 
 
             LoadRuler();
         }
-        public void DowheelZoom(double delta)
+        public void DowheelZoom(double delta, bool zoomcheck = true)
         {
-            DowheelZoom(new Point(IMG.ActualWidth / 2, IMG.ActualHeight / 2), delta);
+            DowheelZoom(new Point(IMG.ActualWidth / 2, IMG.ActualHeight / 2), delta, zoomcheck);
         }
         /// <summary>
         /// 旋转
@@ -236,7 +256,7 @@ namespace PacsCore
             //resolution
             Thickness ltk = new Thickness(0, 0, 0, 0);
             Thickness btk = new Thickness(0, 0, 0, 0);
-            double x1, y2, cl = 100 / value * zoom;
+            double x1, y2, cl = 100 / value * Zoom;
             double c2 = cl / 100;
 
 
@@ -262,7 +282,7 @@ namespace PacsCore
                 }
             }
 
-            TextBlockZoom.Text = zoom.ToString("0.00") + "X";
+            TextBlockZoom.Text = Zoom.ToString("0.00") + "X";
         }
 
         /// <summary>
@@ -280,17 +300,17 @@ namespace PacsCore
             double h = IMG.ActualHeight / dinfo.ImageSource.Height;
             if (w < 1 || h < 1)
             {
-                zoom = w > h ? h : w;
-                transform.CenterX = (IMG.ActualWidth - (dinfo.ImageSource.Width * zoom)) / 2;
-                transform.CenterY = (IMG.ActualHeight - (dinfo.ImageSource.Height * zoom)) / 2;
-                transform.ScaleX = zoom;
-                transform.ScaleY = zoom;
+                Zoom = w > h ? h : w;
+                transform.CenterX = (IMG.ActualWidth - (dinfo.ImageSource.Width * Zoom)) / 2;
+                transform.CenterY = (IMG.ActualHeight - (dinfo.ImageSource.Height * Zoom)) / 2;
+                transform.ScaleX = Zoom;
+                transform.ScaleY = Zoom;
             }
             else
             {
                 transform.ScaleX = 1;
                 transform.ScaleY = 1;
-                zoom = 1;
+                Zoom = 1;
             }
 
             TranslateTransform transform1 = group.Children[1] as TranslateTransform;

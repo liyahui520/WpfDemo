@@ -70,7 +70,7 @@
             </TabItem>
             <TabItem Header="图片设置" HeaderStringFormat="{}{0}" Width="120">
                 <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="Hidden">
                         <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="ImagePath" hc:InfoElement.Title="拍照路径" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
                         <Button Content="选择路径" Click="ImagePath_OnClick" Style="{StaticResource ButtonPrimary}" Margin="10,0,0,0"/>
                     </StackPanel>

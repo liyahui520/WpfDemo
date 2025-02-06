@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WpfMain.Entity;
 using System.IO;
 using Newtonsoft.Json;
+using System.Windows.Media.Animation;
 
 namespace WpfMain.Logic
 {
@@ -15,31 +16,43 @@ namespace WpfMain.Logic
     /// </summary>
     public static class TestLogic
     {
-        public static string TempPath = "Temp";
-        public static string DataPath = "data";
+        //public static string TempPath = "Temp";
+        //public static string DataPath = "data";
+        public static string JsonDataPath = "jsondata";
         private static List<TestInfo> infos;
         private static DateTime? stime;
 
         static TestLogic()
         {
-            TempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TempPath);
-            DataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DataPath);
+            //如果全局已配置data路径 改为配置路径
+            //DataPath = AppStatic.VideoConfig.VideoPath;
+
+            //TempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TempPath);
+            //DataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DataPath);
             infos = new List<TestInfo>();
 
-            if (!Directory.Exists(TempPath))
-                Directory.CreateDirectory(TempPath);
-            if (!Directory.Exists(DataPath))
-                Directory.CreateDirectory(TempPath);
+            //if (!Directory.Exists(TempPath))
+            //    Directory.CreateDirectory(TempPath);
+            //if (!Directory.Exists(DataPath))
+            //    Directory.CreateDirectory(TempPath);
         }
 
         public static bool Save(TestInfo tInfo)
         {
-            string fileName = Path.Combine(DataPath, $"{tInfo.TestDate:yyyyMMddHHmmss}|{tInfo.Id}.json");
-            File.WriteAllText(fileName, JsonConvert.SerializeObject(tInfo));
+            string name = $"{tInfo.TestDate:yyyyMMddHHmmss}_{tInfo.Id}";
+            string jsonfileName = Path.Combine(JsonDataPath, $"{name}.json");
+            File.WriteAllText(jsonfileName, JsonConvert.SerializeObject(tInfo));
 
             //将检查数据由内存或临时目录保存到结果目录
             {
-            
+                if (!Directory.Exists(AppStatic.VideoConfig.VideoPath))
+                    Directory.CreateDirectory(AppStatic.VideoConfig.VideoPath);
+                string dname = Path.Combine(AppStatic.VideoConfig.VideoPath,name);
+                if (!Directory.Exists(dname))
+                    Directory.CreateDirectory(dname);
+
+                tInfo.Result?.Images?.ForEach(x=>x.Bitmap.Save(Path.Combine(dname,x.Name)));
+                tInfo.Result?.Vedios?.ForEach(x=>File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name),Path.Combine(dname,x.Name)));
             }
 
             //添加缓存
@@ -51,7 +64,7 @@ namespace WpfMain.Logic
         public static List<TestInfo> Load(DateTime startTime, DateTime endTime)
         {
             FillTest(startTime);
-            return infos.Where(o=>o.TestDate>=startTime && o.TestDate<=endTime).ToList();
+            return infos.Where(o => o.TestDate >= startTime && o.TestDate <= endTime).ToList();
         }
 
 
@@ -65,7 +78,7 @@ namespace WpfMain.Logic
                 return;
             stime = startTime;
 
-            string[] files = Directory.GetFiles(DataPath, "*.json");
+            string[] files = Directory.GetFiles(JsonDataPath, "*.json");
             foreach (string file in files)
             {
                 string[] names = file.Split('|');

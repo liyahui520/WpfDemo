@@ -46,8 +46,8 @@ namespace WpfMain.Controlls
 
         static UCVideo()
         {
-            if (Directory.Exists(TestLogic.TempPath))
-                Directory.CreateDirectory(TestLogic.TempPath);
+            if (Directory.Exists(AppVideoConfig.TempPath))
+                Directory.CreateDirectory(AppVideoConfig.TempPath);
         }
         public UCVideo()
         {
@@ -58,7 +58,7 @@ namespace WpfMain.Controlls
         {
 
             videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder = new CameraRecorder(TestLogic.TempPath + videoFileName, 20, true);
+            recorder = new CameraRecorder(AppVideoConfig.TempPath + videoFileName, 20, true);
             InitVideo();
 
         }
@@ -102,7 +102,7 @@ namespace WpfMain.Controlls
         public void SetAviFilePath()
         {
             videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder.SetAviFilePath(TestLogic.TempPath + videoFileName);
+            recorder.SetAviFilePath(AppVideoConfig.TempPath + videoFileName);
         }
 
         public void AutoWavRecorder(bool isOpen)
