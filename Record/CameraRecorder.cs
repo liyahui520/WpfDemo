@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static AForge.Robotics.Surveyor.SVS;
+using AForge.Video.VFW;
 
 namespace Record
 {
@@ -32,6 +33,7 @@ namespace Record
         protected VideoFileWriter VideoWriter;
         private ScreenCaptureStream VideoStreamer;
         private FolderBrowserDialog FolderBrowser;
+        private AVIWriter aviWriter;
         private VideoCodec VideoCodec;
         /// <summary>
         /// 操作摄像头
@@ -64,10 +66,11 @@ namespace Record
         /// 摄像头录制
         /// </summary>
         /// <param name="aviFilePath">视频路径</param>
+        /// <param name="wavFilePath">录音路径</param>
         /// <param name="defaultFrameRate">默认帧数</param>
         /// <param name="isLoopingWav">是否录制声音(默认不录制)</param>
         /// <param name="videoCodec">视频格式</param>
-        public CameraRecorder(string aviFilePath, int defaultFrameRate = 10, bool isLoopingWav = false, VideoCodec videoCodec = VideoCodec.Raw)
+        public CameraRecorder(string aviFilePath, string wavFilePath, int defaultFrameRate = 30, bool isLoopingWav = false, VideoCodec videoCodec = VideoCodec.Raw)
         {
             this.AviFilePath = aviFilePath;
             this.DEFAULT_FRAME_RATE = defaultFrameRate;
@@ -82,16 +85,19 @@ namespace Record
 
             //是否需要录制声音
             if (isLoopingWav)
-                wavRecorder = new WavRecorder(AppDomain.CurrentDomain.BaseDirectory + Guid.NewGuid().ToString().Replace("-", "") + ".wav");
+                wavRecorder = new WavRecorder(wavFilePath);
         }
 
-        public void SetAviFilePath(string aviFilePath) => AviFilePath = aviFilePath;
+        public void SetAviFilePath(string aviFilePath)
+        {
+            AviFilePath = aviFilePath;
+        }
 
-        public void AutoWavRecorder(bool open = true)
+        public void AutoWavRecorder(string wavFilePath, bool open = true)
         {
             if (open)
             {
-                wavRecorder = new WavRecorder(AppDomain.CurrentDomain.BaseDirectory + Guid.NewGuid().ToString().Replace("-", "") + ".wav");
+                wavRecorder = new WavRecorder(wavFilePath);
             }
             else
             {
@@ -110,7 +116,7 @@ namespace Record
                 }
 
                 Camera = null; // 重置videoSource对象
-            } 
+            }
         }
 
         /// <summary>
@@ -163,9 +169,31 @@ namespace Record
             //    this.RecorderStatus = RecorderStatus.Start;
             //    return;
             //}
-            if (wavRecorder != null)
-                this.wavRecorder.Start();
+            //if (wavRecorder != null)
+            //    this.wavRecorder.Start();
             this.RecorderStatus = RecorderStatus.Start;
+            //// 初始化AVIWriter并设置压缩编码器（例如Motion JPEG）
+            //aviWriter = new AVIWriter("MJPG"); // 使用Motion JPEG编码器
+            //aviWriter.FrameRate = 30; // 设置帧率
+            //aviWriter.Quality = 80;   // 设置压缩质量（0-100）
+            //// 确保分辨率与摄像头实际输出一致
+            //var caps = Camera.VideoCapabilities;
+            //var selectedCap = caps.FirstOrDefault(c => c.FrameSize.Width == 640 && c.FrameSize.Height == 480);
+
+            //if (selectedCap != null)
+            //{
+            //    aviWriter.Open(AviFilePath, selectedCap.FrameSize.Width, selectedCap.FrameSize.Height);
+            //    aviWriter.FrameRate = selectedCap.AverageFrameRate;
+            //}
+            //else
+            //{
+            //    // 默认参数
+            //    aviWriter.Open(AviFilePath, 640, 480);
+            //    aviWriter.FrameRate = 30;
+            //}
+            //if (!File.Exists(AviFilePath))
+            //    File.Create(AviFilePath);
+            //aviWriter.Open(AviFilePath, 640, 480);
             //设置回调,aforge会不断从这个回调推出图像数据
             Camera.NewFrame += Camera_NewFrame;
             //是否需要录制声音
@@ -199,9 +227,19 @@ namespace Record
                 }
 
                 if (!File.Exists(AviFilePath))
-                    VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
+                {
+                    var caps = Camera.VideoCapabilities;
+                    var selectedCap = caps.FirstOrDefault(c => c.FrameSize.Width == 640 && c.FrameSize.Height == 480);
+                    //    aviWriter.Open(AviFilePath, img.Width, img.Height);
+                    if (selectedCap != null)
+                        VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
+                    else
+                    {
+                        VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
+                    }
+                }
                 this.VideoWriter?.WriteVideoFrame(img);
-
+                //aviWriter.AddFrame(img);
                 //每100帧回收一次虚拟内存
                 if ((TotalFrame++) % 100 == 0)
                 {
@@ -225,6 +263,9 @@ namespace Record
                 this.RecorderStatus = RecorderStatus.End;
                 //设置回调,aforge会不断从这个回调推出图像数据
                 Camera.NewFrame -= Camera_NewFrame;
+                //// 释放资源
+                //aviWriter.Close();
+                //aviWriter.Dispose();
                 VideoStreamer?.Stop();
                 VideoWriter.Close();
                 //是否需要录制声音

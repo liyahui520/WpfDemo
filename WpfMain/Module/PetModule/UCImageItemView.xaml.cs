@@ -38,13 +38,13 @@ namespace PacsCore
         {
             tInfo = info;
             InitializeComponent();
-            if (tInfo?.Result?.Images == null)
+            if (tInfo?.Result?.Images == null && tInfo?.Result?.Images.Count > 0)
                 return;
 
-            dinfo = tInfo.Result.Images[0];
+            dinfo = tInfo.Result?.Images[0];
             dicomImage1.Source = dinfo.ImageSource;
             Loaded += UCImageItemView_Loaded;
-          
+
 
         }
 

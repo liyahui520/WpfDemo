@@ -9,6 +9,8 @@ using System.IO;
 using Image = System.Drawing.Image;
 using System.Windows.Media.Media3D;
 using WpfMain.Logic;
+using System.Windows.Shell;
+using AForge.Video.FFMPEG;
 
 namespace WpfMain.Controlls
 {
@@ -19,6 +21,7 @@ namespace WpfMain.Controlls
     {
         VideoCaptureDevice CaptureDevice;
         private string videoFileName = string.Empty; //视频文件名
+        private string wavFileName = string.Empty; //音频文件名
         public bool isStart = false;
         #region 自定义事件
         public CameraRecorder recorder { get; set; }
@@ -57,8 +60,9 @@ namespace WpfMain.Controlls
         private void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
 
-            videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder = new CameraRecorder(TestLogic.TempPath + videoFileName, 20, true);
+            videoFileName = Path.Combine(TestLogic.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
+            wavFileName = Path.Combine(TestLogic.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
+            recorder = new CameraRecorder(videoFileName, wavFileName, 30, true,VideoCodec.MSMPEG4v3);
             InitVideo();
 
         }
@@ -96,18 +100,19 @@ namespace WpfMain.Controlls
                     button_Play_Click(this, null);
                 }
             }
-            
+
         }
         //重新设置视频保存路径
         public void SetAviFilePath()
         {
-            videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
-            recorder.SetAviFilePath(TestLogic.TempPath + videoFileName);
+            videoFileName = Path.Combine(TestLogic.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
+            wavFileName = Path.Combine(TestLogic.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
+            recorder.SetAviFilePath(videoFileName);
         }
 
         public void AutoWavRecorder(bool isOpen)
         {
-            recorder?.AutoWavRecorder(isOpen);
+            recorder?.AutoWavRecorder(wavFileName, isOpen);
         }
 
         public void Start()
@@ -124,13 +129,13 @@ namespace WpfMain.Controlls
 
         public string End()
         {
-           
+
             isStart = false;
-           return recorder.End();
+            return recorder.End();
         }
 
         public void Close()
-        { 
+        {
             if (CaptureDevice != null)
             {
                 if (CaptureDevice.IsRunning)
