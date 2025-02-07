@@ -81,7 +81,7 @@ namespace WpfMain.Logic
             string[] files = Directory.GetFiles(JsonDataPath, "*.json");
             foreach (string file in files)
             {
-                string[] names = file.Replace(DataPath + "\\", "").Split('&');
+                string[] names = file.Replace(JsonDataPath + "\\", "").Split('_');
                 if (DateTime.ParseExact(names[0], "yyyyMMddHHmmss", null) < startTime)
                     continue;
                 if (infos.Any(o => o.Id == names[1]))
