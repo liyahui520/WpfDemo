@@ -13,6 +13,8 @@ namespace WpfMain
 
         public static AppHospital AppHospital { get; set; }
 
+        
+
         public static Window MainWindow { get; set; }
     }
 }

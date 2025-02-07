@@ -49,10 +49,8 @@
                 <ScrollViewer Grid.Row="1" hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="10,0,10,10">
                     <StackPanel Orientation="Vertical" >
 
-                        <Expander Header="处理" Margin="0,4,0,0" >
+                        <Expander Header="缩放/旋转" Margin="0,4,0,0" >
                             <Border  Width="300" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4"  Padding="10">
-
-
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <hc:ButtonGroup>
@@ -74,11 +72,16 @@
                                             </Button>
 
                                         </hc:ButtonGroup>
-                                        <hc:PreviewSlider Name="PreviewSliderHorizontal1" Width="180" Minimum="0.2" Value="1" Maximum="4" SmallChange="0.25" >
+                                        <hc:ScrollViewer IsInertiaEnabled="True" Visibility="Hidden">
+                                            <Slider Width="160" IsSnapToTickEnabled="True" TickFrequency="0.25" Minimum="0" Maximum="4" TickPlacement="TopLeft" Value="{Binding UCD.Zoom}" />
+                                        </hc:ScrollViewer>
+
+                                        <!--<hc:PreviewSlider Name="PreviewSliderHorizontal1"  Width="160" Minimum="0.2" Value="{Binding UCD.Zoom}" Maximum="4" SmallChange="0.25" >
                                             <hc:PreviewSlider.PreviewContent>
                                                 <Label  Content="{Binding Path=(hc:PreviewSlider.PreviewPosition),RelativeSource={RelativeSource Self}}" ContentStringFormat="#0.00"/>
                                             </hc:PreviewSlider.PreviewContent>
-                                        </hc:PreviewSlider>
+
+                                        </hc:PreviewSlider>-->
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <Button Width="30" Height="30" Click="Button_Click_xuanzhuan" ToolTip="旋转" >
@@ -93,19 +96,13 @@
                                             </Button.Background>
                                         </Button>
                                     </StackPanel>
-
                                 </StackPanel>
-
-
                             </Border>
                         </Expander>
-                        <Expander Header="灰度" Margin="0,4,0,0" >
-                            <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" >
-
+                        <Expander Header="对比度" Margin="0,4,0,0" >
+                            <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" >
                                 <StackPanel Orientation="Horizontal">
                                     <hc:ButtonGroup>
-
-
                                         <Button Width="30" Height="30"  ToolTip="对比度-" Click="Button_Click_Duibi" Tag="-30">
                                             <Button.Background>
                                                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Static/Images/对比度 (1).png"/>
@@ -116,16 +113,12 @@
                                                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Static/Images/对比度.png"/>
                                             </Button.Background>
                                         </Button>
-
                                     </hc:ButtonGroup>
 
-                                    <hc:PreviewSlider Height="30" Name="PreviewSliderHorizontal" Width="180" Minimum="0.2" Value="1" Maximum="4" SmallChange="0.25" VerticalAlignment="Top" >
-                                        <hc:PreviewSlider.PreviewContent>
-                                            <Label  Content="{Binding Path=(hc:PreviewSlider.PreviewPosition),RelativeSource={RelativeSource Self}}" ContentStringFormat="#0.00"/>
-                                        </hc:PreviewSlider.PreviewContent>
-                                    </hc:PreviewSlider>
 
-
+                                    <hc:ScrollViewer IsInertiaEnabled="True">
+                                        <Slider Width="160" IsSnapToTickEnabled="True" TickFrequency="30" Minimum="-90" Maximum="180" TickPlacement="TopLeft" Value="{Binding UCD.Threshold,Mode=TwoWay}" />
+                                    </hc:ScrollViewer>
                                 </StackPanel>
 
 
@@ -176,11 +169,11 @@
                                                     <ImageBrush ImageSource="pack://siteoforigin:,,,/Static/Images/clear2.png"/>
                                                 </Button.Background>
                                             </Button>
-                                            <Button Width="30" Height="30"  ToolTip="保存"  Click="Button_Click_save">
+                                            <!--<Button Width="30" Height="30"  ToolTip="保存"  Click="Button_Click_save">
                                                 <Button.Background>
                                                     <ImageBrush ImageSource="pack://siteoforigin:,,,/Static/Images/clear2.png"/>
                                                 </Button.Background>
-                                            </Button>
+                                            </Button>-->
                                         </hc:ButtonGroup>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
@@ -193,7 +186,7 @@
                             </Border>
                         </Expander>
                         <Expander Header="遮罩" Margin="0,4,0,0" >
-                            <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
+                            <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
                                 <StackPanel Orientation="Horizontal">
                                     <hc:ButtonGroup>
 
@@ -215,7 +208,7 @@
                         </Expander>
                         <Expander Header="对比" Margin="0,4,0,0" >
 
-                            <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
+                            <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
                                 <StackPanel Orientation="Horizontal">
                                     <hc:ButtonGroup>
 

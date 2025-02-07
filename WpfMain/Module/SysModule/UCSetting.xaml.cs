@@ -108,7 +108,10 @@ namespace WpfMain.Module.SysModule
             //}
             AppVideoConfig config = new AppVideoConfig();
             config.VideoPath = VideoPath.Text.Trim();
-            config.ImagePath = ImagePath.Text.Trim();
+
+
+
+            //config.ImagePath = ImagePath.Text.Trim();
             config.VideoType = videoType.SelectedValue.ToString().ToLower();
             config.ImageType = imageType.SelectedValue.ToString().ToLower();
             config.VideoDecive = device.SelectedValue.ToString();
