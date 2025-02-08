@@ -47,6 +47,7 @@ namespace WpfMain.Module.SysModule
             hospitalContacts.Text = AppStatic.AppHospital.HospitalContacts;
             hospitalPhone.Text = AppStatic.AppHospital.HospitalPhone;
             img.Source = AppStatic.AppHospital.HospitalLogo?.FromByteArray();
+            UserName.Text = AppStatic.AppHospital.UserName;
             #endregion
 
             var deviceList = new List<VideoType>();
@@ -120,6 +121,7 @@ namespace WpfMain.Module.SysModule
 
             AppHospital hospital = new AppHospital();
             hospital.HospitalName = hospitalName.Text.Trim();
+            hospital.UserName = UserName.Text.Trim();
             hospital.HospitalContacts = hospitalContacts.Text.Trim();
             hospital.HospitalPhone = hospitalPhone.Text.Trim();
             hospital.HospitalLogo = ((BitmapImage)img.Source)?.ToByteArray();

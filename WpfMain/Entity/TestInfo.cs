@@ -17,7 +17,7 @@ namespace WpfMain.Entity
     /// <summary>
     /// 检查信息
     /// </summary> 
-    public class TestInfo:ObservableObject
+    public class TestInfo : ObservableObject
     {
         public string Id { get; set; }
 
@@ -30,12 +30,12 @@ namespace WpfMain.Entity
         /// 所见
         /// </summary>
         public string See { get; set; }
-         
+
         /// <summary>
         /// 大小
         /// </summary>
         public string Size { get; set; }
-          
+
         /// <summary>
         /// 数量
         /// </summary>
@@ -54,7 +54,7 @@ namespace WpfMain.Entity
         /// <summary>
         /// 性别
         /// </summary>
-        public string Gender { get; set; } 
+        public string Gender { get; set; }
 
         /// <summary>
         /// 宠主
@@ -81,7 +81,8 @@ namespace WpfMain.Entity
         {
             TestDate = DateTime.Now;
             Customer = "测试用户";
-            TestName = "镜检"; 
+            DCOperation = AppStatic.AppHospital.UserName;
+            TestName = "镜检";
             Gender = Controlls.Gender.犬.ToString();
             Id = Guid.NewGuid().ToString();
         }
@@ -90,9 +91,9 @@ namespace WpfMain.Entity
         {
             get => result;
             set => SetProperty(ref result, value, nameof(Result));
-        } 
+        }
     }
-     
+
     public class TestResult : ObservableObject
     {
         /// <summary>
@@ -187,7 +188,8 @@ namespace WpfMain.Entity
                     bitmap = new Bitmap(Source);
                 return bitmap;
             }
-            set {
+            set
+            {
                 bitmap = value;
             }
         }
@@ -210,7 +212,8 @@ namespace WpfMain.Entity
 
                 return imageSource;
             }
-            set { 
+            set
+            {
                 imageSource = value;
                 MemoryStream ms = new MemoryStream();
                 BmpBitmapEncoder encoder = new BmpBitmapEncoder();

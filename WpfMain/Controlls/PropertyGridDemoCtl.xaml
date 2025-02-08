@@ -55,9 +55,9 @@
                             </Border.Background>
                             <StackPanel Margin="0,0,0,0">
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="检查名称" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding TestName}"/>
-                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="所     见" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding See}"/>
+                                <!--<TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="所     见" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding See}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="大     小" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Size}"/>
-                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="数     量" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Count}"/>
+                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="数     量" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Count}"/>-->
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="检查医生" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding DCOperation}"/> 
                                 <hc:DateTimePicker  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Placeholder="" hc:InfoElement.Title="检查时间" Style="{StaticResource DateTimePickerExtend}" hc:InfoElement.Necessary="True" Text="{Binding TestDate}" Margin="10,0,0,5"/>
                                 <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10,5,0,5">

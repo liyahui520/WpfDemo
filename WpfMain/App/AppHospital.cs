@@ -16,6 +16,11 @@ namespace WpfMain
         public string HospitalName { get; set; }
 
         /// <summary>
+        /// 医院名称
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
         /// 联系人
         /// </summary>
         public string HospitalContacts { get; set; }

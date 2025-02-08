@@ -75,7 +75,7 @@
                                             <Button Content="拍照" Margin="5" x:Name="EndCamp" Click="EndCamp_OnClick" Style="{StaticResource ButtonSuccess}" Foreground="White"/>
                                         </VirtualizingStackPanel>
 
-                                        <Button Content="保存" Margin="5" Click="Button_SaveTest"/>
+                                        <!--<Button Content="保存" Margin="5" Click="Button_SaveTest"/>-->
 
                                     </StackPanel>
                                 </Border>

@@ -23,6 +23,9 @@
                         <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalName" hc:InfoElement.Title="医院名称" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="UserName" hc:InfoElement.Title="医生名称" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalContacts" hc:InfoElement.Title="联系人" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
