@@ -117,7 +117,7 @@
 
 
                                     <hc:ScrollViewer IsInertiaEnabled="True">
-                                        <Slider Width="160" IsSnapToTickEnabled="True" TickFrequency="30" Minimum="-90" Maximum="180" TickPlacement="TopLeft" Value="{Binding UCD.Threshold,Mode=TwoWay}" />
+                                        <Slider Width="160" IsSnapToTickEnabled="True" TickFrequency="30" Minimum="-90" Maximum="180" TickPlacement="TopLeft" Value="{Binding UCD.Threshold, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ValueChanged="RangeBase_OnValueChanged" />
                                     </hc:ScrollViewer>
                                 </StackPanel>
 
@@ -250,12 +250,13 @@
                 <Border.Background>
                     <SolidColorBrush Color="White" Opacity="0.2"/>
                 </Border.Background>
-                <StackPanel>
-                    <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,5">
-                        <Button Content="保存" Margin="5" Width="150"  Style="{StaticResource ButtonSuccess}"/>
-                    </VirtualizingStackPanel>
-
+                <StackPanel>  
                     <controlls:PropertyGridDemoCtl  Margin="10" Background="Transparent" ParentData="{Binding tInfos, Mode=TwoWay}"/>
+
+                    <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,5">
+                        <Button Content="保存" Margin="20,0,20,0" Width="150" Click="Button_SaveTest" Style="{StaticResource ButtonSuccess}"/>
+                        <Button Content="保存并打印" Margin="20,0,0,0" Width="150"   Style="{StaticResource ButtonPrimary}"/>
+                    </VirtualizingStackPanel>
                 </StackPanel>
             </Border>
         </Grid>

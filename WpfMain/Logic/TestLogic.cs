@@ -7,6 +7,7 @@ using WpfMain.Entity;
 using System.IO;
 using Newtonsoft.Json;
 using System.Windows.Media.Animation;
+using System.Drawing;
 
 namespace WpfMain.Logic
 {
@@ -29,10 +30,11 @@ namespace WpfMain.Logic
 
             //TempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TempPath);
             //DataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DataPath);
+            var tmp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, JsonDataPath);
             infos = new List<TestInfo>();
 
-            //if (!Directory.Exists(TempPath))
-            //    Directory.CreateDirectory(TempPath);
+            if (!Directory.Exists(tmp))
+                Directory.CreateDirectory(tmp);
             //if (!Directory.Exists(DataPath))
             //    Directory.CreateDirectory(TempPath);
         }
@@ -51,7 +53,7 @@ namespace WpfMain.Logic
                 if (!Directory.Exists(dname))
                     Directory.CreateDirectory(dname);
 
-                tInfo.Result?.Images?.ForEach(x=>x.Bitmap.Save(Path.Combine(dname,x.Name)));
+                tInfo.Result?.Images?.ForEach(x=> new Bitmap(x.Bitmap).Save(Path.Combine(dname,x.Name)));
                 tInfo.Result?.Vedios?.ForEach(x=>File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name),Path.Combine(dname,x.Name)));
             }
 
@@ -81,7 +83,7 @@ namespace WpfMain.Logic
             string[] files = Directory.GetFiles(JsonDataPath, "*.json");
             foreach (string file in files)
             {
-                string[] names = file.Replace(JsonDataPath + "\\", "").Split('_');
+                string[] names = file.Replace(JsonDataPath+"\\","").Split('_');
                 if (DateTime.ParseExact(names[0], "yyyyMMddHHmmss", null) < startTime)
                     continue;
                 if (infos.Any(o => o.Id == names[1]))

@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfMain.Entity;
+using WpfMain.Logic;
 
 namespace WpfMain.Module.PetModule
 {
@@ -27,7 +28,8 @@ namespace WpfMain.Module.PetModule
     {
         public List<object> ResolutionDataList = new List<object>();
         //private TestInfo tInfo;
-        public UCImageItemView UCD {
+        public UCImageItemView UCD
+        {
             get => (UCImageItemView)GetValue(UCDProperty);
             set => SetValue(UCDProperty, value);
         }
@@ -104,7 +106,7 @@ namespace WpfMain.Module.PetModule
         private void Button_Click_Duibi(object sender, RoutedEventArgs e)
         {
             if (UCD != null)
-                UCD.Threshold+=int.Parse(((Control)sender).Tag.ToString());
+                UCD.Threshold += int.Parse(((Control)sender).Tag.ToString());
 
         }
 
@@ -211,7 +213,32 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Screenshot_Snapped(object sender, HandyControl.Data.FunctionEventArgs<ImageSource> e)
         {
-            tInfos.Result.Images.Add(new ImageItem { Name=$"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource=e.Info });
+            var old = tInfos.Result;
+            tInfos.Result = new TestResult();
+            old.Images.Add(new ImageItem { Name = $"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource = e.Info });
+            tInfos.Result = old;
+        }
+
+        /// <summary>
+        /// 对比度拖拽事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RangeBase_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (UCD != null)
+                UCD.Threshold = Convert.ToInt32(e.NewValue);
+        }
+
+        /// <summary>
+        /// 保存检查
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_SaveTest(object sender, RoutedEventArgs e)
+        { 
+            TestLogic.Save(tInfos);
+            MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
         }
     }
 }
