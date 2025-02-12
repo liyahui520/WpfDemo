@@ -266,6 +266,7 @@ namespace WpfMain.Module.PetModule
         {
             FrmBackModule pet = new FrmBackModule(new FrmPetImage(e));
             pet.title.Text = "查看";
+            pet.Owner = AppStatic.MainWindow;
             pet.ShowDialog();
             tInfo = new TestInfo();
             tInfo = e;

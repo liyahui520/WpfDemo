@@ -43,20 +43,26 @@ namespace WpfMain.Logic
         {
             string name = $"{tInfo.TestDate:yyyyMMddHHmmss}_{tInfo.Id}";
             string jsonfileName = Path.Combine(JsonDataPath, $"{name}.json");
-            File.WriteAllText(jsonfileName, JsonConvert.SerializeObject(tInfo));
 
             //将检查数据由内存或临时目录保存到结果目录
             {
                 if (!Directory.Exists(AppStatic.VideoConfig.VideoPath))
                     Directory.CreateDirectory(AppStatic.VideoConfig.VideoPath);
-                string dname = Path.Combine(AppStatic.VideoConfig.VideoPath,name);
+                string dname = Path.Combine(AppStatic.VideoConfig.VideoPath, name);
                 if (!Directory.Exists(dname))
                     Directory.CreateDirectory(dname);
 
-                tInfo.Result?.Images?.ForEach(x=> new Bitmap(x.Bitmap).Save(Path.Combine(dname,x.Name)));
-                tInfo.Result?.Vedios?.ForEach(x=>File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name),Path.Combine(dname,x.Name)));
+                tInfo.Result?.Images?.ForEach(x =>
+                {
+                    new Bitmap(x.Bitmap).Save(Path.Combine(dname, x.Name));
+                    x.Source = Path.Combine(dname, x.Name);
+                    x.Type = MediaSourceType.LocalPath;
+                    x.Name = x.Name;
+                });
+                tInfo.Result?.Vedios?.ForEach(x => File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name), Path.Combine(dname, x.Name)));
             }
 
+            File.WriteAllText(jsonfileName, JsonConvert.SerializeObject(tInfo));
             //添加缓存
             if (!infos.Any(o => o.Id == tInfo.Id))
                 infos.Add(tInfo);
@@ -83,7 +89,7 @@ namespace WpfMain.Logic
             string[] files = Directory.GetFiles(JsonDataPath, "*.json");
             foreach (string file in files)
             {
-                string[] names = file.Replace(JsonDataPath+"\\","").Split('_');
+                string[] names = file.Replace(JsonDataPath + "\\", "").Split('_');
                 if (DateTime.ParseExact(names[0], "yyyyMMddHHmmss", null) < startTime)
                     continue;
                 if (infos.Any(o => o.Id == names[1]))

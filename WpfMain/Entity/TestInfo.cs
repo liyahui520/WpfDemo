@@ -171,8 +171,7 @@ namespace WpfMain.Entity
         /// <summary>
         /// 像素间距单拉 毫米mm,纳米 pm
         /// </summary>
-        public string PixelSpacingUnit { get; set; }
-
+        public string PixelSpacingUnit { get; set; } 
 
         [JsonIgnore]
         public Bitmap Bitmap

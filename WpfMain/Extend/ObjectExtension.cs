@@ -581,7 +581,36 @@ namespace WpfMain.Extend
                 return memoryStream.ToArray();  // 转换为 byte[]  
             }
         }
+        /// <summary>
+        /// Bitmap图像格式转为字节
+        /// 多线程启用时经常出问题
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static byte[] Bitmap2Byte(this Bitmap bitmap)
+        {
+            using (Stream stream1 = new MemoryStream())
+            {
+                bitmap.Save(stream1, ImageFormat.Png);
+                byte[] arr = new byte[stream1.Length];
+                stream1.Position = 0;
+                stream1.Read(arr, 0, (int)stream1.Length);
+                stream1.Close();
+                return arr;
+            }
+        }
 
+        public static Bitmap Byte2Bitmap(this byte[] bytes)
+        {
+            byte[] bytelist = bytes;
+            Bitmap bitmap;
+            using (MemoryStream ms1 = new MemoryStream(bytelist))
+            {
+                bitmap = (Bitmap)System.Drawing.Image.FromStream(ms1);
+                ms1.Close();
+            }
+            return bitmap;
+        } 
 
         #region Bitmap与ImageSource互转
         /// <summary>

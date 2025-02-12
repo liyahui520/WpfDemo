@@ -165,7 +165,7 @@
 
                         <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,5">
                             <Button Content="保存" Margin="20,0,20,0" Width="150" Click="Button_SaveTest"  Style="{StaticResource ButtonSuccess}"/>
-                            <Button Content="保存并打印" Margin="20,0,0,0" Width="150" Click="Button_SaveTest"  Style="{StaticResource ButtonPrimary}"/>
+                            <Button Content="保存并预览" Margin="20,0,0,0" Width="150" Click="Button_SaveTest"  Style="{StaticResource ButtonPrimary}"/>
                         </VirtualizingStackPanel>
                     </StackPanel>
 

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfMain.Controlls;
 using WpfMain.Entity;
 using WpfMain.Logic;
 using WpfMain.Module.PetModule;
@@ -71,6 +72,20 @@ namespace WpfMain.Module
                 return;
             } 
             InitData();
+        }
+
+        /// <summary>
+        /// 查看影像
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Img_OnClick(object sender, RoutedEventArgs e)
+        {
+           var entity= (TestInfo)((System.Windows.FrameworkElement)e.Source).Tag;
+           FrmImgView view = new FrmImgView(entity);
+           view.Owner = AppStatic.MainWindow;
+           view.ShowDialog();
         }
     }
 

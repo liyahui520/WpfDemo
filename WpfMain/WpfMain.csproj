@@ -123,6 +123,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controlls\FrmImgView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controlls\UCLocalVideo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -152,6 +156,9 @@
     </Compile>
     <Compile Include="Controlls\UCImageButton.xaml.cs">
       <DependentUpon>UCImageButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controlls\FrmImgView.xaml.cs">
+      <DependentUpon>FrmImgView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controlls\UCLocalVideo.xaml.cs">
       <DependentUpon>UCLocalVideo.xaml</DependentUpon>

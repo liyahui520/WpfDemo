@@ -23,6 +23,7 @@ namespace WpfMain.Controlls
         public UCLocalVideo(string fileName)
         {
             InitializeComponent();
+            Owner = AppStatic.MainWindow;
             InitializePlayer();
             LoadVideo(fileName);
         }
