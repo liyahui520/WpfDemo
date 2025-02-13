@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HandyControl.Themes;
-using Record;
+
 using System.Windows;
 using System.Windows.Media;
 using MessageBox = HandyControl.Controls.MessageBox;
 using HandyControl.Properties.Langs;
 using HandyControl.Tools;
 using System.Globalization;
+using System.Reflection;
+using System.IO;
+
 namespace WpfMain
 {
     public partial class App : Application
@@ -36,6 +39,10 @@ namespace WpfMain
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             // 处理Task没有捕获到全局异常
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
+
+
+
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -47,7 +54,20 @@ namespace WpfMain
             ConfigHelper.Instance.SetWindowDefaultStyle();
             ConfigHelper.Instance.SetNavigationWindowDefaultStyle();
             //初始化DLL配置
-            Global.InitDllPath();
+            //Global.InitDllPath();
+
+#if !DEBUG
+            try
+            {
+                if (!SetupLogic.Update())
+                    Current.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                //BCLApplication.log.Error(ex);
+            }
+#endif
+
         }
 
         // 在垃圾回收机制触发的时候，才能捕捉到Task异常
@@ -64,6 +84,30 @@ namespace WpfMain
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show(e.Exception.Message, "系统提示", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+
+
+        public class SetupLogic
+        {
+
+            public static bool Update()
+            {
+                if (File.Exists("TempSetup.exe"))
+                {
+                    File.Copy("TempSetup.exe", "Setup.exe", true);
+                    File.Delete("TempSetup.exe");
+                    return true;
+                }
+
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Setup.exe");
+                MethodInfo minfo = Assembly.LoadFile(path).GetType("Setup.Logic").GetMethod("Update");
+                if (minfo == null)
+                    return true;
+
+                return (bool)minfo.Invoke(null, null);
+            }
+
         }
     }
 }
