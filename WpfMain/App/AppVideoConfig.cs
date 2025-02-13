@@ -36,7 +36,7 @@ namespace WpfMain
 
         static AppVideoConfig()
         {
-            if (Directory.Exists(TempPath))
+            if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
 
             ConfigPath = AppDomain.CurrentDomain.BaseDirectory + "Config\\";
