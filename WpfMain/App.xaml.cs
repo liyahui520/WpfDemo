@@ -66,10 +66,10 @@ namespace WpfMain
             {
                 //BCLApplication.log.Error(ex);
             }
-
+#endif
 
         }
-#endif
+
         // 在垃圾回收机制触发的时候，才能捕捉到Task异常
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
