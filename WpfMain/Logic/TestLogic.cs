@@ -57,7 +57,7 @@ namespace WpfMain.Logic
                     new Bitmap(x.Bitmap).Save(Path.Combine(dname, x.Name));
                     x.Source = Path.Combine(dname, x.Name);
                     x.Type = MediaSourceType.LocalPath;
-                    x.Name = x.Name;
+                    x.Name = x.Name;                                                                                                    
                 });
                 tInfo.Result?.Vedios?.ForEach(x => File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name), Path.Combine(dname, x.Name)));
             }

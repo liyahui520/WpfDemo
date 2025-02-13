@@ -25,18 +25,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type entity:ImageItem}">
                     <hc:Card  BorderBrush="CornflowerBlue" BorderThickness="2" Cursor="Hand" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="140"  Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
-                        <hc:Card.Style>
-                            <Style TargetType="hc:Card">
-                                <Setter Property="BorderThickness" Value="2"></Setter>
-                                <Setter Property="BorderBrush" Value="Transparent"></Setter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectName}"> 
-                                        <Setter Property="BorderThickness" Value="2"></Setter>
-                                        <Setter Property="BorderBrush" Value="CornflowerBlue"></Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </hc:Card.Style>
+                   
                         <hc:Card.Background>
                             <SolidColorBrush Color="White" Opacity="0.2"/>
                         </hc:Card.Background>

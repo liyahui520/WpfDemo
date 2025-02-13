@@ -188,7 +188,11 @@
                         <Expander Header="遮罩" Margin="0,4,0,0" >
                             <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
                                 <StackPanel Orientation="Horizontal">
-                                    <hc:ButtonGroup>
+
+                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="mask" Click="Button_Click_Comparison" ToolTip="遮罩" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
+                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="screenshot" ToolTip="截图"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
+
+<!--<hc:ButtonGroup>
 
                                         <Button Width="30" Height="30"  ToolTip="遮罩" Click="Button_Click_Comparison">
                                             <Button.Background>
@@ -202,7 +206,7 @@
                                                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Static/Images/screenshot-line.png"/>
                                             </Button.Background>
                                         </Button>
-                                    </hc:ButtonGroup>
+                                    </hc:ButtonGroup>-->
                                 </StackPanel>
                             </Border>
                         </Expander>

@@ -80,6 +80,23 @@
                                     </StackPanel>
                                 </Border>
                             </Expander>
+
+                            <Expander Header="遮罩" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White" FontSize="20">
+                                <Expander.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Expander.Background>
+                                <Border Height="50" BorderThickness="0,1,0,0"  BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    </Border.Background>
+                                    <StackPanel Orientation="Horizontal">
+
+                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="mask" Click="Mask_OnClick" ToolTip="遮罩" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
+                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="screenshot" ToolTip="截图"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
+                                       
+                                    </StackPanel>
+                                </Border>
+                            </Expander>
                             <!--<Expander Header="分辩率" Margin="0,4,0,0" >
                                 <Border Height="60" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4"  Padding="10">
                                 </Border>

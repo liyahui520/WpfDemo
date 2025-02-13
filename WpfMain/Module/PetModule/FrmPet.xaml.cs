@@ -70,6 +70,7 @@ namespace WpfMain.Module.PetModule
             tInfo.Result = new TestResult();
             tInfo.Result.Images = new List<ImageItem>();
             DataContext = this;
+            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -277,6 +278,30 @@ namespace WpfMain.Module.PetModule
         {
             UCLocalVideo pet =  new UCLocalVideo(e.Source); 
             pet.ShowDialog();
+        }
+        
+        /// <summary>
+        /// 遮罩
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void Mask_OnClick(object sender, RoutedEventArgs e)
+        {
+             
+        }
+
+        /// <summary>
+        /// 保存自带的截图功能的图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Screenshot_Snapped(object sender, HandyControl.Data.FunctionEventArgs<ImageSource> e)
+        {
+            var old = tInfo.Result;
+            tInfo.Result = new TestResult();
+            old.Images.Add(new ImageItem { Name = $"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource = e.Info });
+            tInfo.Result = old;
         }
     }
 }
