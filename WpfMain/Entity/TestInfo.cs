@@ -83,7 +83,7 @@ namespace WpfMain.Entity
             Customer = "测试用户";
             DCOperation = AppStatic.AppHospital.UserName;
             TestName = "镜检";
-            Gender = Controlls.Gender.犬.ToString();
+            Gender = Controlls.Gender.公.ToString();
             Id = Guid.NewGuid().ToString();
         }
 

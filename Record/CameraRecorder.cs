@@ -261,7 +261,7 @@ namespace Record
             {
                 this.RecorderStatus = RecorderStatus.End;
                 //设置回调,aforge会不断从这个回调推出图像数据
-                Camera.NewFrame -= Camera_NewFrame;
+                //Camera.NewFrame -= Camera_NewFrame;
                 //// 释放资源
                 //aviWriter.Close();
                 //aviWriter.Dispose();

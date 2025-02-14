@@ -176,7 +176,7 @@ namespace WpfMain.Controlls
             {
                 using (SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Yellow))
                 {
-                    using (Font drawFont = new Font("Arial", 12, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel))
+                    using (Font drawFont = new Font("Arial", 18, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel))
                     {
                         int xPos = 15;
                         int yPos = 10;
@@ -188,10 +188,10 @@ namespace WpfMain.Controlls
                     {
                         using (SolidBrush drawBrush1 = new SolidBrush(System.Drawing.Color.Crimson))
                         {
-                            using (Font drawFont = new Font("Arial", 12, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel))
+                            using (Font drawFont = new Font("Arial", 18, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel))
                             {
                                 int xPos = 15;
-                                int yPos = 25;
+                                int yPos = 35;
                                 g.DrawString("正在录像中", drawFont, drawBrush1, xPos, yPos);
 
                             }
