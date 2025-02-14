@@ -47,8 +47,8 @@ namespace WpfMain
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e); 
-            ConfigHelper.Instance.SetLang("zh-cn"); 
+            base.OnStartup(e);
+            ConfigHelper.Instance.SetLang("zh-cn");
             AppStatic.VideoConfig = AppVideoConfig.GetConfig();
             AppStatic.AppHospital = AppHospital.GetConfig();
             ConfigHelper.Instance.SetWindowDefaultStyle();
