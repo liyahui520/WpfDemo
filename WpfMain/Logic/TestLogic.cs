@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfMain.Entity;
 using System.IO;
 using Newtonsoft.Json;
-using System.Windows.Media.Animation;
 using System.Drawing;
+using Entity.Entity;
+using Tools.App;
 
 namespace WpfMain.Logic
 {
@@ -57,7 +55,7 @@ namespace WpfMain.Logic
                     new Bitmap(x.Bitmap).Save(Path.Combine(dname, x.Name));
                     x.Source = Path.Combine(dname, x.Name);
                     x.Type = MediaSourceType.LocalPath;
-                    x.Name = x.Name;                                                                                                    
+                    x.Name = x.Name;
                 });
                 tInfo.Result?.Vedios?.ForEach(x => File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name), Path.Combine(dname, x.Name)));
             }
@@ -71,6 +69,8 @@ namespace WpfMain.Logic
 
         public static List<TestInfo> Load(DateTime startTime, DateTime endTime)
         {
+            if (infos.Count > 0)
+                return infos;
             FillTest(startTime);
             return infos.Where(o => o.TestDate >= startTime && o.TestDate <= endTime).ToList();
         }

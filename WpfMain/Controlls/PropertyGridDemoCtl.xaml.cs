@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WpfMain.Entity;
+using Entity.Entity;
+using Entity.Enum;
 using WpfMain.Extend;
 
 namespace WpfMain.Controlls
@@ -39,12 +29,12 @@ namespace WpfMain.Controlls
             DemoModel = new PropertyGridDemoModel
             {
                 姓名 = "TestString",
-                性别 = Gender.公,
+                性别 = GenderEnum.公,
                 绝育 = true,
                 电话 = 98,
                 杂项2 = VerticalAlignment.Stretch
             }; 
-            gender.ItemsSource = ObjectExtension.GetEnumDescriptions<Gender>();
+            gender.ItemsSource = ObjectExtension.GetEnumDescriptions<GenderEnum>();
         }
 
         public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(
@@ -71,7 +61,7 @@ namespace WpfMain.Controlls
         public bool 绝育 { get; set; }
 
         [Category("1宠物信息")]
-        public Gender 性别 { get; set; }
+        public GenderEnum 性别 { get; set; }
 
 
         [Category("2杂项")]
@@ -100,13 +90,5 @@ namespace WpfMain.Controlls
 
         [Category("3检查")]
         public int 数量 { get; set; }
-    }
-
-    public enum Gender
-    {
-        公,
-        母,
-        已去势,
-        未知
-    }
+    } 
 }

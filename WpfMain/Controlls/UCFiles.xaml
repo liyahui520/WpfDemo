@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfMain.Controlls"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:entity="clr-namespace:WpfMain.Entity"
+             xmlns:hc="https://handyorg.github.io/handycontrol" 
+             xmlns:entity1="clr-namespace:Entity.Entity;assembly=Entity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" DataContext="{Binding}">
     <Grid>
@@ -20,7 +20,7 @@
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type entity:ImageItem}">
+                    <DataTemplate DataType="{x:Type entity1:ImageItem}">
                         <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120"  Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
@@ -54,7 +54,7 @@
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type entity:ImageItem}">
+                    <DataTemplate DataType="{x:Type entity1:ImageItem}">
                         <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_Video_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>

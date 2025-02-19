@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Ink;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Entity.Enum;
 using Newtonsoft.Json;
-using WpfMain.Extend;
+using Tools.App;
+using Tools.Extend;
 
-namespace WpfMain.Entity
+namespace Entity.Entity
 {
 
     /// <summary>
@@ -83,7 +81,7 @@ namespace WpfMain.Entity
             Customer = "测试用户";
             DCOperation = AppStatic.AppHospital.UserName;
             TestName = "镜检";
-            Gender = Controlls.Gender.公.ToString();
+            Gender = GenderEnum.公.ToString();
             Id = Guid.NewGuid().ToString();
         }
 

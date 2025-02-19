@@ -1,23 +1,13 @@
-﻿using System;
+﻿using CuPrint;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Entity.Entity;
+using Newtonsoft.Json;
+using Tools.App;
 using WpfMain.Controlls;
-using WpfMain.Entity;
 using WpfMain.Logic;
-using WpfMain.Module.PetModule;
 
 namespace WpfMain.Module
 {
@@ -40,13 +30,13 @@ namespace WpfMain.Module
         {
             InitializeComponent();
 
-            startTime.Text = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")+" 00:00:00";
+            startTime.Text = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") + " 00:00:00";
             endTime.Text = DateTime.Now.ToString("yyyy-MM-dd") + " 23:59:59";
-            InitData(); 
+            InitData();
         }
 
         public void InitData()
-        { 
+        {
             DataList = TestLogic.Load(DateTime.Parse(startTime.Text.Trim()), DateTime.Parse(endTime.Text.Trim()));
         }
 
@@ -61,7 +51,7 @@ namespace WpfMain.Module
             DateTime d;
             if (string.IsNullOrWhiteSpace(startTime.Text.Trim()) ||
                 !DateTime.TryParse(startTime.Text.Trim().ToString(), out d))
-            { 
+            {
                 MessageBox.Show(AppStatic.MainWindow, "开始时间不能为空！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -70,7 +60,7 @@ namespace WpfMain.Module
             {
                 MessageBox.Show(AppStatic.MainWindow, "结束时间不能为空！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
-            } 
+            }
             InitData();
         }
 
@@ -82,10 +72,24 @@ namespace WpfMain.Module
         /// <exception cref="NotImplementedException"></exception>
         private void Img_OnClick(object sender, RoutedEventArgs e)
         {
-           var entity= (TestInfo)((System.Windows.FrameworkElement)e.Source).Tag;
-           FrmImgView view = new FrmImgView(entity);
-           view.Owner = AppStatic.MainWindow;
-           view.ShowDialog();
+            var entity = (TestInfo)((System.Windows.FrameworkElement)e.Source).Tag;
+            FrmImgView view = new FrmImgView(entity);
+            view.Owner = AppStatic.MainWindow;
+            view.ShowDialog();
+        }
+
+        /// <summary>
+        /// 查看报告
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ButtonBase_San_OnClick(object sender, RoutedEventArgs e)
+        {
+            FrmBackModule frm = new FrmBackModule(new UCPrint(DataList));
+            frm.ShowDialog();
+
+
         }
     }
 

@@ -10,6 +10,7 @@ using HandyControl.Tools;
 using System.Globalization;
 using System.Reflection;
 using System.IO;
+using Tools.App;
 
 namespace WpfMain
 {

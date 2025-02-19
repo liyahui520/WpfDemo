@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HandyControl.Controls;
+﻿using System.Windows;
 
-namespace WpfMain
+namespace Tools.App
 {
     public static class AppStatic
     {
