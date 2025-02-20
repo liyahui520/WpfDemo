@@ -1,10 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,10 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DrawTools;
 using DrawTools.Utils;
-using Newtonsoft.Json.Linq;
-using WpfMain.Entity;
+using Entity.Entity;
 using WpfMain.Logic;
-using WpfMain.Module.PetModule;
 
 namespace PacsCore
 {

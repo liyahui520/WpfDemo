@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfMain.Extend;
+﻿using System.Collections.Generic;
+using Tools.Extend;
 
-namespace WpfMain.Entity
+namespace Entity.Entity
 {
 
     public class PropertyVideoModel : ObservableObject

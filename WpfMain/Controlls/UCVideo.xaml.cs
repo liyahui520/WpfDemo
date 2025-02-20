@@ -7,10 +7,8 @@ using AForge.Video.DirectShow;
 using Record;
 using System.IO;
 using Image = System.Drawing.Image;
-using System.Windows.Media.Media3D;
-using WpfMain.Logic;
-using System.Windows.Shell;
 using AForge.Video.FFMPEG;
+using Tools.App;
 
 namespace WpfMain.Controlls
 {

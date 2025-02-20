@@ -99,10 +99,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="App\AppHospital.cs" />
-    <Compile Include="App\AppStatic.cs" />
-    <Compile Include="App\AppVideoConfig.cs" />
-    <Compile Include="App\ICustom.cs" />
     <Compile Include="Controlls\PropertyGridDemoCtl.xaml.cs">
       <DependentUpon>PropertyGridDemoCtl.xaml</DependentUpon>
     </Compile>
@@ -178,9 +174,6 @@
     <Compile Include="Controlls\UCWpfViewer.xaml.cs">
       <DependentUpon>UCWpfViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Entity\ImageInfo.cs" />
-    <Compile Include="Entity\TestInfo.cs" />
-    <Compile Include="Entity\VideoEntity.cs" />
     <Compile Include="Extend\Converters\EnumValueToEnumNameConverter.cs" />
     <Compile Include="Extend\Converters\StrToIsCheckedConverter.cs" />
     <Compile Include="Extend\ObjectExtension.cs" />
@@ -405,9 +398,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CuPrint\CuPrint.csproj">
+      <Project>{bd9cfe42-fede-4b42-a476-908bd40373a7}</Project>
+      <Name>CuPrint</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entity\Entity.csproj">
+      <Project>{5fb267fb-3eb3-4331-a2e9-fad077b3d918}</Project>
+      <Name>Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Record\Record.csproj">
       <Project>{503c2c71-8334-4930-b711-69e286e10b24}</Project>
       <Name>Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Tools.csproj">
+      <Project>{53cf764a-ba45-4827-852a-185b4c341b48}</Project>
+      <Name>Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -416,7 +421,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Enum\" />
     <Folder Include="Tools\Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

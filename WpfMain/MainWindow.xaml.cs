@@ -1,8 +1,6 @@
-﻿
-using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using HandyControl.Tools.Extension;
+using Tools.App;
 using WpfMain.Controlls;
 using WpfMain.Module;
 using WpfMain.Module.PetModule;
