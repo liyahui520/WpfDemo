@@ -84,23 +84,26 @@ namespace PacsCore
         /// <summary>
         /// 当前检查信息
         /// </summary>
-        private TestInfo tInfo;
+        //private TestInfo tInfo;
 
 
         public UCImageItemView(TestInfo info)
         {
-            tInfo = info;
+            //TestInfo tInfo = info;
             InitializeComponent();
-            if (tInfo?.Result?.Images == null && tInfo?.Result?.Images.Count > 0)
+            if (info?.Result?.Images == null && info?.Result?.Images.Count > 0)
                 return;
 
-            dinfo = tInfo.Result?.Images[0];
+            dinfo = info.Result?.Images[0];
             dicomImage1.Source = dinfo.ImageSource;
             Loaded += UCImageItemView_Loaded;
-
-
         }
-
+        public UCImageItemView(ImageItem info)
+        {
+            dinfo = info;
+            dicomImage1.Source = info.ImageSource;
+            Loaded += UCImageItemView_Loaded;
+        }
         private void UCImageItemView_Loaded(object sender, RoutedEventArgs e)
         {
             SetDataset();

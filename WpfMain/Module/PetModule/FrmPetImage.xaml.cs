@@ -240,6 +240,11 @@ namespace WpfMain.Module.PetModule
             TestLogic.Save(tInfos);
             MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
         }
+
+        private void UCFiles_ImagesClick(object sender, TestInfo e)
+        {
+
+        }
     }
 }
 

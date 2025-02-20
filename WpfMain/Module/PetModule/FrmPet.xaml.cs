@@ -78,24 +78,6 @@ namespace WpfMain.Module.PetModule
 
         }
 
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            //if (tInfo == null)
-            //{
-            //    tInfo = new TestInfo();
-            //    tInfo.Result = new TestResult();
-            //    tInfo.Result.Images = new System.Collections.Generic.List<ImageItem>
-            //    {
-            //        new ImageItem { ImageSource = ImageTest.Source }
-            //    };
-            //}
-
-            FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
-            pet.title.Text = "查看";
-
-            pet.ShowDialog();
-        }
-
         /// <summary>
         /// 设置曝光
         /// </summary>
@@ -212,23 +194,6 @@ namespace WpfMain.Module.PetModule
         {
             VideoModel.ExposureModel = new Exposure() { IsAuto = false, IsEnable = VideoModel.ExposureModel.IsEnable };
             Video?.AutoWavRecorder(false);
-        }
-
-        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (tInfo == null)
-            {
-                tInfo = new TestInfo();
-                tInfo.Result = new TestResult();
-                tInfo.Result.Images = new List<ImageItem>
-                {
-                    new ImageItem { ImageSource = ((ImageSource)e.Source) }
-                };
-            }
-            FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
-            pet.title.Text = "查看";
-
-            pet.ShowDialog();
         }
 
         public void Closed()
