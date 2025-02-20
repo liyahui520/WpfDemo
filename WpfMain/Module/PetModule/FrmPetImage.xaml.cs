@@ -47,7 +47,7 @@ namespace WpfMain.Module.PetModule
     nameof(UCD), typeof(UCImageItemView), typeof(FrmPetImage));
 
 
-        public FrmPetImage(TestInfo info)
+        public FrmPetImage(TestInfo info,ImageItem item)
         {
             tInfos = info;
             InitializeComponent();
@@ -59,13 +59,12 @@ namespace WpfMain.Module.PetModule
                 Integer = 98,
                 VerticalAlignment = VerticalAlignment.Stretch
             };
-
-            UCD = new UCImageItemView(tInfos);
-            BorderImageContent.Child = UCD;
-
             ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
             HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
             DataContext = this;
+
+            UCD = new UCImageItemView(item);
+            BorderImageContent.Child = UCD;
         }
 
 
@@ -227,15 +226,18 @@ namespace WpfMain.Module.PetModule
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_SaveTest(object sender, RoutedEventArgs e)
-        { 
+        {
             TestLogic.Save(tInfos);
             MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
         }
 
         private void UCFiles_ImagesClick(object sender, TestInfo e)
         {
-
+            BorderImageContent.Child = null;
+            UCD = new UCImageItemView(UCFilesImageAndVideo.SelectedImageItem);
+            BorderImageContent.Child = UCD;
         }
+
     }
 }
 

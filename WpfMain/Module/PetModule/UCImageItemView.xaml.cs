@@ -94,8 +94,9 @@ namespace PacsCore
         }
         public UCImageItemView(ImageItem info)
         {
+            InitializeComponent();
             dinfo = info;
-            dicomImage1.Source = info.ImageSource;
+            dicomImage1.Source = info?.ImageSource;
             Loaded += UCImageItemView_Loaded;
         }
         private void UCImageItemView_Loaded(object sender, RoutedEventArgs e)
