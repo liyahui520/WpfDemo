@@ -5,9 +5,10 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
                   xmlns:hc="https://handyorg.github.io/handycontrol"
                   xmlns:cuPrint="clr-namespace:CuPrint"
-                  mc:Ignorable="d"   Height="1130" Width="800" Background="#FFFFFF">
+                  xmlns:global="clr-namespace:"
+                  mc:Ignorable="d"  Background="#FFFFFF">
 
-    <Grid>
+    <Grid> 
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition ></RowDefinition>
@@ -22,6 +23,8 @@
                 </Border> 
             </StackPanel>
         </Grid>
-        
+        <Grid Grid.Row="1">
+            <DocumentViewer x:Name="Viewer"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Size = System.Windows.Size;
 
 namespace CuPrint
 {
@@ -35,10 +36,40 @@ namespace CuPrint
         public UCPrint(List<TestInfo> dataList)
         {
             InitializeComponent();
-           
+            ShowPrintPreview();
         }
-         
+
+
+        private void ShowPrintPreview()
+        {
+            // 创建打印内容 
+            var header = new TextBlock { Text = "固定表头", FontSize = 20 };
+            var footer = new TextBlock { Text = "第 {0} 页", FontSize = 12 };
+
+            var contents = Enumerable.Range(1, 50)
+                .Select(i => new StackPanel
+                {
+                    Children = {
+                        new TextBlock { Text = $"内容项 {i}" },
+                        new System.Windows.Controls.Image { Source = new BitmapImage(new Uri("https://i-blog.csdnimg.cn/blog_migrate/2c6942fcbe234b5b9ff65476e534f1ce.jpeg")),  Height = 50 }
+                    }
+                });
+
+            // 生成文档 
+            var print = new PrintHelper(header, contents, footer, new Size(794, 1123));
+            var doc = new FixedDocument();
+            foreach (var page in print._pages)
+            {
+                var pageContent = new PageContent();
+                var fixedPage = new FixedPage();
+                fixedPage.Children.Add(page);
+                pageContent.Child = fixedPage;
+                doc.Pages.Add(pageContent);
+            }
+            Viewer.Document = doc;
+
+        }
     }
 
-     
+
 }
