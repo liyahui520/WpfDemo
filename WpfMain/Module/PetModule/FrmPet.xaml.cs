@@ -76,24 +76,6 @@ namespace WpfMain.Module.PetModule
 
         }
 
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            //if (tInfo == null)
-            //{
-            //    tInfo = new TestInfo();
-            //    tInfo.Result = new TestResult();
-            //    tInfo.Result.Images = new System.Collections.Generic.List<ImageItem>
-            //    {
-            //        new ImageItem { ImageSource = ImageTest.Source }
-            //    };
-            //}
-
-            FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
-            pet.title.Text = "查看";
-
-            pet.ShowDialog();
-        }
-
         /// <summary>
         /// 设置曝光
         /// </summary>
@@ -212,23 +194,6 @@ namespace WpfMain.Module.PetModule
             Video?.AutoWavRecorder(false);
         }
 
-        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (tInfo == null)
-            {
-                tInfo = new TestInfo();
-                tInfo.Result = new TestResult();
-                tInfo.Result.Images = new List<ImageItem>
-                {
-                    new ImageItem { ImageSource = ((ImageSource)e.Source) }
-                };
-            }
-            FrmModule pet = new FrmModule(new FrmPetImage(tInfo));
-            pet.title.Text = "查看";
-
-            pet.ShowDialog();
-        }
-
         public void Closed()
         {
             Video?.Close();
@@ -263,7 +228,8 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void UCFiles_OnImagesClick(object sender, TestInfo e)
         {
-            FrmBackModule pet = new FrmBackModule(new FrmPetImage(e));
+            
+            FrmBackModule pet = new FrmBackModule(new FrmPetImage(e, (sender as UCFiles).SelectedImageItem));
             pet.title.Text = "查看";
             pet.Owner = AppStatic.MainWindow;
             pet.ShowDialog();

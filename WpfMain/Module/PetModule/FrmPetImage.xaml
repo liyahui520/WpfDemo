@@ -246,7 +246,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Column="0" CornerRadius="10" Name="BorderImageContent"/>
             <Border Grid.Row="1" Grid.Column="0" CornerRadius="10" Name="BorderImageDuibi"/>
-            <controlls:UCFiles Grid.Row="2" ParentData="{Binding tInfos, Mode=TwoWay}"></controlls:UCFiles>
+            <controlls:UCFiles x:Name="UCFilesImageAndVideo" Grid.Row="2" ParentData="{Binding tInfos, Mode=TwoWay}" ImagesClick="UCFiles_ImagesClick"></controlls:UCFiles>
         </Grid>
         <Grid Grid.Column="2">
             <Border  CornerRadius="10">

@@ -44,20 +44,24 @@ namespace WpfMain.Controlls
             set => SetValue(ParentDataProperty, value);
         }
 
+
+        public ImageItem SelectedImageItem { get; set; }
+
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (ParentData != null)
             {
-                var entity = (ImageItem)((System.Windows.FrameworkElement)e.Source).DataContext;
+                SelectedImageItem = (ImageItem)((System.Windows.FrameworkElement)e.Source).DataContext;
                 var old = ParentData.Result;
                 ParentData.Result = new TestResult();
-                old.Images.Remove(entity);
+                old.Images.Remove(SelectedImageItem);
                 ParentData.Result = old;
             }
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        { 
+        {
+            SelectedImageItem = (sender as HandyControl.Controls.Card)?.DataContext as ImageItem;
             RaiseSomeActionTriggered(ParentData);
         }
 
