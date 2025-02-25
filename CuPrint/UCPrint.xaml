@@ -3,21 +3,12 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
-                  xmlns:hc="https://handyorg.github.io/handycontrol"
-                  xmlns:cuPrint="clr-namespace:CuPrint"
-                  xmlns:global="clr-namespace:"
+                  xmlns:hc="https://handyorg.github.io/handycontrol" 
                   mc:Ignorable="d"  Background="#FFFFFF">
 
-    <Grid> 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition ></RowDefinition>
-        </Grid.RowDefinitions>
+    <Grid>  
         <Grid>
-            <StackPanel Orientation="Horizontal" Background="#FFDFDEDE">
-                <Border Margin="1">
-                    <Button Margin="5" Padding="4"  Style="{StaticResource ButtonIcon}" hc:IconElement.Geometry="{StaticResource PrintGeometry}"/>
-                </Border>
+            <StackPanel Orientation="Horizontal" Background="#FFDFDEDE"> 
                 <Border Margin="3,1,1,1">
                     <Button Margin="5" Padding="4"  Style="{StaticResource ButtonIcon}" hc:IconElement.Geometry="{StaticResource DownGeometry}"/>
                 </Border> 

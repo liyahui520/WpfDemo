@@ -4,13 +4,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
 using Entity.Entity;
 using Tools.App;
+using Tools.Extend;
 using WpfMain.Controlls;
-using WpfMain.Extend;
 using WpfMain.Logic;
 using WpfMain.Module.SysModule;
 using MessageBox = HandyControl.Controls.MessageBox;
@@ -228,7 +227,7 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void UCFiles_OnImagesClick(object sender, TestInfo e)
         {
-            
+            Files.SelectedImageItem = (sender as UCFiles).SelectedImageItem;
             FrmBackModule pet = new FrmBackModule(new FrmPetImage(e, (sender as UCFiles).SelectedImageItem));
             pet.title.Text = "查看";
             pet.Owner = AppStatic.MainWindow;
@@ -240,10 +239,10 @@ namespace WpfMain.Module.PetModule
 
         private void UCFiles_OnVideoClick(object sender, MediaItem e)
         {
-            UCLocalVideo pet =  new UCLocalVideo(e.Source); 
+            UCLocalVideo pet = new UCLocalVideo(e.Source);
             pet.ShowDialog();
         }
-        
+
         /// <summary>
         /// 遮罩
         /// </summary>
@@ -252,7 +251,7 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void Mask_OnClick(object sender, RoutedEventArgs e)
         {
-             
+
         }
 
         /// <summary>

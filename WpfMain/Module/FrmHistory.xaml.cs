@@ -86,7 +86,8 @@ namespace WpfMain.Module
         /// <exception cref="NotImplementedException"></exception>
         private void ButtonBase_San_OnClick(object sender, RoutedEventArgs e)
         {
-            FrmBackModule frm = new FrmBackModule(new UCPrint(DataList));
+            var entity = (TestInfo)(((System.Windows.FrameworkElement)sender).Tag);
+            FrmBackModule frm = new FrmBackModule(new UCPrint(entity));
             frm.ShowDialog();
 
 

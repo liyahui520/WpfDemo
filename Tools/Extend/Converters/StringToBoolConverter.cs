@@ -4,27 +4,24 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
-namespace WpfMain.Extend.Converters
+namespace Tools.Extend.Converters
 {
-    public class StrToIsCheckedConverter : IValueConverter
+    public class StringToBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value?.ToString().ToUpper() == parameter?.ToString().ToUpper();
+            string str1 = value?.ToString();
+            var element = parameter as DependencyObject;
+            string str2 = BindingHelper.GetDynamicParam(element).ToString(); ;
+            return str1 == str2; // 返回布尔值
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (bool.TryParse(value?.ToString(), out var isChecked))
-            {
-                if (isChecked)
-                {
-                    return parameter;
-                }
-            }
-            return value;
+            throw new NotImplementedException();
         }
     }
 }

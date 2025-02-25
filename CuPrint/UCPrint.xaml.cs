@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CuPrint.PrintControlls;
 using Size = System.Windows.Size;
 
 namespace CuPrint
@@ -25,25 +26,19 @@ namespace CuPrint
     /// </summary>
     public partial class UCPrint : UserControl
     {
-        public static readonly DependencyProperty DataListProperty = DependencyProperty.Register(
-            nameof(DataList), typeof(List<TestInfo>), typeof(UCPrint), new PropertyMetadata(default(List<TestInfo>)));
-
-        public List<TestInfo> DataList
-        {
-            get => (List<TestInfo>)GetValue(DataListProperty);
-            set => SetValue(DataListProperty, value);
-        }
-        public UCPrint(List<TestInfo> dataList)
+      
+        public UCPrint(TestInfo dataList)
         {
             InitializeComponent();
-            ShowPrintPreview();
+            ShowPrintPreview(dataList);
         }
 
 
-        private void ShowPrintPreview()
+        private void ShowPrintPreview(TestInfo dataList)
         {
+            var a = new PrintHeader(dataList); 
             // 创建打印内容 
-            var header = new TextBlock { Text = "固定表头", FontSize = 20 };
+            var header = a;
             var footer = new TextBlock { Text = "第 {0} 页", FontSize = 12 };
 
             var contents = Enumerable.Range(1, 50)

@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="WpfMain.Controlls.PropertyGridDemoCtl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:converters="clr-namespace:WpfMain.Extend.Converters"
+             xmlns:hc="https://handyorg.github.io/handycontrol" 
+             xmlns:converters1="clr-namespace:Tools.Extend.Converters;assembly=Tools"
              Background="{DynamicResource RegionBrush}" >
     <UserControl.Resources>
-        <converters:StrToIsCheckedConverter x:Key="StrToIsCheckedConverter"/> 
+        <converters1:StrToIsCheckedConverter x:Key="StrToIsCheckedConverter"/> 
     </UserControl.Resources>
     <hc:TransitioningContentControl>
         <Grid Margin="0" >

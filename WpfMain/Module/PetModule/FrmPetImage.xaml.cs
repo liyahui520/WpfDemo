@@ -47,7 +47,7 @@ namespace WpfMain.Module.PetModule
     nameof(UCD), typeof(UCImageItemView), typeof(FrmPetImage));
 
 
-        public FrmPetImage(TestInfo info,ImageItem item)
+        public FrmPetImage(TestInfo info, ImageItem item)
         {
             tInfos = info;
             InitializeComponent();
@@ -62,7 +62,7 @@ namespace WpfMain.Module.PetModule
             ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
             HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
             DataContext = this;
-
+            UCFilesImageAndVideo.SelectedImageItem = item;
             UCD = new UCImageItemView(item);
             BorderImageContent.Child = UCD;
         }

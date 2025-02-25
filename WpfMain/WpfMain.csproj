@@ -174,10 +174,6 @@
     <Compile Include="Controlls\UCWpfViewer.xaml.cs">
       <DependentUpon>UCWpfViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Extend\Converters\EnumValueToEnumNameConverter.cs" />
-    <Compile Include="Extend\Converters\StrToIsCheckedConverter.cs" />
-    <Compile Include="Extend\ObjectExtension.cs" />
-    <Compile Include="Extend\ObservableObject.cs" />
     <Compile Include="Logic\ImageLogic.cs" />
     <Compile Include="Logic\TestLogic.cs" />
     <Compile Include="Module\MaskWindow.xaml.cs">
@@ -302,9 +298,6 @@
     <Content Include="Static\Images\遮罩.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Page Include="Themes\Styles\Style.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <None Include="App.config" />
     <Content Include="Static\Images\1_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -393,9 +386,6 @@
     <Content Include="Static\Images\yangben.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Page Include="Themes\Styles\Geometries.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CuPrint\CuPrint.csproj">
@@ -414,11 +404,6 @@
       <Project>{53cf764a-ba45-4827-852a-185b4c341b48}</Project>
       <Name>Tools</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Themes\Styles\Button.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\Converters\" />

@@ -18,7 +18,7 @@
             <ColumnDefinition Width="180"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0" hc:ScrollViewer.IsInertiaEnabled="False" SelectionMode="Single" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Padding="20,0,0,0" BorderThickness="0" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding Result.Images}">
+        <ListBox Grid.Column="0" hc:ScrollViewer.IsInertiaEnabled="False" SelectionMode="Single" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Padding="20,0,0,0" BorderThickness="0" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding Result.Images}">
             <ListBox.Background>
                 <SolidColorBrush Color="White" Opacity="0.2"/>
             </ListBox.Background>

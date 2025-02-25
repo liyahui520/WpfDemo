@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
 using System.Windows.Markup;
-using System.Xml.Linq;
-using HandyControl.Controls;
-using System.Drawing.Printing;
-using System.Runtime.Remoting.Messaging;
-using System.IO;
+using System.Xml;
 
 namespace CuPrint
 {
@@ -70,10 +63,16 @@ namespace CuPrint
 
         public FrameworkElement DeepCopyFrameworkElement(FrameworkElement element)
         {
-            StringWriter stringWriter = new StringWriter();
-            XamlWriter.Save(element, stringWriter);
-            string xaml = stringWriter.ToString();
-            return (FrameworkElement)XamlReader.Parse(xaml);
+            var settings = new XmlWriterSettings { Indent = true };
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb, settings))
+            {
+                XamlWriter.Save(element, writer);
+            }
+            //StringWriter stringWriter = new StringWriter(); 
+            //XamlWriter.Save(element, stringWriter);
+            //string xaml = stringWriter.ToString();
+            return (FrameworkElement)XamlReader.Parse(sb.ToString());
         }
 
         public override DocumentPage GetPage(int pageNumber) =>

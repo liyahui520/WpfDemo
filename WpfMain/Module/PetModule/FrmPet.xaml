@@ -169,7 +169,7 @@
                     <Controlls:UCVideo x:Name="Video"/>
                 </Border>
 
-                <Controlls:UCFiles Grid.Row="1" ParentData="{Binding tInfo, Mode=TwoWay}" ImagesClick="UCFiles_OnImagesClick" VideoClick="UCFiles_OnVideoClick"></Controlls:UCFiles>
+                <Controlls:UCFiles Grid.Row="1" ParentData="{Binding tInfo, Mode=TwoWay}" x:Name="Files" ImagesClick="UCFiles_OnImagesClick" VideoClick="UCFiles_OnVideoClick"></Controlls:UCFiles>
  
             </Grid>
             <Grid Grid.Column="2">

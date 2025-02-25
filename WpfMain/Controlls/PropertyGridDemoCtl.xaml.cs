@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Entity.Entity;
 using Entity.Enum;
-using WpfMain.Extend;
+using Tools.Extend; 
 
 namespace WpfMain.Controlls
 {

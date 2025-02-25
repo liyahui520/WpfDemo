@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Entity.Entity;
 using Tools.App;
-using WpfMain.Extend;
+using Tools.Extend;
 
 namespace WpfMain.Module.SysModule
 {

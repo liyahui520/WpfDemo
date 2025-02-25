@@ -6,8 +6,14 @@
              xmlns:local="clr-namespace:WpfMain.Controlls"
              xmlns:hc="https://handyorg.github.io/handycontrol" 
              xmlns:entity1="clr-namespace:Entity.Entity;assembly=Entity"
+             xmlns:styles="clr-namespace:Tools.Themes.Styles;assembly=Tools"
+             xmlns:converters="clr-namespace:Tools.Extend.Converters;assembly=Tools"
+             xmlns:extend="clr-namespace:Tools.Extend;assembly=Tools"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" DataContext="{Binding}">
+    <UserControl.Resources>
+        <converters:StringToBoolConverter x:Key="StringToBoolConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -15,13 +21,13 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <hc:Divider Content="拍照" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
-            <ListBox hc:ScrollViewer.IsInertiaEnabled="False" Margin="0" BorderThickness="0"  Height="180"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Images, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <ListBox hc:ScrollViewer.IsInertiaEnabled="False" x:Name="ImgListBox" Margin="0" BorderThickness="0"  Height="180" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" FocusVisualStyle="{StaticResource FocusVisualRadius0Margin0}" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Images, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ListBox.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type entity1:ImageItem}">
-                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120"  Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                        <hc:Card Margin="8" BorderThickness="0" Effect="{StaticResource EffectShadow2}"  MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
                             </hc:Card.Background>
@@ -49,13 +55,13 @@
 
         <StackPanel Grid.Row="1">
             <hc:Divider Content="视频" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
-            <ListBox  Grid.Row="1" hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  Height="180"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Vedios, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <ListBox  Grid.Row="1" hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  Height="180"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Vedios, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ListBox.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type entity1:ImageItem}">
-                        <hc:Card  BorderThickness="0" Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_Video_OnMouseLeftButtonDown">
+                        <hc:Card  Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_Video_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
                             </hc:Card.Background>

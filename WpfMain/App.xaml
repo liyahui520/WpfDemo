@@ -8,9 +8,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <hc:ThemeResources/>
                 <hc:Theme/>
-                <ResourceDictionary Source="pack://application:,,,/Themes/Styles/Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Themes/Styles/Geometries.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Themes/Styles/Style.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Tools;component/Themes/Styles/Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Tools;component/Themes/Styles/Geometries.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Tools;component/Themes/Styles/Style.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

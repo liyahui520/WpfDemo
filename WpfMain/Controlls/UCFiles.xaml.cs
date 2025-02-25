@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Entity.Entity; 
+using Entity.Entity;
 
 namespace WpfMain.Controlls
 {
@@ -18,7 +18,7 @@ namespace WpfMain.Controlls
 
         #region 点击事件
 
-        public event EventHandler<TestInfo> ImagesClick; 
+        public event EventHandler<TestInfo> ImagesClick;
 
         private void RaiseSomeActionTriggered(TestInfo entity)
         {
@@ -44,8 +44,20 @@ namespace WpfMain.Controlls
             set => SetValue(ParentDataProperty, value);
         }
 
+        private ImageItem _selectedImageItem;
 
-        public ImageItem SelectedImageItem { get; set; }
+        public ImageItem SelectedImageItem
+        {
+            get
+            {
+                return _selectedImageItem;
+            }
+            set
+            {
+                ImgListBox.SelectedItem = value;
+                _selectedImageItem = value;
+            }
+        }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {

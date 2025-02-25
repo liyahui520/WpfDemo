@@ -62,6 +62,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PrintControlls\PrintHeader.xaml.cs">
+      <DependentUpon>PrintHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PrintHelper.cs" />
     <Compile Include="UCPrint.xaml.cs">
       <DependentUpon>UCPrint.xaml</DependentUpon>
@@ -94,6 +97,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="PrintControlls\PrintHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UCPrint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -104,6 +111,11 @@
       <Project>{5FB267FB-3EB3-4331-A2E9-FAD077B3D918}</Project>
       <Name>Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tools\Tools.csproj">
+      <Project>{53CF764A-BA45-4827-852A-185B4C341B48}</Project>
+      <Name>Tools</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
