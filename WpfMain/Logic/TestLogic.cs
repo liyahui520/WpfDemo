@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Drawing;
 using Entity.Entity;
 using Tools.App;
+using Tools.Extend;
 
 namespace WpfMain.Logic
 {
@@ -52,7 +53,7 @@ namespace WpfMain.Logic
 
                 tInfo.Result?.Images?.ForEach(x =>
                 {
-                    new Bitmap(x.Bitmap).Save(Path.Combine(dname, x.Name));
+                    new Bitmap(x.Bitmap.Byte2Bitmap()).Save(Path.Combine(dname, x.Name));
                     x.Source = Path.Combine(dname, x.Name);
                     x.Type = MediaSourceType.LocalPath;
                     x.Name = x.Name;

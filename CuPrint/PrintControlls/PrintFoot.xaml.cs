@@ -18,24 +18,24 @@ using Tools.App;
 namespace CuPrint.PrintControlls
 {
     /// <summary>
-    /// PrintHeader.xaml 的交互逻辑
+    /// PrintFoot.xaml 的交互逻辑
     /// </summary>
-    public partial class PrintHeader : UserControl
+    public partial class PrintFoot : UserControl
     {
         public static readonly DependencyProperty TestInfoProperty = DependencyProperty.Register(
-            nameof(tInfo), typeof(TestInfo), typeof(PrintHeader), new PropertyMetadata(default(TestInfo)));
+            nameof(tInfo), typeof(TestInfo), typeof(PrintFoot), new PropertyMetadata(default(TestInfo)));
 
         public TestInfo tInfo
         {
             get => (TestInfo)GetValue(TestInfoProperty);
             set => SetValue(TestInfoProperty, value);
         }
-        public PrintHeader(TestInfo info)
+        public PrintFoot(TestInfo info,int pageIndex)
         {
-            InitializeComponent();
-            hospitalName.Text = AppStatic.AppHospital.HospitalName;
-            tInfo=info;
-            DataContext = info;
-        }
+            InitializeComponent(); 
+            tInfo = info;
+            pageCount.Text = "第"+pageIndex.ToString()+"页";
+            DataContext = info; 
+    }
     }
 }

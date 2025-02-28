@@ -26,7 +26,7 @@ namespace CuPrint
     /// </summary>
     public partial class UCPrint : UserControl
     {
-      
+
         public UCPrint(TestInfo dataList)
         {
             InitializeComponent();
@@ -36,7 +36,8 @@ namespace CuPrint
 
         private void ShowPrintPreview(TestInfo dataList)
         {
-            var a = new PrintHeader(dataList); 
+            var a = new PrintHeader(dataList);
+            a.Measure(new Size(794, 1123));
             // 创建打印内容 
             var header = a;
             var footer = new TextBlock { Text = "第 {0} 页", FontSize = 12 };
@@ -51,7 +52,7 @@ namespace CuPrint
                 });
 
             // 生成文档 
-            var print = new PrintHelper(header, contents, footer, new Size(794, 1123));
+            var print = new CustomerPrintHelper(dataList, new Size(784, 1103));
             var doc = new FixedDocument();
             foreach (var page in print._pages)
             {
@@ -62,6 +63,19 @@ namespace CuPrint
                 doc.Pages.Add(pageContent);
             }
             Viewer.Document = doc;
+
+            //// 生成文档 
+            //var print = new PrintHelper(header, contents, footer, new Size(794, 1123));
+            //var doc = new FixedDocument();
+            //foreach (var page in print._pages)
+            //{
+            //    var pageContent = new PageContent();
+            //    var fixedPage = new FixedPage();
+            //    fixedPage.Children.Add(page);
+            //    pageContent.Child = fixedPage;
+            //    doc.Pages.Add(pageContent);
+            //}
+            //Viewer.Document = doc;
 
         }
     }

@@ -62,8 +62,18 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomerPrintHelper.cs" />
+    <Compile Include="PrintControlls\PrintContent.xaml.cs">
+      <DependentUpon>PrintContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PrintControlls\PrintFoot.xaml.cs">
+      <DependentUpon>PrintFoot.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PrintControlls\PrintHeader.xaml.cs">
       <DependentUpon>PrintHeader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PrintControlls\PrintImg.xaml.cs">
+      <DependentUpon>PrintImg.xaml</DependentUpon>
     </Compile>
     <Compile Include="PrintHelper.cs" />
     <Compile Include="UCPrint.xaml.cs">
@@ -97,7 +107,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="PrintControlls\PrintContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrintControlls\PrintFoot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PrintControlls\PrintHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrintControlls\PrintImg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

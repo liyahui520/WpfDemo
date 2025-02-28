@@ -3,25 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CuPrint.PrintControlls" DataContext="{Binding tInfo}"
+             xmlns:local="clr-namespace:CuPrint.PrintControlls"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             DataContext="{Binding tInfo}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="White">
+             d:DesignHeight="450" d:DesignWidth="700" Width="750" Background="White"  Margin="0">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="30"/> 
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="30"/>
             <ColumnDefinition/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="1" Grid.Column="1" x:Name="hospitalName" HorizontalAlignment="Center" Text="测试医院" VerticalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
         <WrapPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left">
-            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="宠    主" Style="{StaticResource TextBlockDefault}"/> 
-            <TextBlock x:Name="customer" HorizontalAlignment="Center" Text="{Binding Customer}" VerticalAlignment="Center"  FontSize="14" Width="150" TextDecorations="Underline"></TextBlock>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="宠    主" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
+            <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black"> 
+                <TextBlock x:Name="customer" HorizontalAlignment="Center" Text="{Binding Customer}" VerticalAlignment="Center"  FontSize="14"/>
+            </Border>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="电    话" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
+            <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding CustomerPhone}" VerticalAlignment="Center"  FontSize="14"/>
+            </Border>
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="检查时间" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
+            <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding TestDate, StringFormat=yyyy-MM-dd HH:mm:ss}" VerticalAlignment="Center"  FontSize="14"/>
+            </Border> 
         </WrapPanel>
+        <WrapPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="宠    物" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
+
+            <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Pet}" VerticalAlignment="Center"  FontSize="14"/>
+            </Border> 
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="性    别" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
+            <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Gender}" VerticalAlignment="Center"  FontSize="14"/>
+            </Border> 
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="检查名称" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
+            <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding TestName}" VerticalAlignment="Center"  FontSize="14"/>
+            </Border> 
+        </WrapPanel>
+ 
     </Grid>
 </UserControl>

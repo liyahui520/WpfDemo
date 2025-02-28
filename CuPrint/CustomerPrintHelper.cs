@@ -1,74 +1,99 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows;
 using System.Windows.Markup;
-using System.Xml;
-using System.IO;
+using System.Windows;
 using System.Xaml;
-using System;
-using System.Xml.Linq;
+using System.Xml;
+using CuPrint.PrintControlls;
+using Entity.Entity;
 using Tools.Extend;
+using System.Windows.Media.Imaging;
 
 namespace CuPrint
 {
-    public class PrintHelper : DocumentPaginator
+    public class CustomerPrintHelper : DocumentPaginator
     {
         private readonly FrameworkElement _header;
         private readonly FrameworkElement _footer;
         public readonly List<FrameworkElement> _pages = new List<FrameworkElement>();
-        public PrintHelper(FrameworkElement header,
-            IEnumerable<FrameworkElement> contents,
-            FrameworkElement footer,
-            Size pageSize)
+        public CustomerPrintHelper(TestInfo data, Size pageSize)
         {
-            _header = CloneExpressionBuilder<FrameworkElement>.Clone(header);
-            _footer = DeepCopyFrameworkElement(footer);
-            CreateFixedDocument(_header, contents, _footer, pageSize);
+            CreateFixedDocument(data, pageSize);
         }
 
-        public void CreateFixedDocument(
-            FrameworkElement header,
-            IEnumerable<FrameworkElement> contents,
-            FrameworkElement footer,
-            Size pageSize)
+        public void CreateFixedDocument(TestInfo data, Size pageSize)
         {
             PageSize = pageSize;
             double currentHeight = 0;
             var currentPage = CreatePageContainer();
-            // 添加固定表头 
-            if (_header != null)
+            // 添加固定表头  
+            var cus_header = new PrintHeader(data);
+            cus_header.Measure(pageSize);
+            currentPage.Children.Add(cus_header);
+            currentHeight += cus_header.DesiredSize.Height;
+        
+            var a = ObjectExtension.ChunkBy(data.Result.Images, 2).ToList();
+            List<WrapPanel> panels = new List<WrapPanel>();
+            a.ForEach(o =>
             {
-                _header.Measure(pageSize);
-                currentPage.Children.Add(CloneExpressionBuilder<FrameworkElement>.Clone(header));
-                currentHeight += _header.DesiredSize.Height;
-            }
+                var p = new WrapPanel(){Margin = new Thickness(40,0,20,0)};
+                o.ForEach(i=>p.Children.Add(new System.Windows.Controls.Image { Source = i.ImageSource, Height = 300, Width = 320,Margin = new Thickness(10,0,0,0)}));
+                panels.Add(p);
+            });
+            //      .Select<List<ImageItem>, WrapPanel>(o =>
+            //{
+            //    var a = new WrapPanel();
+            //    o.Select<ImageItem, UIElementCollection>(i =>
+            //    {
+            //         a.Children.Add(new System.Windows.Controls.Image
+            //        { Source = i.ImageSource, Height = 100, Width = 120 });
+            //         return a.Children;
+            //    });
+            //    return a;
+            //});
+            int page = 1;
+            var cus_footer = new PrintFoot(data, page);
+            cus_footer.Measure(pageSize);
+            currentHeight += cus_footer.DesiredSize.Height;
             // 分页处理 
-            foreach (var content in contents)
+            foreach (var content in panels)
             {
                 content.Measure(pageSize);
-                if (currentHeight + content.DesiredSize.Height > pageSize.Height)
+                if (currentHeight + content.DesiredSize.Height > pageSize.Height - 10)
                 {
+                    // 添加固定表尾  
+                    cus_footer = new PrintFoot(data, page);
+                    cus_footer.Measure(pageSize);
+                    currentPage.Children.Add(cus_footer);
                     FinalizePage(currentPage, pageSize);
+                    page++;
                     currentPage = CreatePageContainer();
                     currentHeight = 0;
                     // 添加固定表头 
-                    if (_header != null)
-                    { 
-                        currentPage.Children.Add(CloneExpressionBuilder<FrameworkElement>.Clone(header));
-                        currentHeight += header.DesiredSize.Height;
-                    }
+                    cus_header = new PrintHeader(data);
+                    cus_header.Measure(pageSize);
+                    currentPage.Children.Add(cus_header);
+                    currentHeight += cus_header.DesiredSize.Height + cus_footer.DesiredSize.Height;
                 }
                 currentPage.Children.Add(content);
                 currentHeight += content.DesiredSize.Height;
             }
+            // 添加固定表尾  
+            cus_footer = new PrintFoot(data, page);
+            cus_footer.Measure(pageSize);
+            currentPage.Children.Add(cus_footer);
             FinalizePage(currentPage, pageSize);
         }
 
         // 预编译属性复制委托（示例）
         private static Action<FrameworkElement, FrameworkElement> _cloneDelegate;
-         
+
 
         public static FrameworkElement DeepCopyFrameworkElement(FrameworkElement source)
         {
@@ -144,12 +169,6 @@ namespace CuPrint
 
         private void FinalizePage(StackPanel page, Size pageSize)
         {
-            // 添加固定表尾 
-            if (_footer != null)
-            {
-                _footer.Measure(pageSize);
-                page.Children.Add(DeepCopyFrameworkElement(_footer));
-            }
             page.Measure(pageSize);
             page.Arrange(new Rect(pageSize));
             _pages.Add(page);
@@ -157,28 +176,9 @@ namespace CuPrint
 
         private static StackPanel CreatePageContainer() => new StackPanel
         {
-            Width = 1123,
-            Height = 794
+            Width = 794,
+            Height = 1113
         };
     }
 
-    // 扩展方法 
-    public static class PrintExtensions
-    {
-        public static PageContent Clone(this PageContent source)
-        {
-            var newPage = new FixedPage();
-            foreach (UIElement child in source.Child.Children)
-            {
-                if (child is FrameworkElement fe)
-                {
-                    var clone = new FrameworkElement();
-                    clone.Width = fe.Width;
-                    clone.Height = fe.Height;
-                    newPage.Children.Add(clone);
-                }
-            }
-            return new PageContent { Child = newPage };
-        }
-    }
 }

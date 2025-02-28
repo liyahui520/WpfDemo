@@ -12,11 +12,42 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Tools.Extend
 {
     public static partial class ObjectExtension
-    { 
+    {
+        public static IEnumerable<List<T>> ChunkBy<T>(this List<T> source, int chunkSize)
+        {
+            for (int i = 0; i < source.Count; i += chunkSize)
+            {
+                yield return source.GetRange(i, Math.Min(chunkSize, source.Count - i));
+            }
+        }
+        public static T DeepCloneByReflection<T>(T source)
+        {
+            if (source == null) return default;
+
+            var type = typeof(T);
+            var clone = (T)Activator.CreateInstance(type);
+
+            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (Attribute.IsDefined(field, typeof(XmlIgnoreAttribute))) continue;
+
+                var value = field.GetValue(source);
+                // 递归处理引用类型（排除字符串）
+                if (value != null && !value.GetType().IsValueType && value.GetType() != typeof(string))
+                {
+                    value = DeepCloneByReflection(value);
+                }
+                field.SetValue(clone, value);
+            }
+
+            return clone;
+        }
 
         /// <summary>
         /// 将字典转化为QueryString格式
@@ -824,5 +855,37 @@ namespace Tools.Extend
 
             return filePaths;
         }
+    }
+
+    public static class CloneExpressionBuilder<T>
+    {
+        private static readonly Func<T, T> _cloneFunc;
+
+        static CloneExpressionBuilder()
+        {
+            var sourceParam = Expression.Parameter(typeof(T), "source");
+            var clone = Expression.Variable(typeof(T), "clone");
+
+            var body = new List<Expression>
+            {
+                Expression.Assign(clone, Expression.New(typeof(T)))
+            };
+
+            foreach (var field in typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (Attribute.IsDefined(field, typeof(XmlIgnoreAttribute))) continue;
+
+                var sourceField = Expression.Field(sourceParam, field);
+                var cloneField = Expression.Field(clone, field);
+                body.Add(Expression.Assign(cloneField, sourceField));
+            }
+
+            body.Add(clone);
+
+            var block = Expression.Block(new[] { clone }, body);
+            _cloneFunc = Expression.Lambda<Func<T, T>>(block, sourceParam).Compile();
+        }
+
+        public static T Clone(T source) => _cloneFunc(source);
     }
 }

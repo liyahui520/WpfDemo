@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using DrawTools;
 using DrawTools.Utils;
 using Entity.Entity;
+using Tools.Extend;
 using WpfMain.Logic;
 
 namespace PacsCore
@@ -46,7 +47,7 @@ namespace PacsCore
                 else
                 {
                     // 绘制灰度图
-                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.Bitmap, value);
+                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.Bitmap.Byte2Bitmap(), value);
                     dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
                 }
 

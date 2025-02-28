@@ -4,6 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Entity.Enum;
 using Newtonsoft.Json;
 using Tools.App;
@@ -155,10 +158,15 @@ namespace Entity.Entity
 
 
 
-    //图片
+    //图片 
+    [Serializable]
     public class ImageItem : MediaItem
     {
+        [XmlIgnore]
+        [NonSerialized]
         private Bitmap bitmap;
+        [XmlIgnore]
+        [NonSerialized]
         private ImageSource imageSource;
 
         /// <summary>
@@ -169,28 +177,29 @@ namespace Entity.Entity
         /// <summary>
         /// 像素间距单拉 毫米mm,纳米 pm
         /// </summary>
-        public string PixelSpacingUnit { get; set; } 
+        public string PixelSpacingUnit { get; set; }
 
+        [XmlIgnore]
         [JsonIgnore]
-        public Bitmap Bitmap
+        public byte[] Bitmap
         {
             get
             {
                 if (bitmap != null)
-                    return bitmap;
+                    return bitmap.Bitmap2Byte();
 
                 if (Type != MediaSourceType.LocalPath)
                     return null;
                 if (File.Exists(Source))
                     bitmap = new Bitmap(Source);
-                return bitmap;
+                return bitmap.Bitmap2Byte();
             }
             set
             {
-                bitmap = value;
+                bitmap = value.Byte2Bitmap();
             }
         }
-
+        [XmlIgnore]
         [JsonIgnore]
         public ImageSource ImageSource
         {
@@ -220,7 +229,6 @@ namespace Entity.Entity
                 ms.Close();
             }
         }
-
 
     }
 
