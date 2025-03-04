@@ -20,20 +20,27 @@ namespace CuPrint.PrintControlls
     /// PrintImg.xaml 的交互逻辑
     /// </summary>
     public partial class PrintImg : UserControl
-    {
-        public static readonly DependencyProperty ParentDataProperty = DependencyProperty.Register(
-            "ParentData", typeof(TestInfo), typeof(PrintImg), new PropertyMetadata(default(TestInfo)));
-
-        public TestInfo ParentData
+    { 
+        public PrintImg(List<ImageItem> info)
         {
-            get => (TestInfo)GetValue(ParentDataProperty);
-            set => SetValue(ParentDataProperty, value);
+            InitializeComponent(); 
+            ImgListBox.ItemsSource = info;
+            DataContext = info;
+            DisableEvents(this);
         }
 
-        public PrintImg(TestInfo info)
+        public static void DisableEvents(DependencyObject parent)
         {
-            InitializeComponent();
-            ParentData =info;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is UIElement uiElement)
+                {
+                    uiElement.IsHitTestVisible = false; // 禁用命中测试 
+                    uiElement.Focusable = false;        // 禁用焦点 
+                }
+                DisableEvents(child);
+            }
         }
     }
 }

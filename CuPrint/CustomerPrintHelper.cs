@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows;
+using System.Windows.Media;
 using System.Xaml;
 using System.Xml;
 using CuPrint.PrintControlls;
@@ -37,14 +38,20 @@ namespace CuPrint
             cus_header.Measure(pageSize);
             currentPage.Children.Add(cus_header);
             currentHeight += cus_header.DesiredSize.Height;
-        
+
             var a = ObjectExtension.ChunkBy(data.Result.Images, 2).ToList();
-            List<WrapPanel> panels = new List<WrapPanel>();
+            List<PrintImg> panels = new List<PrintImg>();
             a.ForEach(o =>
             {
-                var p = new WrapPanel(){Margin = new Thickness(40,0,20,0)};
-                o.ForEach(i=>p.Children.Add(new System.Windows.Controls.Image { Source = i.ImageSource, Height = 300, Width = 320,Margin = new Thickness(10,0,0,0)}));
-                panels.Add(p);
+                //var p = new System.Windows.Controls.StackPanel(){Margin = new Thickness(40,1,20,1), Orientation = Orientation.Horizontal,Background = Brushes.Red};
+                var img = new PrintImg(o);
+                panels.Add(img);
+                //o.ForEach(i =>
+                //{
+
+                //    //p.Children.Add(new System.Windows.Controls.Image { Source = i.ImageSource, Height = 200, Width = 220, Margin = new Thickness(10, 0, 0, 0) })
+                //});
+                //panels.Add(p);
             });
             //      .Select<List<ImageItem>, WrapPanel>(o =>
             //{
@@ -67,6 +74,17 @@ namespace CuPrint
                 content.Measure(pageSize);
                 if (currentHeight + content.DesiredSize.Height > pageSize.Height - 10)
                 {
+                    var panelHeight = (pageSize.Height - 10) - (currentHeight + content.DesiredSize.Height);
+                    if (panelHeight > 0)
+                    {
+                        var sp = new StackPanel
+                        {
+                            Width = 794,
+                            Height = panelHeight
+                        };
+                        sp.Measure(pageSize);
+                        currentPage.Children.Add(sp);
+                    }
                     // 添加固定表尾  
                     cus_footer = new PrintFoot(data, page);
                     cus_footer.Measure(pageSize);
@@ -87,6 +105,17 @@ namespace CuPrint
             // 添加固定表尾  
             cus_footer = new PrintFoot(data, page);
             cus_footer.Measure(pageSize);
+            var panelHeight1 = (pageSize.Height - 10) - currentHeight - cus_footer.DesiredSize.Height;
+            if (panelHeight1 > 0)
+            {
+                var sp = new StackPanel
+                {
+                    Width = 794,
+                    Height = panelHeight1
+                };
+                sp.Measure(pageSize);
+                currentPage.Children.Add(sp);
+            }
             currentPage.Children.Add(cus_footer);
             FinalizePage(currentPage, pageSize);
         }

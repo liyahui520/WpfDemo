@@ -87,7 +87,7 @@ namespace WpfMain.Module
         private void ButtonBase_San_OnClick(object sender, RoutedEventArgs e)
         {
             var entity = (TestInfo)(((System.Windows.FrameworkElement)sender).Tag);
-            FrmBackModule frm = new FrmBackModule(new UCPrint(entity));
+            FrmModule frm = new FrmModule(new UCPrint(entity));
             frm.ShowDialog();
 
 
