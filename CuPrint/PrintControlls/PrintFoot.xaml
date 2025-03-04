@@ -11,23 +11,23 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="30"/> 
+            <RowDefinition Height="30"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition/>
             <ColumnDefinition Width="10"/>
-        </Grid.ColumnDefinitions> 
+        </Grid.ColumnDefinitions>
         <WrapPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="检查医生" Style="{StaticResource TextBlockDefault}" FontSize="14"/>
             <Border Width="150" Margin="5,0,5,0" BorderThickness="0,0,0,0.6" BorderBrush="Black">
-                <TextBlock x:Name="customer" HorizontalAlignment="Center" Text="{Binding Customer}" VerticalAlignment="Center"  FontSize="14"/>
+                <TextBlock x:Name="customer" HorizontalAlignment="Center" Text="{Binding DCOperation}" VerticalAlignment="Center"  FontSize="14"/>
             </Border>
-             
+
         </WrapPanel>
         <WrapPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"  HorizontalAlignment="Right">
-            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="第1页" x:Name="pageCount" Style="{StaticResource TextBlockDefault}" FontSize="10"/> 
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="第1页" x:Name="pageCount" Style="{StaticResource TextBlockDefault}" FontSize="10"/>
 
         </WrapPanel>
     </Grid>

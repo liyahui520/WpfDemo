@@ -69,7 +69,7 @@ namespace Tools.Extend
         {
             return string.IsNullOrEmpty(str) ? "" : System.Uri.EscapeDataString(str);
         }
-         
+
 
         /// <summary>
         /// 将object转换为long，若失败则返回0
@@ -300,7 +300,7 @@ namespace Tools.Extend
             {
                 return defaultValue.GetValueOrDefault();
             }
-        } 
+        }
         /// <summary>
         /// 是否有值
         /// </summary>
@@ -310,7 +310,7 @@ namespace Tools.Extend
         {
             return obj == null || string.IsNullOrEmpty(obj.ToString());
         }
-         
+
 
         /// <summary>
         /// 将字符串转为值类型，若没有得到或者错误返回为空
@@ -503,7 +503,7 @@ namespace Tools.Extend
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 return default(T);
             }
         }
@@ -544,7 +544,7 @@ namespace Tools.Extend
                 return (T)assembly.CreateInstance(typeName);
             }
             catch (Exception ex)
-            { 
+            {
             }
             return default(T);
         }
@@ -616,15 +616,18 @@ namespace Tools.Extend
         /// <returns></returns>
         public static byte[] Bitmap2Byte(this Bitmap bitmap)
         {
-            using (Stream stream1 = new MemoryStream())
-            {
-                bitmap.Save(stream1, ImageFormat.Png);
-                byte[] arr = new byte[stream1.Length];
-                stream1.Position = 0;
-                stream1.Read(arr, 0, (int)stream1.Length);
-                stream1.Close();
-                return arr;
-            }
+            if (bitmap != null)
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // 克隆图像以解除文件锁定 
+                    using (Bitmap clonedBitmap = new Bitmap(bitmap))
+                    {
+                        clonedBitmap.Save(ms, ImageFormat.Png);
+                    }
+                    return ms.ToArray();
+                }
+
+            return null;
         }
 
         public static Bitmap Byte2Bitmap(this byte[] bytes)
@@ -637,7 +640,7 @@ namespace Tools.Extend
                 ms1.Close();
             }
             return bitmap;
-        } 
+        }
 
         #region Bitmap与ImageSource互转
         /// <summary>
@@ -654,7 +657,7 @@ namespace Tools.Extend
                 return imageSource;
             }
             catch (Exception ex)
-            { 
+            {
             }
             return null;
         }
@@ -676,7 +679,7 @@ namespace Tools.Extend
                 return bitmap;
             }
             catch (Exception ex)
-            { 
+            {
             }
             return null;
         }
@@ -731,7 +734,7 @@ namespace Tools.Extend
                 }
             }
             catch (Exception ex)
-            { 
+            {
             }
             return buffer;
         }
@@ -767,7 +770,7 @@ namespace Tools.Extend
                 }
             }
             catch (Exception ex)
-            { 
+            {
             }
             return bitmap;
         }

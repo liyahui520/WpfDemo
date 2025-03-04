@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using Entity.Entity;
 using Tools.App;
 using WpfMain.Logic;
+using CuPrint;
 
 namespace WpfMain.Module.PetModule
 {
@@ -237,7 +238,17 @@ namespace WpfMain.Module.PetModule
             UCD = new UCImageItemView(UCFilesImageAndVideo.SelectedImageItem);
             BorderImageContent.Child = UCD;
         }
-
+        /// <summary>
+        /// 打印预览
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ButtonBase_Print_OnClick(object sender, RoutedEventArgs e)
+        {
+            FrmModule frm = new FrmModule(new UCPrint(tInfos));
+            frm.ShowDialog();
+        }
     }
 }
 

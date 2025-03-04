@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
+using CuPrint;
 using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
@@ -265,6 +266,12 @@ namespace WpfMain.Module.PetModule
             tInfo.Result = new TestResult();
             old.Images.Add(new ImageItem { Name = $"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource = e.Info });
             tInfo.Result = old;
+        }
+
+        private void Button_Save_Print_Test(object sender, RoutedEventArgs e)
+        {
+            FrmModule frm = new FrmModule(new UCPrint(tInfo));
+            frm.ShowDialog();
         }
     }
 }
