@@ -50,7 +50,7 @@
                 <ScrollViewer Grid.Row="1" hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="10,0,10,10">
                     <StackPanel Orientation="Vertical" >
 
-                        <Expander Header="缩放/旋转" Margin="0,4,0,0" >
+                        <Expander Header="缩放/旋转" Margin="0,4,0,0" IsExpanded="True" >
                             <Border  Width="300" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4"  Padding="10">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
@@ -100,7 +100,7 @@
                                 </StackPanel>
                             </Border>
                         </Expander>
-                        <Expander Header="对比度" Margin="0,4,0,0" >
+                        <Expander Header="对比度" Margin="0,4,0,0" IsExpanded="True" >
                             <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4" >
                                 <StackPanel Orientation="Horizontal">
                                     <hc:ButtonGroup>
@@ -125,7 +125,7 @@
 
                             </Border>
                         </Expander>
-                        <Expander Header="测量/涂鸦" Margin="0,4,0,0" >
+                        <Expander Header="测量/涂鸦" Margin="0,4,0,0" IsExpanded="True" >
                             <Border Height="100" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
 
                                 <StackPanel>
@@ -186,7 +186,7 @@
                                 </StackPanel>
                             </Border>
                         </Expander>
-                        <Expander Header="遮罩" Margin="0,4,0,0" >
+                        <Expander Header="遮罩" Margin="0,4,0,0" IsExpanded="True" >
                             <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
                                 <StackPanel Orientation="Horizontal">
 
@@ -209,7 +209,7 @@
                                 </StackPanel>
                             </Border>
                         </Expander>
-                        <Expander Header="对比" Margin="0,4,0,0" >
+                        <Expander Header="对比" Margin="0,4,0,0" IsExpanded="True" >
 
                             <Border Height="50" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource RegionBrush}" CornerRadius="0,0,4,4">
                                 <StackPanel Orientation="Horizontal">

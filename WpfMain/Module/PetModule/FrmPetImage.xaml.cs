@@ -61,7 +61,7 @@ namespace WpfMain.Module.PetModule
                 VerticalAlignment = VerticalAlignment.Stretch
             };
             ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
-            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
+            //HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
             DataContext = this;
             UCFilesImageAndVideo.SelectedImageItem = item;
             UCD = new UCImageItemView(item);
