@@ -81,7 +81,7 @@
                     <Line Margin="0,16,0,0"   X1="10" />-->
 
                 </Grid>
-                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Hidden">
                     <TextBlock Foreground="White" FontSize="9" Name="TextBlockRight">10</TextBlock>
                     <TextBlock Foreground="White" FontSize="9">cm</TextBlock>
                 </StackPanel>
@@ -115,7 +115,7 @@
                     <Line Margin="32,0,0,0"   Y2="10" />
                     <Line Margin="36,0,0,0"   Y2="0" />-->
                 </Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="Hidden">
                     <TextBlock Foreground="White" FontSize="9" Name="TextBlockButton">10</TextBlock>
                     <TextBlock Foreground="White" FontSize="9">cm</TextBlock>
                 </StackPanel>

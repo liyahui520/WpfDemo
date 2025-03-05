@@ -8,6 +8,8 @@ using System.Windows.Media.Imaging;
 using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
+using HandyControl.Tools.Extension;
+using System.Windows.Controls.Primitives;
 
 namespace WpfMain.Module.SysModule
 {
@@ -16,20 +18,33 @@ namespace WpfMain.Module.SysModule
     /// </summary>
     public partial class UCSetting
     {
+
+        private string _title;
         public UCSetting()
         {
             InitializeComponent();
+        }
 
+
+        public UCSetting(string title)
+        {
+            InitializeComponent();
+            _title = title;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             #region 视频设置初始化
             VideoPath.Text = AppStatic.VideoConfig.VideoPath;
             videoType.ItemsSource = new List<VideoType>() { new VideoType() { Name = "AVI" } };//, new VideoType() { Name = "MP4" }, new VideoType() { Name = "WMV" } 
-            videoType.SelectedValue = AppStatic.VideoConfig.VideoType.ToUpper();
+            videoType.SelectedValue = string.IsNullOrEmpty(AppStatic.VideoConfig.VideoType) ? "AVI" : AppStatic.VideoConfig.VideoType.ToUpper();
             #endregion
 
             #region 图片设置初始化
             ImagePath.Text = AppStatic.VideoConfig.ImagePath;
             imageType.ItemsSource = new List<VideoType>() { new VideoType() { Name = "JPG" }, new VideoType() { Name = "PNG" } };
-            imageType.SelectedValue = AppStatic.VideoConfig.ImageType.ToUpper();
+            imageType.SelectedValue = string.IsNullOrEmpty(AppStatic.VideoConfig.ImageType) ? "JPG" : AppStatic.VideoConfig.VideoType.ToUpper();
+
             #endregion
 
             #region 医院信息初始化
@@ -41,6 +56,20 @@ namespace WpfMain.Module.SysModule
             UserName.Text = AppStatic.AppHospital.UserName;
             #endregion
 
+            if (!string.IsNullOrEmpty(_title))
+            {
+                switch (_title)
+                {
+                    case "医院设置":
+                        Selector.SetIsSelected(TabItemHospital,true);
+                        break;
+                    case "设置":
+                        Selector.SetIsSelected(TabItemVideo, true);
+                        break;
+                }
+            }
+
+
             var deviceList = new List<VideoType>();
             // 设定初始视频设备
             FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -50,8 +79,8 @@ namespace WpfMain.Module.SysModule
             }
             device.ItemsSource = deviceList;
             device.SelectedValue = AppStatic.VideoConfig.VideoDecive;
-
         }
+
         /// <summary>
         /// 视频路径
         /// </summary>
@@ -143,5 +172,6 @@ namespace WpfMain.Module.SysModule
             DialogResult = false;
             this.Close();
         }
+
     }
 }

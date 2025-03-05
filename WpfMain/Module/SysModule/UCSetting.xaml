@@ -10,13 +10,14 @@
            ResizeMode="NoResize"
            WindowStartupLocation="CenterScreen"
            IsFullScreen="False" 
+           Loaded="Window_Loaded"
            d:DesignHeight="450" d:DesignWidth="600" Width="630" Height="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0" TabStripPlacement="Left" FontSize="14">
+        <TabControl Grid.Row="0" TabStripPlacement="Left" FontSize="14" Name="TabControlMain">
             <TabItem Header="医院信息" HeaderStringFormat="{}{0}" Width="120" Height="28" VerticalAlignment="Top">
                 <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -57,7 +58,7 @@
                     </StackPanel>
                 </hc:UniformSpacingPanel>
             </TabItem>
-            <TabItem Header="视频设置" HeaderStringFormat="{}{0}" Width="120">
+            <TabItem Header="视频设置" HeaderStringFormat="{}{0}" Width="120" Name="TabItemVideo">
                 <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <ComboBox Width="380" SelectedValuePath="VideoString" DisplayMemberPath="Name" x:Name="device" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="默认设备" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0" Text=""/>
@@ -71,7 +72,7 @@
                     </StackPanel>
                 </hc:UniformSpacingPanel>
             </TabItem>
-            <TabItem Header="图片设置" HeaderStringFormat="{}{0}" Width="120">
+            <TabItem Header="图片设置" HeaderStringFormat="{}{0}" Width="120" Name="TabItemImage" >
                 <hc:UniformSpacingPanel Spacing="8" Margin="10" ChildWrapping="Wrap">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Visibility="Hidden">
                         <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="ImagePath" hc:InfoElement.Title="拍照路径" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text="" IsReadOnly="True"/>
@@ -84,7 +85,7 @@
             </TabItem>
           
         </TabControl>
-        <hc:UniformSpacingPanel Grid.Row="1" Orientation="Vertical" HorizontalSpacing="10" HorizontalAlignment="Right" Spacing="32">
+        <hc:UniformSpacingPanel Grid.Row="1" Orientation="Vertical" HorizontalSpacing="10" HorizontalAlignment="Right" Spacing="32" Name="TabItemHospital">
             <WrapPanel>
                 <StackPanel>
                     <Button Content="保存" Margin="5" Style="{StaticResource ButtonPrimary}" x:Name="Save" Click="Save_OnClick"/>
