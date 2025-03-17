@@ -10,6 +10,7 @@ using Entity.Entity;
 using Tools.App;
 using WpfMain.Logic;
 using CuPrint;
+using System.Windows.Shapes;
 
 namespace WpfMain.Module.PetModule
 {
@@ -248,6 +249,12 @@ namespace WpfMain.Module.PetModule
         {
             FrmModule frm = new FrmModule(new UCPrint(tInfos));
             frm.ShowDialog();
+        }
+
+        private void screenshot_Click(object sender, RoutedEventArgs e)
+        {
+            Point screenPoint = UCD.PointToScreen(new Point(0, 0));
+            new MaskWindow(new Rectangle { RadiusX = screenPoint.X, RadiusY = screenPoint.Y, Width = UCD.ActualWidth, Height = UCD.ActualHeight }).Show();
         }
     }
 }

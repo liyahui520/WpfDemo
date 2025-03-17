@@ -30,10 +30,10 @@
     <hc:SimplePanel>
 
         <InkCanvas EditingMode="None" Name="PART_Canvas" Background="Transparent"/>
-        <Rectangle Name="PART_MaskAreaLeft" IsHitTestVisible="False"  Fill="#AA000000" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Rectangle Name="PART_MaskAreaTop" IsHitTestVisible="False" Fill="#AA000000" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Rectangle Name="PART_MaskAreaRight" IsHitTestVisible="False" Fill="#AA000000" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Rectangle Name="PART_MaskAreaBottom" IsHitTestVisible="False" Fill="#AA000000" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Rectangle Name="PART_MaskAreaLeft" IsHitTestVisible="False"  Fill="#CA000000" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Rectangle Name="PART_MaskAreaTop" IsHitTestVisible="False" Fill="#CA000000" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Rectangle Name="PART_MaskAreaRight" IsHitTestVisible="False" Fill="#CA000000" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Rectangle Name="PART_MaskAreaBottom" IsHitTestVisible="False" Fill="#CA000000" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Border Name="PART_TargetArea">
             <Border.Style>
                 <Style TargetType="Border">

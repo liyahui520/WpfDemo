@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using HandyControl.Controls;
 using HandyControl.Data;
 using HandyControl.Tools;
@@ -205,7 +206,26 @@ namespace WpfMain.Module
             Closed += ScreenshotWindow_Closed;
         }
 
+        public MaskWindow(Rectangle rectangle )
+        {
+            InitializeComponent();
+            this.WindowState = WindowState.Normal;
+            this.WindowStartupLocation = WindowStartupLocation.Manual;
+            this.Width = rectangle.Width;
+            this.Height = rectangle.Height;
+            this.Left = rectangle.RadiusX;
+            this.Top = rectangle.RadiusY;
 
+            DataContext = this;
+            this.Background = new SolidColorBrush(Colors.Transparent);
+            this.WindowStyle = WindowStyle.None;
+
+            _screenshotWindowHandle = this.GetHandle();
+            InteropMethods.EnableWindow(_screenshotWindowHandle, false);
+
+            Loaded += ScreenshotWindow_Loaded;
+            Closed += ScreenshotWindow_Closed;
+        }
 
         public override void OnApplyTemplate()
         {
