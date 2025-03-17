@@ -211,19 +211,19 @@ namespace Record
             {
                 if (this.RecorderStatus != RecorderStatus.Start) return;
                 var img = ((Bitmap)eventArgs.Frame.Clone());
-                using (Graphics g = Graphics.FromImage(img))
-                {
-                    using (SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Yellow))
-                    {
-                        using (Font drawFont = new Font("Arial", 12, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel))
-                        {
-                            int xPos = 15;
-                            int yPos = 10;
-                            string drawDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                            g.DrawString(drawDate, drawFont, drawBrush, xPos, yPos);
-                        }
-                    }
-                }
+                //using (Graphics g = Graphics.FromImage(img))
+                //{
+                //    using (SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Yellow))
+                //    {
+                //        using (Font drawFont = new Font("Arial", 12, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel))
+                //        {
+                //            int xPos = 15;
+                //            int yPos = 10;
+                //            string drawDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                //            g.DrawString(drawDate, drawFont, drawBrush, xPos, yPos);
+                //        }
+                //    }
+                //}
 
                 if (!File.Exists(AviFilePath))
                 {

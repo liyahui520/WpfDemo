@@ -12,68 +12,87 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" DataContext="{Binding}">
     <UserControl.Resources>
-        <converters:StringToBoolConverter x:Key="StringToBoolConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <hc:Divider Content="拍照" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
-            <ListBox hc:ScrollViewer.IsInertiaEnabled="False" x:Name="ImgListBox" Margin="0" BorderThickness="0"  Height="180" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" FocusVisualStyle="{StaticResource FocusVisualRadius0Margin0}" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Images, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <hc:Divider Grid.Row="0" Content="图像" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
+        <CheckBox Grid.Row="1" Foreground="White" Content="全选" IsChecked="False" Margin="10,3,0,0" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked"/>
+        <Grid Grid.Row="2">
+            <ListBox hc:ScrollViewer.IsInertiaEnabled="False" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="8" VerticalAlignment="Stretch" x:Name="ImgListBox" SelectionMode="Single" Margin="0" BorderThickness="0"  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" FocusVisualStyle="{StaticResource FocusVisualRadius0Margin0}" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Images, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ListBox.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
+
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type entity1:ImageItem}">
-                        <hc:Card Margin="8" BorderThickness="0" Effect="{StaticResource EffectShadow2}"  MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
-                            <hc:Card.Background>
-                                <SolidColorBrush Color="White" Opacity="0.2"/>
-                            </hc:Card.Background>
-                            <Border CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
-                                <Image Width="120" Height="100" Source="{Binding ImageSource}" Stretch="Uniform"/>
-                                <Border.ContextMenu>
-                                    <ContextMenu Width="120">
-                                        <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </Border.ContextMenu>
-                            </Border>
-                            <hc:Card.FooterTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="1">
-                                        <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource TextBlockDefault}" Foreground="White" Text="{Binding }" HorizontalAlignment="Center"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </hc:Card.FooterTemplate>
-                        </hc:Card>
+                        <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Center">
+                            <CheckBox Content="" IsChecked="{Binding IsSelected}" Margin="0" Padding="0"/>
+                            <hc:Card Margin="8" ToolTip="双击设计" BorderThickness="0" Effect="{StaticResource EffectShadow2}"  MaxWidth="120" Tag="{Binding}"  Footer="{Binding }" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                                <hc:Card.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </hc:Card.Background>
+                                <StackPanel HorizontalAlignment="Right">
+                                    <Border Margin="0" Padding="0" CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
+                                        <Image Width="120" Height="100" Source="{Binding ImageSource}" Stretch="Uniform"/>
+                                        <!--<Border.ContextMenu>
+                                        <ContextMenu Width="120">
+                                            <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Border.ContextMenu>-->
+                                    </Border>
+                                    <Button Margin="0,-90,0,0" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Close_OnMouseLeftButtonDown" Style="{StaticResource ButtonIconCircular.Small}" Background="Red" BorderBrush="Transparent" BorderThickness="0" Foreground="White" hc:IconElement.Geometry="{StaticResource CloseGeometry}"/>
+
+                                </StackPanel>
+                                <hc:Card.FooterTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Center">
+                                            <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource TextBlockDefault}" Visibility="{Binding IsEdit, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="White" Text="[已编辑]" HorizontalAlignment="Center"/>
+                                            <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource TextBlockDefault}" Foreground="White" Text="{Binding Name}" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </hc:Card.FooterTemplate>
+                            </hc:Card>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </StackPanel>
+        </Grid>
 
-        <StackPanel Grid.Row="1">
-            <hc:Divider Content="视频" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
-            <ListBox  Grid.Row="1" hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  Height="180"  ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Vedios, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <hc:Divider Grid.Row="3" Content="视频" HorizontalContentAlignment="Left" Foreground="White" Margin="0"/>
+
+        <Grid Grid.Row="4">
+            <ListBox hc:ScrollViewer.IsInertiaEnabled="True" Margin="0" BorderThickness="0"  x:Name="videoList" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" HorizontalAlignment="Left" ItemContainerStyle="{StaticResource CustomListBoxItemStyle}" Style="{StaticResource WrapPanelHorizontalListBox}"  ItemsSource="{Binding ParentData.Result.Vedios, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ListBox.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </ListBox.Background>
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type entity1:ImageItem}">
+                    <DataTemplate DataType="{x:Type entity1:MediaItem}">
                         <hc:Card  Margin="8" Effect="{StaticResource EffectShadow2}" MaxWidth="120" Tag="{Binding}"  Footer="{Binding Name}" MouseLeftButtonDown="UIElement_Video_OnMouseLeftButtonDown">
                             <hc:Card.Background>
                                 <SolidColorBrush Color="White" Opacity="0.2"/>
                             </hc:Card.Background>
-                            <Border CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
-                                <MediaElement Width="120" Height="100" Source="{Binding Source}" Stretch="Uniform"/>
-                                <Border.ContextMenu>
-                                    <ContextMenu Width="120">
-                                        <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </Border.ContextMenu>
-                            </Border>
+
+                            <StackPanel HorizontalAlignment="Right">
+                                <Border CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
+                                    <MediaElement Width="120" Height="100" Source="{Binding Source}" Stretch="Uniform"/>
+                                    <Border.ContextMenu>
+                                        <ContextMenu Width="120">
+                                            <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                </Border>
+                                <Button Margin="0,-90,0,0" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Video_Close_OnMouseLeftButtonDown" Style="{StaticResource ButtonIconCircular.Small}" Background="Red" BorderBrush="Transparent" BorderThickness="0" Foreground="White" hc:IconElement.Geometry="{StaticResource CloseGeometry}"/>
+
+                            </StackPanel>
                             <hc:Card.FooterTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="1">
@@ -85,6 +104,6 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

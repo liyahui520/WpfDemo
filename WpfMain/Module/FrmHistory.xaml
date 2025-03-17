@@ -37,18 +37,21 @@
                 </DataGrid.RowHeaderTemplate>-->
             <DataGrid.Columns>
                 <!--<DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding }" Header="序号"/>-->
+                <DataGridTextColumn Binding="{Binding RecordNo}" Header="病历号"/>
                 <DataGridTextColumn Binding="{Binding Customer}" Header="客户"/>
-                <DataGridTextColumn Binding="{Binding CustomerPhone}" Header="手机号"/>
+                <!--<DataGridTextColumn Binding="{Binding CustomerPhone}" Header="手机号"/>-->
                 <DataGridTextColumn Binding="{Binding Pet}" Header="宠物名"/>
                 <DataGridTextColumn Binding="{Binding Gender}" Header="性别"/>
+                <DataGridTextColumn Binding="{Binding Type}" Header="宠物种类"/>
+                <DataGridTextColumn Binding="{Binding Variety}" Header="宠物品种"/>
                 <!--<DataGridTextColumn Binding="{Binding DeviceName}" Header="设备"/>-->
-                <DataGridTextColumn Binding="{Binding TestName}" Header="名称"/>
+                <!--<DataGridTextColumn Binding="{Binding TestName}" Header="名称"/>-->
                 <!--<DataGridTextColumn Binding="{Binding See}" Header="所见"/>
                 <DataGridTextColumn Binding="{Binding Size}" Header="大小"/>
                 <DataGridTextColumn Binding="{Binding Count}" Header="数量"/>-->
                 <DataGridTextColumn Binding="{Binding DCOperation}" Header="检查医生"/>
-                <DataGridTextColumn Binding="{Binding TestDate, StringFormat=yyyy-MM-dd HH:mm:ss}" Header="检查时间"/>
-                <DataGridTextColumn Binding="{Binding Result.Remark}" Width="*" Header="备注"/>
+                <DataGridTextColumn Binding="{Binding TestDate, StringFormat=yyyy-MM-dd}" Header="检查时间"/>
+                <DataGridTextColumn Binding="{Binding Result.Remark}" Width="*" Header="镜检结果"/>
                 <!--<DataGridTextColumn Width="100" Header="缩略图"/>-->
 
                 <DataGridTemplateColumn Header="操作" Width="170">

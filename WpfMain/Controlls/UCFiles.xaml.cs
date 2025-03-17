@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Entity.Entity;
+using HandyControl.Controls;
+using Newtonsoft.Json.Linq;
 
 namespace WpfMain.Controlls
 {
@@ -59,6 +61,21 @@ namespace WpfMain.Controlls
             }
         }
 
+        private MediaItem _selectedVideoItem;
+
+        public MediaItem SelectedVideoItem
+        {
+            get
+            {
+                return _selectedVideoItem;
+            }
+            set
+            {
+                videoList.SelectedItem = value;
+                _selectedVideoItem = value;
+            }
+        }
+
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (ParentData != null)
@@ -74,6 +91,7 @@ namespace WpfMain.Controlls
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SelectedImageItem = (sender as HandyControl.Controls.Card)?.DataContext as ImageItem;
+            SelectedImageItem.IsSelected = !SelectedImageItem.IsSelected;
             RaiseSomeActionTriggered(ParentData);
         }
 
@@ -82,6 +100,61 @@ namespace WpfMain.Controlls
         {
             var wntity = (MediaItem)((System.Windows.FrameworkElement)sender).Tag;
             RaiseVideoActionTriggered(wntity);
+        }
+
+        private void Close_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (ParentData != null)
+            {
+                SelectedImageItem = (ImageItem)((System.Windows.FrameworkElement)e.Source).DataContext;
+                var old = ParentData.Result;
+                ParentData.Result = new TestResult();
+                old.Images.Remove(SelectedImageItem);
+                ParentData.Result = old;
+                Growl.Success("删除成功");
+            }
+        }
+
+        private void Video_Close_OnMouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            if (ParentData != null)
+            {
+                SelectedVideoItem = (MediaItem)((System.Windows.FrameworkElement)e.Source).DataContext;
+                var old = ParentData.Result;
+                ParentData.Result = new TestResult();
+                old.Vedios.Remove(SelectedVideoItem);
+                ParentData.Result = old;
+                Growl.Success("删除成功");
+            }
+        }
+
+        private void Close_OnMouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            if (ParentData != null)
+            {
+                SelectedImageItem = (ImageItem)((System.Windows.FrameworkElement)e.Source).DataContext;
+                var old = ParentData.Result;
+                ParentData.Result = new TestResult();
+                old.Images.Remove(SelectedImageItem);
+                ParentData.Result = old;
+                Growl.Success("删除成功");
+            }
+        }
+
+        private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (ParentData != null)
+            { 
+                ParentData.Result.Images.ForEach(s => s.IsSelected = true); 
+            }
+        }
+
+        private void ToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            if (ParentData != null)
+            {
+                ParentData.Result.Images.ForEach(s => s.IsSelected = false);
+            }
         }
     }
 }

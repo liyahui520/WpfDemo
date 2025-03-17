@@ -23,6 +23,11 @@ namespace Entity.Entity
         public string Id { get; set; }
 
         /// <summary>
+        /// 病历号
+        /// </summary>
+        public string RecordNo { get; set; }
+
+        /// <summary>
         /// 检查名称
         /// </summary>
         public string TestName { get; set; }
@@ -73,6 +78,17 @@ namespace Entity.Entity
         public DateTime TestDate { get; set; }
 
         /// <summary>
+        /// 宠物种类
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// 宠物品种
+        /// </summary>
+        public string Variety { get; set; }
+
+
+        /// <summary>
         /// 检查结果
         /// </summary>
         private TestResult result;
@@ -121,7 +137,7 @@ namespace Entity.Entity
     }
 
 
-    public class MediaItem
+    public class MediaItem : ObservableObject
     {
         public string Name { get; set; }
 
@@ -131,14 +147,27 @@ namespace Entity.Entity
         public string Source { get; set; }
 
         /// <summary>
+        /// 是否已修改
+        /// </summary>
+        public bool IsEdit { get; set; }
+
+        /// <summary>
+        /// 是否选中
+        /// </summary>
+        private bool _IsSelected;
+
+        /// <summary>
         /// 数据类型
         /// </summary>
         public MediaSourceType Type { get; set; }
+
+
+        public bool IsSelected
+        {
+            get => _IsSelected;
+            set => SetProperty(ref _IsSelected, value, nameof(IsSelected));
+        }
     }
-
-
-
-
 
     public enum MediaSourceType
     {
@@ -155,8 +184,6 @@ namespace Entity.Entity
         /// </summary>
         LocalPath = 2,
     }
-
-
 
     //图片 
     [Serializable]
@@ -231,9 +258,6 @@ namespace Entity.Entity
         }
 
     }
-
-
-
 
     /// <summary>
     /// 检查结果明细

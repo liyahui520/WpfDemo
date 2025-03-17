@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:hc="https://handyorg.github.io/handycontrol" 
              xmlns:converters1="clr-namespace:Tools.Extend.Converters;assembly=Tools"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              Background="{DynamicResource RegionBrush}" >
     <UserControl.Resources>
-        <converters1:StrToIsCheckedConverter x:Key="StrToIsCheckedConverter"/> 
+        <converters1:StrToIsCheckedConverter x:Key="StrToIsCheckedConverter"/>
     </UserControl.Resources>
     <hc:TransitioningContentControl>
         <Grid Margin="0" >
@@ -16,36 +17,36 @@
             </hc:PropertyGrid>-->
             <ScrollViewer  hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="5,0,5,5">
                 <StackPanel Orientation="Vertical" DataContext="{Binding ParentData, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                    <Expander Header="宠主信息" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White">
+                    <Expander Header="病历信息" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White">
                         <Expander.Background>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Expander.Background>
-                        <Border Height="100" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4"  Padding="10">
+                        <Border Height="800" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4"  Padding="10">
                             <Border.Background>
                                 <SolidColorBrush Color="White" Opacity="0.4"/>
                             </Border.Background>
                             <StackPanel Margin="0,0,0,0">
-                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠主名称"  hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}"  Margin="10,0,0,5" Text="{Binding Customer}"/>
-                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="电      话" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding CustomerPhone}"/>
-                            </StackPanel>
-                        </Border>
-                    </Expander>
-                    <Expander Header="宠物信息" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White">
-                        <Expander.Background>
-                            <SolidColorBrush Color="White" Opacity="0.4"/>
-                        </Expander.Background>
-                        <Border Height="100" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4"  Padding="10">
-                            <Border.Background>
-                                <SolidColorBrush Color="White" Opacity="0.4"/>
-                            </Border.Background>
-                            <StackPanel Margin="0,0,0,0">
-                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物名称"  hc:InfoElement.Necessary="True" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Pet}"/>
+                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="病历号"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding RecordNo}"/>
+                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠主姓名"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}"  Margin="10,0,0,5" Text="{Binding Customer}"/>
+                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物名称"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Pet}"/>
                                 <ComboBox x:Name="gender"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="性      别" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="" SelectedItem="{Binding Gender}"/>
-                                 
+                                <ComboBox ItemsSource="{Binding DataList}" IsEditable="True" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠物种类" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="{Binding Type}"/>
+                                <ComboBox ItemsSource="{Binding DataList}" IsEditable="True" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠物品种" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="{Binding Variety}"/>
+                                <DatePicker SelectedDate="{x:Static system:DateTime.Now}"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" Style="{StaticResource DatePickerExtend}" hc:InfoElement.Title="检查时间" Text="{Binding TestDate , StringFormat=yyyy-MM-dd}" Margin="10,0,0,5"/>
+                                <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10,5,0,5">
+                                    <TextBlock HorizontalAlignment="Left" Width="70" Text="镜检结果" Style="{StaticResource TextBlockDefault}"/>
+                                    <RichTextBox Width="280" Height="180" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <FlowDocument>
+                                            <Paragraph>
+                                                <Run Text="{Binding Result.Remark}"/>
+                                            </Paragraph>
+                                        </FlowDocument>
+                                    </RichTextBox>
+                                </VirtualizingStackPanel>
                             </StackPanel>
                         </Border>
                     </Expander>
-                    <Expander Header="检查信息" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White">
+                    <!--<Expander Header="检查信息" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White">
                         <Expander.Background>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Expander.Background>
@@ -55,9 +56,11 @@
                             </Border.Background>
                             <StackPanel Margin="0,0,0,0">
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="检查名称" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding TestName}"/>
-                                <!--<TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="所     见" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding See}"/>
+                                -->
+                    <!--<TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="所     见" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding See}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="大     小" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Size}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="数     量" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Count}"/>-->
+                    <!--
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="检查医生" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding DCOperation}"/> 
                                 <hc:DateTimePicker  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Placeholder="" hc:InfoElement.Title="检查时间" Style="{StaticResource DateTimePickerExtend}" hc:InfoElement.Necessary="True" Text="{Binding TestDate}" Margin="10,0,0,5"/>
                                 <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10,5,0,5">
@@ -72,7 +75,7 @@
                                     </VirtualizingStackPanel>
                             </StackPanel>
                         </Border>
-                    </Expander> 
+                    </Expander>-->
                 </StackPanel>
             </ScrollViewer>
             <!--<StackPanel hc:TitleElement.TitleWidth="168" Grid.Row="1" Margin="20,16,17,10">
