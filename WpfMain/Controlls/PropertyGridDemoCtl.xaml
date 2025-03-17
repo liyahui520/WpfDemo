@@ -25,7 +25,7 @@
                             <Border.Background>
                                 <SolidColorBrush Color="White" Opacity="0.4"/>
                             </Border.Background>
-                            <StackPanel Margin="0,0,0,0">
+                            <StackPanel Margin="0,0,0,0"  Width="280">
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="病历号"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding RecordNo}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠主姓名"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}"  Margin="10,0,0,5" Text="{Binding Customer}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物名称"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Pet}"/>
@@ -35,7 +35,7 @@
                                 <DatePicker SelectedDate="{x:Static system:DateTime.Now}"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" Style="{StaticResource DatePickerExtend}" hc:InfoElement.Title="检查时间" Text="{Binding TestDate , StringFormat=yyyy-MM-dd}" Margin="10,0,0,5"/>
                                 <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10,5,0,5">
                                     <TextBlock HorizontalAlignment="Left" Width="70" Text="镜检结果" Style="{StaticResource TextBlockDefault}"/>
-                                    <RichTextBox Width="280" Height="180" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    <RichTextBox Width="200"  MinHeight="180" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                         <FlowDocument>
                                             <Paragraph>
                                                 <Run Text="{Binding Result.Remark}"/>

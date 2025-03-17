@@ -149,7 +149,8 @@ namespace WpfMain.Module.PetModule
             System.Drawing.Image img = Video?.Capture();
             if (img != null)
             {
-                string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;
+                //string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;
+                string fullName = $"0{tInfo.Result.Images.Count + 1}.{AppStatic.VideoConfig.ImageType}";
                 try
                 {
                     if (tInfo.Result.Images == null)

@@ -34,7 +34,7 @@
                     <DataTemplate DataType="{x:Type entity1:ImageItem}">
                         <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Center">
                             <CheckBox Content="" IsChecked="{Binding IsSelected}" Margin="0" Padding="0"/>
-                            <hc:Card Margin="8" ToolTip="双击设计" BorderThickness="0" Effect="{StaticResource EffectShadow2}"  MaxWidth="120" Tag="{Binding}"  Footer="{Binding }" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
+                            <hc:Card Margin="8" BorderThickness="0" Effect="{StaticResource EffectShadow2}"  MaxWidth="120" Tag="{Binding}"  Footer="{Binding }" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown">
                                 <hc:Card.Background>
                                     <SolidColorBrush Color="White" Opacity="0.2"/>
                                 </hc:Card.Background>
@@ -53,7 +53,7 @@
                                 </StackPanel>
                                 <hc:Card.FooterTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource TextBlockDefault}" Visibility="{Binding IsEdit, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="White" Text="[已编辑]" HorizontalAlignment="Center"/>
                                             <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource TextBlockDefault}" Foreground="White" Text="{Binding Name}" HorizontalAlignment="Center"/>
                                         </StackPanel>
