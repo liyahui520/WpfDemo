@@ -68,7 +68,7 @@ namespace WpfMain
 
         private void UCCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            UCSetting setting = new UCSetting();
+            UCSetting setting = new UCSetting((sender as UCCard).Tag?.ToString());
             setting.Owner = this;
             setting.ShowDialog();
         }

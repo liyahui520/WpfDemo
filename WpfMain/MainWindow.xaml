@@ -55,11 +55,11 @@
             <controlls:UCCard Grid.Row="2" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/record.png" Content="历史记录" MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown" />
 
             <!--镜检-->
-            <controlls:UCCard Grid.Row="2" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/jingjian.png" Content="设置"   MouseLeftButtonDown="UCCard_MouseLeftButtonDown" />
+            <controlls:UCCard Grid.Row="2" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/jingjian.png" Tag="设置" Content="设置"   MouseLeftButtonDown="UCCard_MouseLeftButtonDown" />
             <!--样本制作-->
             <!--<controlls:UCCard Grid.Row="3" Grid.Column="1" Logo="pack://SiteOfOrigin:,,,/Static/Images/yangben.png" Content="样本制作" />-->
             <!--账户管理-->
-            <controlls:UCCard Grid.Row="3" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/users.png" Content="医院信息" />
+            <controlls:UCCard Grid.Row="3" Grid.Column="2" Logo="pack://SiteOfOrigin:,,,/Static/Images/users.png" Tag="医院设置" Content="医院信息" MouseLeftButtonDown="UCCard_MouseLeftButtonDown"/>
             <!--报告模板-->
             <controlls:UCCard Grid.Row="3" Grid.Column="3" Logo="pack://SiteOfOrigin:,,,/Static/Images/baogao.png" Content="报告模板" MouseLeftButtonDown="UIElement_Print_OnMouseLeftButtonDown"/>
            </Grid>

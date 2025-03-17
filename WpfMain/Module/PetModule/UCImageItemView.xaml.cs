@@ -312,8 +312,8 @@ namespace PacsCore
         private void LoadDicomImage()
         {
 
-            BackFrame.Width = dinfo.ImageSource.Width;
-            BackFrame.Height = dinfo.ImageSource.Height;
+            //BackFrame.Width = dinfo.ImageSource.Width;
+            //BackFrame.Height = dinfo.ImageSource.Height;
 
             TransformGroup group = IMG.FindResource("Imageview") as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;

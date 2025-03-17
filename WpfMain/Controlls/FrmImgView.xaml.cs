@@ -21,7 +21,7 @@ namespace WpfMain.Controlls
         }
 
 
-        public static readonly DependencyProperty NameProperty = DependencyProperty.Register(
+        public new static readonly DependencyProperty NameProperty = DependencyProperty.Register(
             "SelectName", typeof(string), typeof(FrmImgView), new PropertyMetadata(default(string)));
 
         public string SelectName
