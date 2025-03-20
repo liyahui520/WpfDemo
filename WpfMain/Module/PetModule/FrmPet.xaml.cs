@@ -271,6 +271,9 @@ namespace WpfMain.Module.PetModule
 
         private void Button_Save_Print_Test(object sender, RoutedEventArgs e)
         {
+            FrmModule f = new FrmModule(new UCPrintNotes(tInfo));
+            f.ShowDialog();
+            return;
             FrmModule frm = new FrmModule(new UCPrint(tInfo));
             frm.ShowDialog();
         }

@@ -531,7 +531,26 @@ namespace Tools.Extend
                 return (T)format.Deserialize(fs);
             }
         }
+        public static byte[] ReadFileToBytes(this string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException("文件路径无效");
 
+            try
+            {
+                return File.ReadAllBytes(path); // 小文件直接读取[3]()
+            }
+            catch (IOException ex)
+            {
+                // 大文件回退到FileStream方式 
+                using (FileStream fs = new FileStream(path, FileMode.Open))
+                {
+                    byte[] buffer = new byte[fs.Length];
+                    fs.Read(buffer, 0, buffer.Length);
+                    return buffer;
+                }
+            }
+        }
 
         public static T GetObjectByClass<T>(string dllName, string typeName)
         {
