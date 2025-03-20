@@ -75,8 +75,8 @@ namespace WpfMain
 
         private void UIElement_Print_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            FrmModule frm = new FrmModule(new UCWpfViewer());
-            frm.title.Text = "测试";
+            FrmModule frm = new FrmModule(new FrmNotes());
+            frm.title.Text = "模板";
             frm.Owner = this;
             frm.ShowDialog();
         }

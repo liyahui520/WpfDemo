@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -70,6 +71,7 @@
     <Compile Include="Extend\Converters\StrToIsCheckedConverter.cs" />
     <Compile Include="Extend\ObjectExtension.cs" />
     <Compile Include="Extend\ObservableObject.cs" />
+    <Compile Include="Extend\Valueformat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

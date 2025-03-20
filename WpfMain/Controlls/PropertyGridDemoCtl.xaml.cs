@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using Entity.Entity;
 using Entity.Enum;
@@ -35,6 +37,8 @@ namespace WpfMain.Controlls
                 杂项2 = VerticalAlignment.Stretch
             }; 
             gender.ItemsSource = ObjectExtension.GetEnumDescriptions<GenderEnum>();
+
+            baogaos.ItemsSource = new List<string>(){"1","2"};
         }
 
         public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(

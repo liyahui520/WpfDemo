@@ -60,7 +60,7 @@ namespace WpfMain.Controlls
 
             videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
             wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
-            recorder = new CameraRecorder(videoFileName, wavFileName, 30, true,VideoCodec.MSMPEG4v3);
+            recorder = new CameraRecorder(videoFileName, wavFileName, 30, true,VideoCodec.MSMPEG4v3); 
             InitVideo();
 
         }
@@ -99,6 +99,18 @@ namespace WpfMain.Controlls
                 }
             }
 
+            sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
+            sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height;
+            //VideoCapabilities[] capabilities = CaptureDevice.VideoCapabilities;
+            //if (capabilities.Length > 0)
+            //{
+            //    // 3. 设置分辨率（示例选择第一个支持的分辨率）
+            //    videoDevice.VideoResolution = capabilities[0];
+
+            //    // 4. 启动摄像头并获取当前分辨率 
+            //    videoDevice.Start();
+            //    Console.WriteLine($"当前分辨率: {CaptureDevice.VideoResolution.FrameSize.Width}x{CaptureDevice.VideoResolution.FrameSize.Height}");
+            //}
         }
         //重新设置视频保存路径
         public void SetAviFilePath()
@@ -169,35 +181,35 @@ namespace WpfMain.Controlls
         /// <param name="image"></param>
         private void videoSourcePlayer1_NewFrame(object sender, ref Bitmap image)
         {
-            //录像
-            using (Graphics g = Graphics.FromImage(image))
-            {
-                using (SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Yellow))
-                {
-                    using (Font drawFont = new Font("Arial", 18, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel))
-                    {
-                        int xPos = 15;
-                        int yPos = 10;
-                        string drawDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                        g.DrawString(drawDate, drawFont, drawBrush, xPos, yPos);
+            ////录像
+            //using (Graphics g = Graphics.FromImage(image))
+            //{
+            //    using (SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Yellow))
+            //    {
+            //        using (Font drawFont = new Font("Arial", 18, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel))
+            //        {
+            //            int xPos = 15;
+            //            int yPos = 10;
+            //            string drawDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            //            g.DrawString(drawDate, drawFont, drawBrush, xPos, yPos);
 
-                    }
-                    if (isStart)
-                    {
-                        using (SolidBrush drawBrush1 = new SolidBrush(System.Drawing.Color.Crimson))
-                        {
-                            using (Font drawFont = new Font("Arial", 18, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel))
-                            {
-                                int xPos = 15;
-                                int yPos = 35;
-                                g.DrawString("正在录像中", drawFont, drawBrush1, xPos, yPos);
+            //        }
+            //        if (isStart)
+            //        {
+            //            using (SolidBrush drawBrush1 = new SolidBrush(System.Drawing.Color.Crimson))
+            //            {
+            //                using (Font drawFont = new Font("Arial", 18, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel))
+            //                {
+            //                    int xPos = 15;
+            //                    int yPos = 35;
+            //                    g.DrawString("正在录像中", drawFont, drawBrush1, xPos, yPos);
 
-                            }
-                        }
+            //                }
+            //            }
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //} 
 
         }
 

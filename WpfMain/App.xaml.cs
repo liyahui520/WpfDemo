@@ -56,7 +56,8 @@ namespace WpfMain
             ConfigHelper.Instance.SetNavigationWindowDefaultStyle();
             //初始化DLL配置
             //Global.InitDllPath();
-
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
+            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
 #if !DEBUG
             try
             {
