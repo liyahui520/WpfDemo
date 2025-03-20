@@ -6,8 +6,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <hc:ThemeResources/>
-                <hc:Theme/>
+
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+
                 <ResourceDictionary Source="pack://application:,,,/Tools;component/Themes/Styles/Button.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Tools;component/Themes/Styles/Geometries.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Tools;component/Themes/Styles/Style.xaml"/>

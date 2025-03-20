@@ -25,7 +25,7 @@
 
                     <Grid RenderTransform="{StaticResource Imageview}"  RenderOptions.BitmapScalingMode="NearestNeighbor">
                         <Image Name="dicomImage1"   Stretch="Uniform"/>
-                        <dt:DrawingCanvas x:Name="drawingCanvas"  Brush="White" Background="#02FFFFFF" DrawingToolType="Pointer"  />
+                        <dt:DrawingCanvas x:Name="drawingCanvas"  Brush="White"  StrokeThickness="3"  Background="#02FFFFFF" DrawingToolType="Pointer"  />
                         <Border  Background="#02FFFFFF" Name="Bordermove" Cursor="SizeAll" 
                             MouseLeftButtonDown="IMG1_MouseLeftButtonDown"
                              MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
