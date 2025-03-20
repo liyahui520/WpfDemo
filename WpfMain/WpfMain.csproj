@@ -74,9 +74,13 @@
     <Reference Include="DrawTools">
       <HintPath>..\Libs\DrawTools.dll</HintPath>
     </Reference>
-    <Reference Include="HandyControl, Version=3.5.2.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
+    <Reference Include="HandyControl, Version=3.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libs\HandyControl.dll</HintPath>
+    </Reference>
+    <Reference Include="HandyControlDemoCode, Version=3.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\HandyControlDemoCode.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.1.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -203,6 +207,9 @@
     <Compile Include="Module\PetModule\FrmPet.xaml.cs">
       <DependentUpon>FrmPet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Module\PetModule\UCListImageView.xaml.cs">
+      <DependentUpon>UCListImageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Module\PetModule\UCImageItemView.xaml.cs">
       <DependentUpon>UCImageItemView.xaml</DependentUpon>
     </Compile>
@@ -243,6 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Module\PetModule\UCListImageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Module\PetModule\UCImageItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -268,6 +279,7 @@
     <Content Include="Static\Images\screenshot-line.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Static\Images\保存.png" />
     <Content Include="Static\Images\对比度 %281%29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -286,9 +298,11 @@
     <Content Include="Static\Images\截图.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Static\Images\撤销.png" />
     <Content Include="Static\Images\旋转.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Static\Images\添加文件.png" />
     <Content Include="Static\Images\翻转.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

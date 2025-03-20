@@ -16,21 +16,21 @@ namespace WpfMain
 {
     public partial class App : Application
     {
-        internal void UpdateTheme(ApplicationTheme theme)
-        {
-            if (ThemeManager.Current.ApplicationTheme != theme)
-            {
-                ThemeManager.Current.ApplicationTheme = theme;
-            }
-        }
+        //internal void UpdateTheme(ApplicationTheme theme)
+        //{
+        //    if (ThemeManager.Current.ApplicationTheme != theme)
+        //    {
+        //        ThemeManager.Current.ApplicationTheme = theme;
+        //    }
+        //}
 
-        internal void UpdateAccent(Brush accent)
-        {
-            if (ThemeManager.Current.AccentColor != accent)
-            {
-                ThemeManager.Current.AccentColor = accent;
-            }
-        }
+        //internal void UpdateAccent(Brush accent)
+        //{
+        //    if (ThemeManager.Current.AccentColor != accent)
+        //    {
+        //        ThemeManager.Current.AccentColor = accent;
+        //    }
+        //}
 
         public App()
         {
