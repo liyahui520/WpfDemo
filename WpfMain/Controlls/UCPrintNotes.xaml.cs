@@ -196,12 +196,15 @@ namespace WpfMain.Controlls
                         DocumentImage image = richEdit.Document.Images.Insert(pos, i.Bitmap.Byte2Bitmap());
                         image.Size = new SizeF(900, 600); 
                         pos = image.Range.End;
-                        rh = richEdit.Document.InsertText(pos, "                ");
-                        pos = rh.End;
-                        // 调整段落行距 
-                        DevExpress.XtraRichEdit.API.Native.Paragraph paragraph = richEdit.Document.GetParagraph(pos);
-                        paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Single;
-                        paragraph.RightIndent = 100;
+                     
+                    // 调整段落行距 
+                    DevExpress.XtraRichEdit.API.Native.Paragraph paragraph = richEdit.Document.GetParagraph(pos); 
+                    paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Single;
+                        //paragraph.SpacingBefore = 100; // 段前5磅 
+                        //paragraph.SpacingAfter = 100;  // 段后5磅 
+                        //paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Exactly;
+                        //paragraph.LineSpacing = 3.0f;   // 行距12磅 
+                        //paragraph.RightIndent = 100;
                     });
                     // 2. 获取当前段落并设置间距  
                     //paragraph.SpacingBefore = 100; // 段前5磅 
