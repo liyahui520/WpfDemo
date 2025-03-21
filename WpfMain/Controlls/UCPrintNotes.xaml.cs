@@ -47,24 +47,24 @@ namespace WpfMain.Controlls
         /// <param name="e"></param>
         private void UCPrintNotes_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var data = "D:\\Works\\Wpf\\WpfMain\\打印模板(1)\\尿检1.docx".ReadFileToBytes();
+            //var data = "D:\\Works\\Wpf\\WpfMain\\打印模板(1)\\尿检.docx".ReadFileToBytes();
             RichConntext frtext = new RichConntext();
-            frtext.ConntextType = RichConntextType.rtf;
+            frtext.ConntextType = RichConntextType.docx;
             frtext.BindData = new List<RichConntext.RichConntextBindData>();
 
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = AppStatic.AppHospital });
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo });
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo.Result });
-            using (frtext.Conntext = new System.IO.MemoryStream(data))
+            //using (frtext.Conntext = new System.IO.MemoryStream(data))
+            //{
+            this.richEditControl1.Document.LoadDocument(tInfo.TestPath, ConvertToDevType(RichConntextType.docx));
+            foreach (var item in frtext.BindData)
+                LoadBingDataValues(item);
+            var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
+            string html = string.Empty;
+            a.ForEach(s =>
             {
-                this.richEditControl1.Document.LoadDocument(frtext.Conntext, ConvertToDevType(RichConntextType.rtf));
-                foreach (var item in frtext.BindData)
-                    LoadBingDataValues(item);
-                var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
-                string html = string.Empty;
-                a.ForEach(s =>
-                {
-                    InsertImageAfterText(richEditControl1, "{<image 200*200>}", s);
+                InsertImageAfterText(richEditControl1, "{<image 200*200>}", s);
                     //html += "<div>\r\n      ";
                     //s.ForEach(r =>
                     //{
@@ -73,14 +73,14 @@ namespace WpfMain.Controlls
                     //});
                     //html += "\t</div>";
                 });
+            this.richEditControl1.Refresh();
+            //InsertHtmlAfterText("影像", html);
 
-                //InsertHtmlAfterText("影像", html);
-
-                //tInfo.Result.Images.ForEach(s =>
-                //{
-                //    InsertImageAfterText(richEditControl1, "影像", s.Bitmap.Byte2Bitmap());
-                //});
-            }
+            //tInfo.Result.Images.ForEach(s =>
+            //{
+            //    InsertImageAfterText(richEditControl1, "影像", s.Bitmap.Byte2Bitmap());
+            //});
+            //}
         }
 
         // 动态插入HTML到指定文字后 
@@ -231,11 +231,11 @@ namespace WpfMain.Controlls
             Type r = typeof(TestResult);
             var dic = new Dictionary<string, object>();
 
-            dic.Add("主人名称", new Valueformat(t.GetProperty("Pet"), null));
+            dic.Add("宠物名称", new Valueformat(t.GetProperty("Pet"), null));
             dic.Add("病历号", new Valueformat(t.GetProperty("RecordNo"), null));
             dic.Add("检查医生", new Valueformat(t.GetProperty("DCOperation"), null));
             dic.Add("宠物性别", new Valueformat(t.GetProperty("Gender"), null));
-            dic.Add("宠主名称", new Valueformat(t.GetProperty("Customer"), null));
+            dic.Add("主人名称", new Valueformat(t.GetProperty("Customer"), null));
             dic.Add("检查时间", new Valueformat(t.GetProperty("TestDate"), null));
             dic.Add("宠物种类", new Valueformat(t.GetProperty("Type"), null));
             dic.Add("宠物品种", new Valueformat(t.GetProperty("Variety"), null));
@@ -247,7 +247,21 @@ namespace WpfMain.Controlls
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            richEditControl1.SaveDocument("1.docx",DocumentFormat.OpenXml);
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.Description = "选择文件保存目录";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{tInfo.TestName.ToString()}.docx"); 
+                    richEditControl1.SaveDocument(exportPath, DocumentFormat.OpenXml);
+                    MessageBox.Show($"导出成功！路径：{exportPath}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"导出失败：{ex.Message}");
+                }
+            }
         }
     }
     /// <summary>

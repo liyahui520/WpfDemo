@@ -99,6 +99,11 @@ namespace Entity.Entity
         /// </summary>
         public string Neuter { get; set; }
 
+        /// <summary>
+        /// 报告地址
+        /// </summary>
+        public string TestPath { get; set; }
+
 
         /// <summary>
         /// 检查结果
@@ -111,11 +116,13 @@ namespace Entity.Entity
             TestDate = DateTime.Now;
             Customer = "测试用户";
             DCOperation = AppStatic.AppHospital.UserName;
-            TestName = "细胞学";
+            TestName = "分泌物";
+            TestPath = "";
             Gender = GenderEnum.公.ToString();
             Id = Guid.NewGuid().ToString();
             Neuter = NeuterEnum.未绝育.ToString();
             Type = "犬";
+            
 
         }
 

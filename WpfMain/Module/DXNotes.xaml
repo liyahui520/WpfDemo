@@ -15,5 +15,5 @@
             </dxre:RichEditControl.CacheMode>
         </dxre:RichEditControl>
 
-    </Grid>
+    </Grid> 
 </Window>

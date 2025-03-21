@@ -100,5 +100,33 @@ namespace WpfMain.Logic
             }
 
         }
+
+        private static List<AppTemp> _appTemps;
+
+        public static List<AppTemp> AppTemps
+        {
+            get
+            {
+                if (_appTemps == null)
+                {
+                   return GetTemps();
+                }
+
+                return _appTemps;
+            }
+        }
+        private static List<AppTemp> GetTemps()
+        {
+            List<AppTemp> tenmps = new List<AppTemp>();
+            var path= AppDomain.CurrentDomain.BaseDirectory + "PrintTemp\\";
+            string[] files = Directory.GetFiles(path, "*.docx");
+            foreach (string file in files)
+            {
+                string[] names = file.Replace(path, "").Split('.');
+                tenmps.Add(new AppTemp(){Name = names[0],Path = file.ToString()});
+            }
+
+            return tenmps;
+        }
     }
 }

@@ -26,7 +26,7 @@
                                 <SolidColorBrush Color="White" Opacity="0.4"/>
                             </Border.Background>
                             <StackPanel Margin="0,0,0,0"  Width="280">
-                                <ComboBox x:Name="baogaos" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="报告模板"  hc:InfoElement.Necessary="False" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" SelectedValue="{Binding TestName}" />
+                                <ComboBox x:Name="baogaos" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="报告模板" SelectionChanged="Baogaos_OnSelectionChanged"  DisplayMemberPath="Name" hc:InfoElement.Necessary="False" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="{Binding TestName}" />
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="病历号"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding RecordNo}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠主姓名"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}"  Margin="10,0,0,5" Text="{Binding Customer}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物名称"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Pet}"/>

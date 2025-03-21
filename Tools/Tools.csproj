@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="App\AppHospital.cs" />
     <Compile Include="App\AppStatic.cs" />
+    <Compile Include="App\AppTemp.cs" />
     <Compile Include="App\AppVideoConfig.cs" />
     <Compile Include="App\ICustom.cs" />
     <Compile Include="App\PetInfo.cs" />
