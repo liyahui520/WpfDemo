@@ -60,6 +60,9 @@ namespace WpfMain.Controlls
             this.richEditControl1.Document.LoadDocument(tInfo.TestPath, ConvertToDevType(RichConntextType.docx));
             foreach (var item in frtext.BindData)
                 LoadBingDataValues(item);
+
+
+            richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
             var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
             string html = string.Empty;
             a.ForEach(s =>

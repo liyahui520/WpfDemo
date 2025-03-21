@@ -10,18 +10,22 @@ using Image = System.Drawing.Image;
 using AForge.Video.FFMPEG;
 using Tools.App;
 using Size = System.Windows.Size;
+using System.Windows.Media;
+using System.Windows.Forms;
 
 namespace WpfMain.Controlls
 {
     /// <summary>
     /// UCVideo.xaml 的交互逻辑
     /// </summary>
-    public partial class UCVideo : UserControl
+    public partial class UCVideo : System.Windows.Controls.UserControl
     {
         VideoCaptureDevice CaptureDevice;
         private string videoFileName = string.Empty; //视频文件名
         private string wavFileName = string.Empty; //音频文件名
         public bool isStart = false;
+        private double _vw;
+        private double _vh;
         #region 自定义事件
         public CameraRecorder recorder { get; set; }
 
@@ -38,7 +42,7 @@ namespace WpfMain.Controlls
             }
             else
             {
-                MessageBox.Show("摄像头未获取到");
+                System.Windows.MessageBox.Show("摄像头未获取到");
             }
         }
 
@@ -55,13 +59,18 @@ namespace WpfMain.Controlls
         {
             InitializeComponent();
         }
-
+        public UCVideo(double width, double height)
+        {
+            InitializeComponent();
+            _vw = width;
+            _vh = height;
+        }
         private void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
 
             videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
             wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
-            recorder = new CameraRecorder(videoFileName, wavFileName, 30, true,VideoCodec.MSMPEG4v3); 
+            recorder = new CameraRecorder(videoFileName, wavFileName, 30, true, VideoCodec.MSMPEG4v3);
             InitVideo();
 
         }
@@ -83,7 +92,7 @@ namespace WpfMain.Controlls
             {
                 CaptureDevice = recorder.initCapture(AppStatic.VideoConfig.VideoDecive);
                 sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
-                sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height; 
+                sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height;
                 sourcePlayer.VideoSource = CaptureDevice;
                 //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
                 button_Play_Click(this, null);
@@ -104,8 +113,17 @@ namespace WpfMain.Controlls
                 }
             }
 
-            view.Width = CaptureDevice.VideoResolution.FrameSize.Width;
-            view.Height = CaptureDevice.VideoResolution.FrameSize.Height;
+            view.Width = _vw;
+            view.Height = _vh;
+            if (_vw / CaptureDevice.VideoResolution.FrameSize.Width < _vw / CaptureDevice.VideoResolution.FrameSize.Height)
+                view.Height = (double)CaptureDevice.VideoResolution.FrameSize.Height / (double)CaptureDevice.VideoResolution.FrameSize.Width * _vw;
+            else
+                view.Width = (double)CaptureDevice.VideoResolution.FrameSize.Width / (double)CaptureDevice.VideoResolution.FrameSize.Height * _vh;
+
+
+
+
+
 
             // // 假设已经有VideoSourcePlayer实例 sourcePlayer 
             // // 获取显示控件的宽高  
@@ -144,10 +162,10 @@ namespace WpfMain.Controlls
             //    Console.WriteLine($"当前分辨率: {CaptureDevice.VideoResolution.FrameSize.Width}x{CaptureDevice.VideoResolution.FrameSize.Height}");
             //}
         }
-         
 
-    //重新设置视频保存路径
-    public void SetAviFilePath()
+
+        //重新设置视频保存路径
+        public void SetAviFilePath()
         {
             videoFileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType;
             recorder.SetAviFilePath(AppVideoConfig.TempPath + videoFileName);
