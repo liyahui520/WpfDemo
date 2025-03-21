@@ -294,19 +294,22 @@
                 <SolidColorBrush Color="#666666" Opacity="0.6"/>
             </Grid.Background>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*" Name="GridRowContent1"></ColumnDefinition>
-                <ColumnDefinition  Width="0*" Name="GridRowContent2"></ColumnDefinition>
+                <ColumnDefinition Width="0*" Name="GridRowContent2"></ColumnDefinition>
+                <ColumnDefinition  Width="5*" Name="GridRowContent1"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <!--<RowDefinition Height="5*" Name="GridRowContent1"/>
                 <RowDefinition  Height="0*" Name="GridRowContent2"/>-->
                 <!--<RowDefinition  Height="380"/>-->
             </Grid.RowDefinitions>
-            <Border Grid.Column="0" CornerRadius="10" Name="BorderImageContent"/>
-            <Border Grid.Column="1" CornerRadius="10" Name="BorderImageDuibi" Background="Black">
+            
+            <Border Grid.Column="0" CornerRadius="10" Name="BorderImageDuibi" Background="Black">
                 <Image Stretch="Uniform" Name="ImageDuibi"></Image>
             </Border>
-
+            <Border Grid.Column="1" CornerRadius="10" Name="BorderImageContent"/>
+            
+            
+            
             <StackPanel Orientation="Horizontal"  Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top">
                 <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  Tag="0.25" ToolTip="放大" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AmplifyGeometry}" Click="Button_Click_Zoom"/>
                 <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  Tag="-0.25" ToolTip="缩小" Click="Button_Click_Zoom" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReduceGeometry}"/>
