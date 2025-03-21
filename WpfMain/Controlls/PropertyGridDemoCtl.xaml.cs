@@ -9,6 +9,7 @@ using Entity.Entity;
 using Entity.Enum;
 using Tools.App;
 using Tools.Extend;
+using WpfMain.Logic;
 
 namespace WpfMain.Controlls
 {
@@ -39,8 +40,10 @@ namespace WpfMain.Controlls
             //    杂项2 = VerticalAlignment.Stretch
             //};
             gender.ItemsSource = ObjectExtension.GetEnumDescriptions<GenderEnum>();
+            neuter.ItemsSource = ObjectExtension.GetEnumDescriptions<NeuterEnum>();
 
-            baogaos.ItemsSource = new List<string>() { "分泌物", "粪检", "尿检", "细胞学", "血涂片" };
+
+            baogaos.ItemsSource = TestLogic.AppTemps;// new List<string>() { "分泌物", "粪检", "尿检", "细胞学", "血涂片" }; 
             baogaos.SelectedIndex = 0;
             petTypes.ItemsSource = AppStatic.PetInfo.PetTypes;
             if (AppStatic.PetInfo?.PetTypes.Count > 0)
@@ -73,9 +76,15 @@ namespace WpfMain.Controlls
             petVariety.ItemsSource = ((PetType)petTypes.SelectedItem).PetVarietys;
             if (((PetType)petTypes.SelectedItem).PetVarietys.Count > 0)
             {
-                petVariety.SelectedItem = ((PetType)petTypes.SelectedItem).PetVarietys[0]; 
+                petVariety.SelectedItem = ((PetType)petTypes.SelectedItem).PetVarietys[0];
                 ParentData.Variety = ((PetType)petTypes.SelectedItem).PetVarietys[0].Name;
             }
+        }
+
+        private void Baogaos_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (baogaos.SelectedItem == null || ParentData == null) return;
+            ParentData.TestPath = ((AppTemp)baogaos.SelectedItem).Path;
         }
     }
 

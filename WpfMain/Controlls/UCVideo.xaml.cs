@@ -82,6 +82,8 @@ namespace WpfMain.Controlls
             if (!string.IsNullOrWhiteSpace(AppStatic.VideoConfig.VideoDecive))
             {
                 CaptureDevice = recorder.initCapture(AppStatic.VideoConfig.VideoDecive);
+                sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
+                sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height; 
                 sourcePlayer.VideoSource = CaptureDevice;
                 //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
                 button_Play_Click(this, null);
@@ -94,41 +96,43 @@ namespace WpfMain.Controlls
                 {   // 默认设备
                     //CaptureDevice = new VideoCaptureDevice(videoDevices[0].MonikerString);
                     CaptureDevice = recorder.initCapture(videoDevices[0].MonikerString);
+                    sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
+                    sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height;
                     sourcePlayer.VideoSource = CaptureDevice;
                     //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
                     button_Play_Click(this, null);
                 }
             }
 
-            //view.Width = CaptureDevice.VideoResolution.FrameSize.Width;
-            //view.Height = CaptureDevice.VideoResolution.FrameSize.Height;
+            view.Width = CaptureDevice.VideoResolution.FrameSize.Width;
+            view.Height = CaptureDevice.VideoResolution.FrameSize.Height;
 
-           // // 假设已经有VideoSourcePlayer实例 sourcePlayer 
-           // // 获取显示控件的宽高  
-           //var p= new Size(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight);
-           // this.Measure(p);
-           // double viewWidth = this.Width;
-           // double viewHeight = this.Height;
+            // // 假设已经有VideoSourcePlayer实例 sourcePlayer 
+            // // 获取显示控件的宽高  
+            //var p= new Size(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight);
+            // this.Measure(p);
+            // double viewWidth = this.Width;
+            // double viewHeight = this.Height;
 
-           // // 假设已经获取到视频的宽高 mWidth 和 mHeight 
-           // double ratioView = viewWidth / viewHeight;
-           // double ratio = Width / Height;
+            // // 假设已经获取到视频的宽高 mWidth 和 mHeight 
+            // double ratioView = viewWidth / viewHeight;
+            // double ratio = Width / Height;
 
-           // if (ratioView - ratio < 0)
-           // {
-           //     // 屏幕宽高比相比视频的宽高比更小，表示视频是过于宽了 
-           //     // 那就以宽为基准，宽最大化 
-           //     sourcePlayer.Width = int.Parse(viewWidth.ToString());
-           //     // 高进行等比例缩放 
-           //     sourcePlayer.Height = int.Parse((viewWidth / ratio).ToString());
-           // }
-           // else
-           // {
-           //     // 以高为基准，高铺满全屏 
-           //     sourcePlayer.Height = int.Parse(viewHeight.ToString());
-           //     // 等比例计算出横向区域，多出父控件的范围将被裁剪 
-           //     sourcePlayer.Width = int.Parse((viewHeight * ratio).ToString());
-           // }
+            // if (ratioView - ratio < 0)
+            // {
+            //     // 屏幕宽高比相比视频的宽高比更小，表示视频是过于宽了 
+            //     // 那就以宽为基准，宽最大化 
+            //     sourcePlayer.Width = int.Parse(viewWidth.ToString());
+            //     // 高进行等比例缩放 
+            //     sourcePlayer.Height = int.Parse((viewWidth / ratio).ToString());
+            // }
+            // else
+            // {
+            //     // 以高为基准，高铺满全屏 
+            //     sourcePlayer.Height = int.Parse(viewHeight.ToString());
+            //     // 等比例计算出横向区域，多出父控件的范围将被裁剪 
+            //     sourcePlayer.Width = int.Parse((viewHeight * ratio).ToString());
+            // }
             //VideoCapabilities[] capabilities = CaptureDevice.VideoCapabilities;
             //if (capabilities.Length > 0)
             //{
