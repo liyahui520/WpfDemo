@@ -54,6 +54,7 @@ namespace WpfMain.Controlls
 
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = AppStatic.AppHospital });
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo });
+            frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo.Result });
             using (frtext.Conntext = new System.IO.MemoryStream(data))
             {
                 this.richEditControl1.Document.LoadDocument(frtext.Conntext, ConvertToDevType(RichConntextType.rtf));
@@ -227,9 +228,10 @@ namespace WpfMain.Controlls
         {
             Type appHo = typeof(AppHospital);
             Type t = typeof(TestInfo);
+            Type r = typeof(TestResult);
             var dic = new Dictionary<string, object>();
 
-            dic.Add("宠物名称", new Valueformat(t.GetProperty("Pet"), null));
+            dic.Add("主人名称", new Valueformat(t.GetProperty("Pet"), null));
             dic.Add("病历号", new Valueformat(t.GetProperty("RecordNo"), null));
             dic.Add("检查医生", new Valueformat(t.GetProperty("DCOperation"), null));
             dic.Add("宠物性别", new Valueformat(t.GetProperty("Gender"), null));
@@ -237,7 +239,15 @@ namespace WpfMain.Controlls
             dic.Add("检查时间", new Valueformat(t.GetProperty("TestDate"), null));
             dic.Add("宠物种类", new Valueformat(t.GetProperty("Type"), null));
             dic.Add("宠物品种", new Valueformat(t.GetProperty("Variety"), null));
+            dic.Add("检查所见", new Valueformat(r.GetProperty("Remark"), null));
+            dic.Add("宠物年龄", new Valueformat(t.GetProperty("Sex"), null));
+            dic.Add("是否绝育", new Valueformat(t.GetProperty("Neuter"), null));
             return dic;
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            richEditControl1.SaveDocument("1.docx",DocumentFormat.OpenXml);
         }
     }
     /// <summary>

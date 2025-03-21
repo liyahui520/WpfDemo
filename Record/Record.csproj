@@ -210,6 +210,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy /y $(SolutionDir)Libs\*.dll  ..\$(OutDir)
-xcopy /y $(SolutionDir)Libs\*.exe  ..\$(OutDir)</PreBuildEvent>
+xcopy /y $(SolutionDir)Libs\*.exe  ..\$(OutDir)
+xcopy  $(SolutionDir)Libs  ..\$(OutDir) /s /e /y</PreBuildEvent>
   </PropertyGroup>
 </Project>

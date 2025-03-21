@@ -89,6 +89,18 @@ namespace Entity.Entity
 
 
         /// <summary>
+        /// 年龄
+        /// </summary>
+        public string Sex { get; set; }
+
+
+        /// <summary>
+        /// 绝育
+        /// </summary>
+        public string Neuter { get; set; }
+
+
+        /// <summary>
         /// 检查结果
         /// </summary>
         private TestResult result;
@@ -102,6 +114,9 @@ namespace Entity.Entity
             TestName = "镜检";
             Gender = GenderEnum.公.ToString();
             Id = Guid.NewGuid().ToString();
+            Neuter = NeuterEnum.未绝育.ToString();
+            Type = "犬";
+
         }
 
         public TestResult Result

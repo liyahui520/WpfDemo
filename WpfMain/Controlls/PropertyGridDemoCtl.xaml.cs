@@ -29,16 +29,17 @@ namespace WpfMain.Controlls
         public PropertyGridDemoCtl()
         {
             InitializeComponent();
-            DemoModel = new PropertyGridDemoModel
-            {
-                姓名 = "TestString",
-                性别 = GenderEnum.公,
-                绝育 = true,
-                电话 = 98,
-                杂项2 = VerticalAlignment.Stretch
-            };
+            //DemoModel = new PropertyGridDemoModel
+            //{
+            //    姓名 = "TestString",
+            //    性别 = GenderEnum.公,
+            //    绝育 = NeuterEnum.未绝育,
+            //    电话 = 98,
+            //    杂项2 = VerticalAlignment.Stretch
+            //};
             gender.ItemsSource = ObjectExtension.GetEnumDescriptions<GenderEnum>();
 
+            neuter.ItemsSource = ObjectExtension.GetEnumDescriptions<NeuterEnum>();
             baogaos.ItemsSource = new List<string>() { "1", "2" };
 
             petTypes.ItemsSource = AppStatic.PetInfo.PetTypes;

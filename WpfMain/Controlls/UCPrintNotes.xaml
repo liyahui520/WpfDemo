@@ -8,6 +8,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <dxre:RichEditControl x:Name="richEditControl1" CommandBarStyle="Empty"  BarManager="{Binding ElementName=barManager1, Mode=OneTime}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
+            <Button Content="导出" Margin="5" Style="{StaticResource ButtonPrimary}" Click="ButtonBase_OnClick"/>
+            <Button Content="打印" Margin="5" Style="{StaticResource ButtonPrimary}"/>
+        </StackPanel>
+        <dxre:RichEditControl Grid.Row="1" x:Name="richEditControl1" CommandBarStyle="Empty"  BarManager="{Binding ElementName=barManager1, Mode=OneTime}"/>
     </Grid>
 </UserControl>
