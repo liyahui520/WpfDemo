@@ -213,6 +213,10 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Button_SaveTest(object sender, RoutedEventArgs e)
         {
+            if (tInfo?.Result?.Images?.Count == 0)
+                if (MessageBox.Show("尚未添加任何图片,是否确定导出", "系统提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning)== MessageBoxResult.OK)
+                    return;
+
             if (Video.isStart)
             {
                 MessageBox.Show(AppStatic.MainWindow, "正在录像中，请先停止！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);

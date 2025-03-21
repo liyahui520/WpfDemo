@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,15 +40,16 @@ namespace WpfMain.Controlls
             //};
             gender.ItemsSource = ObjectExtension.GetEnumDescriptions<GenderEnum>();
 
-            neuter.ItemsSource = ObjectExtension.GetEnumDescriptions<NeuterEnum>();
-            baogaos.ItemsSource = new List<string>() { "1", "2" };
-
+            baogaos.ItemsSource = new List<string>() { "分泌物", "粪检", "尿检", "细胞学", "血涂片" };
+            baogaos.SelectedIndex = 0;
             petTypes.ItemsSource = AppStatic.PetInfo.PetTypes;
             if (AppStatic.PetInfo?.PetTypes.Count > 0)
             {
                 petTypes.SelectedItem = AppStatic.PetInfo.PetTypes[0];
                 if (ParentData != null)
                     ParentData.Type = AppStatic.PetInfo.PetTypes[0].Name;
+                petTypes.SelectedIndex = 0;
+
                 //if (AppStatic.PetInfo.PetTypes[0]?.PetVarietys.Count > 0)
                 //{
                 //    petVariety.SelectedItem = AppStatic.PetInfo.PetTypes[0].PetVarietys[0];
@@ -76,6 +78,8 @@ namespace WpfMain.Controlls
             }
         }
     }
+
+
 
 
 

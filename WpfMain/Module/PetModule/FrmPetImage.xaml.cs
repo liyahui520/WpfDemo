@@ -11,6 +11,7 @@ using Tools.App;
 using WpfMain.Logic;
 using CuPrint;
 using System.Windows.Shapes;
+using Tools.Extend;
 
 namespace WpfMain.Module.PetModule
 {
@@ -151,8 +152,10 @@ namespace WpfMain.Module.PetModule
             if (odf.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
-            BorderImageDuibi.Background = new ImageBrush { ImageSource = new BitmapImage(new Uri(odf.FileName)) };
-            GridRowContent2.Height = new GridLength(5, GridUnitType.Star);
+            ImageDuibi.Source =  new BitmapImage(new Uri(odf.FileName));
+
+            //GridRowContent2.Height = new GridLength(5, GridUnitType.Star);
+            GridRowContent2.Width = new GridLength(5, GridUnitType.Star);
         }
 
         /// <summary>
@@ -162,7 +165,8 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Button_Click_CloseCmp(object sender, RoutedEventArgs e)
         {
-            GridRowContent2.Height = new GridLength(0, GridUnitType.Star);
+            //GridRowContent2.Height = new GridLength(0, GridUnitType.Star);
+            GridRowContent2.Width = new GridLength(0, GridUnitType.Star);
         }
 
         /// <summary>
