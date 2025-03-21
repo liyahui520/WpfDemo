@@ -63,7 +63,7 @@
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
-                                            <CheckBox Grid.Column="0" Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding ExposureModel.IsAuto}" IsEnabled="{Binding ExposureModel.IsEnable}" Margin="5,5,0,0"/>
+                                            <CheckBox Grid.Column="0" Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
                                             <VirtualizingStackPanel Grid.Row="1"  VerticalAlignment="Center" Orientation="Horizontal"  Margin="5,10,0,0">
                                                 <!--<TextBlock HorizontalAlignment="Left" Text="视频保存地址：" Style="{StaticResource TextBlockDefaultSecLight}"/>-->
                                                 <!--<TextBlock HorizontalAlignment="Left" Text="D://video" Style="{StaticResource TextBlockDefaultSecLight}"/>-->

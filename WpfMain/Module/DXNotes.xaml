@@ -1,15 +1,19 @@
-﻿<dx:ThemedWindow
+﻿<Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxre="http://schemas.devexpress.com/winfx/2008/xaml/richedit"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     x:Class="WpfMain.Module.DXNotes"
-    Title="DXNotes" Height="350" Width="525" ShowIcon="False" WindowState="Maximized" WindowStartupLocation="CenterScreen" 
+    Title="DXNotes" Height="350" Width="525" WindowState="Maximized" WindowStartupLocation="CenterScreen" 
     >
 
     <Grid>
-
-        <dxre:RichEditControl ShowBorder="False" CommandBarStyle="Ribbon" />
+        <dxre:RichEditControl x:Name="EditControl" ShowBorder="False" CommandBarStyle="Ribbon" >
+            <dxre:RichEditControl.CacheMode>
+                <BitmapCache EnableClearType="True" SnapsToDevicePixels="True"/>
+            </dxre:RichEditControl.CacheMode>
+        </dxre:RichEditControl>
 
     </Grid>
-</dx:ThemedWindow>
+</Window>

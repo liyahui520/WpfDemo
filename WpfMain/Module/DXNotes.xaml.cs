@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using DevExpress.Xpf.Core;
+using System.Windows; 
 
 
 namespace WpfMain.Module
@@ -18,11 +7,19 @@ namespace WpfMain.Module
     /// <summary>
     /// Interaction logic for DXNotes.xaml
     /// </summary>
-    public partial class DXNotes : ThemedWindow
+    public partial class DXNotes : Window
     {
         public DXNotes()
         {
             InitializeComponent();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            //this.Resources.Clear();
+            EditControl.Dispose();
+            //GC.Collect();
         }
     }
 }

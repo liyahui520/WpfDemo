@@ -80,10 +80,10 @@ namespace WpfMain
             note.ShowDialog();
             return;
 
-            FrmModule frm = new FrmModule(new FrmNotes());
-            frm.title.Text = "模板";
-            frm.Owner = this;
-            frm.ShowDialog();
+            //FrmModule frm = new FrmModule(new FrmNotes());
+            //frm.title.Text = "模板";
+            //frm.Owner = this;
+            //frm.ShowDialog();
         }
     }
 }

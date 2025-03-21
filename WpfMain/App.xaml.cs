@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HandyControl.Themes;
-
 using System.Windows;
-using System.Windows.Media;
-using MessageBox = HandyControl.Controls.MessageBox;
-using HandyControl.Properties.Langs;
 using HandyControl.Tools;
 using System.Globalization;
 using System.Reflection;
 using System.IO;
+using Entity.Entity;
 using Tools.App;
 
 namespace WpfMain
@@ -52,6 +48,7 @@ namespace WpfMain
             ConfigHelper.Instance.SetLang("zh-cn");
             AppStatic.VideoConfig = AppVideoConfig.GetConfig();
             AppStatic.AppHospital = AppHospital.GetConfig();
+            AppStatic.PetInfo = PetInfo.GetConfig();
             ConfigHelper.Instance.SetWindowDefaultStyle();
             ConfigHelper.Instance.SetNavigationWindowDefaultStyle();
             //初始化DLL配置

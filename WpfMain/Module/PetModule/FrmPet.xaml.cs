@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -218,6 +219,18 @@ namespace WpfMain.Module.PetModule
                 return;
             }
             TestLogic.Save(tInfo);
+            if (AppStatic.PetInfo.PetTypes.Any(s => s.Name == tInfo.Type))
+            {
+                if (AppStatic.PetInfo.PetTypes.First(s => s.Name == tInfo.Type).PetVarietys.All(s => s.Name != tInfo.Variety))
+                {
+                    AppStatic.PetInfo.PetTypes.First(s => s.Name == tInfo.Type).PetVarietys.Add(new PetVariety() { Name = tInfo.Variety });
+                }
+            }
+            else
+            {
+                AppStatic.PetInfo.PetTypes.Add(new PetType() { Name = tInfo.Type, PetVarietys = new List<PetVariety>() { new PetVariety() { Name = tInfo.Variety } } });
+            }
+            AppStatic.PetInfo.Save();
             MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
         }
 
