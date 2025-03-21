@@ -64,6 +64,7 @@
     <Compile Include="App\AppStatic.cs" />
     <Compile Include="App\AppVideoConfig.cs" />
     <Compile Include="App\ICustom.cs" />
+    <Compile Include="App\PetInfo.cs" />
     <Compile Include="Extend\BindingHelper.cs" />
     <Compile Include="Extend\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Extend\Converters\EnumValueToEnumNameConverter.cs" />

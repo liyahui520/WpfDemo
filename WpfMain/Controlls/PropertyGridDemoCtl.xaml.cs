@@ -6,7 +6,8 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Entity.Entity;
 using Entity.Enum;
-using Tools.Extend; 
+using Tools.App;
+using Tools.Extend;
 
 namespace WpfMain.Controlls
 {
@@ -23,7 +24,7 @@ namespace WpfMain.Controlls
         {
             get => (TestInfo)GetValue(ParentDataProperty);
             set => SetValue(ParentDataProperty, value);
-        } 
+        }
 
         public PropertyGridDemoCtl()
         {
@@ -35,10 +36,23 @@ namespace WpfMain.Controlls
                 绝育 = true,
                 电话 = 98,
                 杂项2 = VerticalAlignment.Stretch
-            }; 
+            };
             gender.ItemsSource = ObjectExtension.GetEnumDescriptions<GenderEnum>();
 
-            baogaos.ItemsSource = new List<string>(){"1","2"};
+            baogaos.ItemsSource = new List<string>() { "1", "2" };
+
+            petTypes.ItemsSource = AppStatic.PetInfo.PetTypes;
+            if (AppStatic.PetInfo?.PetTypes.Count > 0)
+            {
+                petTypes.SelectedItem = AppStatic.PetInfo.PetTypes[0];
+                if (ParentData != null)
+                    ParentData.Type = AppStatic.PetInfo.PetTypes[0].Name;
+                //if (AppStatic.PetInfo.PetTypes[0]?.PetVarietys.Count > 0)
+                //{
+                //    petVariety.SelectedItem = AppStatic.PetInfo.PetTypes[0].PetVarietys[0];
+                //    petVariety.SelectedValue = AppStatic.PetInfo.PetTypes[0].PetVarietys[0].Name;
+                //}
+            }
         }
 
         public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(
@@ -48,6 +62,17 @@ namespace WpfMain.Controlls
         {
             get => (PropertyGridDemoModel)GetValue(DemoModelProperty);
             set => SetValue(DemoModelProperty, value);
+        }
+
+        private void PetTypes_OnSelected(object sender, RoutedEventArgs e)
+        {
+            if (petTypes.SelectedItem == null || ParentData == null) return;
+            petVariety.ItemsSource = ((PetType)petTypes.SelectedItem).PetVarietys;
+            if (((PetType)petTypes.SelectedItem).PetVarietys.Count > 0)
+            {
+                petVariety.SelectedItem = ((PetType)petTypes.SelectedItem).PetVarietys[0]; 
+                ParentData.Variety = ((PetType)petTypes.SelectedItem).PetVarietys[0].Name;
+            }
         }
     }
 
@@ -94,5 +119,5 @@ namespace WpfMain.Controlls
 
         [Category("3检查")]
         public int 数量 { get; set; }
-    } 
+    }
 }

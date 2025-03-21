@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using DevExpress.Xpf.Core;
 using Tools.App;
 using WpfMain.Module.SysModule;
 
@@ -9,7 +10,7 @@ namespace WpfMain.Module
     /// <summary>
     /// FrmModule.xaml 的交互逻辑
     /// </summary>
-    public partial class FrmModule
+    public partial class FrmModule: Window
     {
         public FrmModule(UserControl control)
         {

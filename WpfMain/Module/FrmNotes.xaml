@@ -187,7 +187,7 @@
                             <dxb:BarButtonItemLink BarItemName="biInsertSymbol"/>
                         </dxb:Bar.ItemLinks>
                     </dxb:Bar>
-                    <dxb:Bar x:Name="barPageSetup" Caption="{Binding ConverterParameter=Caption_GroupPageSetup, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    <!--<dxb:Bar x:Name="barPageSetup" Caption="{Binding ConverterParameter=Caption_GroupPageSetup, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -368,7 +368,7 @@
                         <dxb:Bar.ItemLinks>
                             <dxre:RibbonStyleGalleryItemLink BarItemName="biGalleryTableStyle"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>
+                    </dxb:Bar>-->
                     <!--<dxb:Bar x:Name="barDrawBorders" Caption="{Binding ConverterParameter=Caption_GroupTableDrawBorders, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>

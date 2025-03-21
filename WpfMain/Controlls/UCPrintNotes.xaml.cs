@@ -47,7 +47,7 @@ namespace WpfMain.Controlls
         /// <param name="e"></param>
         private void UCPrintNotes_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var data = "C:\\Users\\liyah\\Desktop\\test.rtf".ReadFileToBytes();
+            var data = "D:\\Works\\Wpf\\WpfMain\\打印模板(1)\\尿检1.docx".ReadFileToBytes();
             RichConntext frtext = new RichConntext();
             frtext.ConntextType = RichConntextType.rtf;
             frtext.BindData = new List<RichConntext.RichConntextBindData>();
@@ -59,11 +59,11 @@ namespace WpfMain.Controlls
                 this.richEditControl1.Document.LoadDocument(frtext.Conntext, ConvertToDevType(RichConntextType.rtf));
                 foreach (var item in frtext.BindData)
                     LoadBingDataValues(item);
-                var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s=>s.IsSelected).ToList(), 2).ToList();
+                var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
                 string html = string.Empty;
                 a.ForEach(s =>
                 {
-                    InsertImageAfterText(richEditControl1, "影像", s);
+                    InsertImageAfterText(richEditControl1, "{<image 200*200>}", s);
                     //html += "<div>\r\n      ";
                     //s.ForEach(r =>
                     //{
@@ -179,6 +179,8 @@ namespace WpfMain.Controlls
                     DocumentRange searchRange = richEdit.Document.CreateRange(0, richEdit.Document.Range.End.ToInt());
                     DocumentRange foundRange = richEdit.Document.FindAll(targetText,
                         DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive, searchRange).FirstOrDefault();
+                    this.richEditControl1.Document.Replace(foundRange, "");
+                    if (foundRange == null) return;
                     pos = foundRange.End;
                 }
 
@@ -194,12 +196,12 @@ namespace WpfMain.Controlls
                     {
                         // 插入图片并设置布局 
                         DocumentImage image = richEdit.Document.Images.Insert(pos, i.Bitmap.Byte2Bitmap());
-                        image.Size = new SizeF(900, 600); 
+                        image.Size = new SizeF(900, 600);
                         pos = image.Range.End;
-                     
-                    // 调整段落行距 
-                    DevExpress.XtraRichEdit.API.Native.Paragraph paragraph = richEdit.Document.GetParagraph(pos); 
-                    paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Single;
+
+                        // 调整段落行距 
+                        DevExpress.XtraRichEdit.API.Native.Paragraph paragraph = richEdit.Document.GetParagraph(pos);
+                        paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Single;
                         //paragraph.SpacingBefore = 100; // 段前5磅 
                         //paragraph.SpacingAfter = 100;  // 段后5磅 
                         //paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Exactly;
