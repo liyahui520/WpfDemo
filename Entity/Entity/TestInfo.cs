@@ -111,7 +111,7 @@ namespace Entity.Entity
             TestDate = DateTime.Now;
             Customer = "测试用户";
             DCOperation = AppStatic.AppHospital.UserName;
-            TestName = "镜检";
+            TestName = "细胞学";
             Gender = GenderEnum.公.ToString();
             Id = Guid.NewGuid().ToString();
             Neuter = NeuterEnum.未绝育.ToString();
