@@ -75,7 +75,7 @@ namespace Entity.Entity
         /// <summary>
         /// 检查时间
         /// </summary>
-        public DateTime TestDate { get; set; }
+        public DateTime TestDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 宠物种类

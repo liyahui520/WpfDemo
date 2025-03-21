@@ -26,20 +26,20 @@
                                 <SolidColorBrush Color="White" Opacity="0.4"/>
                             </Border.Background>
                             <StackPanel Margin="0,0,0,0"  Width="280">
-                                <ComboBox x:Name="baogaos" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="报告模板"  hc:InfoElement.Necessary="False" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" />
+                                <ComboBox x:Name="baogaos" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="报告模板"  hc:InfoElement.Necessary="False" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" SelectedValue="{Binding TestName}" />
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="病历号"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding RecordNo}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠主姓名"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}"  Margin="10,0,0,5" Text="{Binding Customer}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物名称"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Pet}"/>
                                 <ComboBox x:Name="gender"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="性      别" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="" SelectedItem="{Binding Gender}"/>
                                 <ComboBox x:Name="petTypes" IsEditable="True" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠物种类" SelectedIndex="0" SelectionChanged="PetTypes_OnSelected" DisplayMemberPath="Name"  Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="{Binding Type}"/>
                                 <ComboBox x:Name="petVariety" IsEditable="True" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠物品种" DisplayMemberPath="Name" Style="{StaticResource ComboBoxExtend}"   Margin="10,0,0,5" Text="{Binding Variety}"/>
-                                <DatePicker SelectedDate="{x:Static system:DateTime.Now}"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" Style="{StaticResource DatePickerExtend}" hc:InfoElement.Title="检查时间" Text="{Binding TestDate , StringFormat=yyyy-MM-dd}" Margin="10,0,0,5"/>
+                                <DatePicker Name="DatePickerTestDate" SelectedDate="{Binding TestDate}"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" Style="{StaticResource DatePickerExtend}" hc:InfoElement.Title="检查时间" Text="{Binding TestDate , StringFormat=yyyy-MM-dd}" Margin="10,0,0,5"/>
                                 <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10,5,0,5">
                                     <TextBlock HorizontalAlignment="Left" Width="70" Text="镜检结果" Style="{StaticResource TextBlockDefault}"/>
                                     <RichTextBox Width="200"  MinHeight="180" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                         <FlowDocument>
                                             <Paragraph>
-                                                <Run Text="{Binding Result.Remark}"/>
+                                                <Run Text="{Binding See}"/>
                                             </Paragraph>
                                         </FlowDocument>
                                     </RichTextBox>

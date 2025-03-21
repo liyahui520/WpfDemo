@@ -11,6 +11,7 @@ using Tools.App;
 using WpfMain.Logic;
 using CuPrint;
 using System.Windows.Shapes;
+using Tools.Extend;
 
 namespace WpfMain.Module.PetModule
 {
