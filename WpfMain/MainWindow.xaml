@@ -11,10 +11,10 @@
     MinHeight="750"
     ShowNonClientArea="False"
     ShowTitle="True" 
-    WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Border_MouseLeftButtonDown"
+    WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Border_MouseLeftButtonDown" Margin="0" Padding="0"
     mc:Ignorable="d" WindowStyle="None">
     <hc:Window.Background>
-        <ImageBrush ImageSource="pack://SiteOfOrigin:,,,/Static/Images/background.jpg"  Opacity="0.9"/>
+        <ImageBrush ImageSource="pack://SiteOfOrigin:,,,/Static/Images/background.jpg" Stretch="UniformToFill" />
     </hc:Window.Background>
     <Grid>
         <Grid.RowDefinitions>

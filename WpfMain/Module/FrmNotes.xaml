@@ -126,7 +126,7 @@
                             <dxb:BarButtonItemLink BarItemName="biEditReplace"/>
                         </dxb:Bar.ItemLinks>
                     </dxb:Bar>
-                    <!--<dxb:Bar x:Name="barPages" Caption="{Binding ConverterParameter=Caption_GroupPages, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    <dxb:Bar x:Name="barPages" Caption="{Binding ConverterParameter=Caption_GroupPages, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -199,8 +199,8 @@
                             <dxb:BarSubItemLink BarItemName="biInsertBreak"/>
                             <dxb:BarSubItemLink BarItemName="biPageLayoutLineNumbering"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barPageBackground" Caption="{Binding ConverterParameter=Caption_GroupPageBackground, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barPageBackground" Caption="{Binding ConverterParameter=Caption_GroupPageBackground, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -287,8 +287,8 @@
                             <dxb:BarButtonItemLink BarItemName="biCheckSpelling"/>
                             <dxb:BarButtonItemLink BarItemName="biReviewShowLanguageForm"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barProtect" Caption="{Binding ConverterParameter=Caption_GroupDocumentProtection, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barProtect" Caption="{Binding ConverterParameter=Caption_GroupDocumentProtection, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -297,8 +297,8 @@
                             <dxb:BarButtonItemLink BarItemName="biReviewEditPermissionRange"/>
                             <dxb:BarButtonItemLink BarItemName="biReviewUnprotectDocument"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barComment" Caption="{Binding ConverterParameter=Caption_GroupComment, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barComment" Caption="{Binding ConverterParameter=Caption_GroupComment, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -308,8 +308,8 @@
                             <dxb:BarButtonItemLink BarItemName="biReviewPreviousComment"/>
                             <dxb:BarButtonItemLink BarItemName="biReviewNextComment"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barTracking" Caption="{Binding ConverterParameter=Caption_GroupTracking, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barTracking" Caption="{Binding ConverterParameter=Caption_GroupTracking, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -318,8 +318,8 @@
                             <dxb:BarSubItemLink BarItemName="biReviewReviewers"/>
                             <dxb:BarCheckItemLink BarItemName="biReviewReviewingPane"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barNavigation" Caption="{Binding ConverterParameter=Caption_GroupHeaderFooterToolsDesignNavigation, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barNavigation" Caption="{Binding ConverterParameter=Caption_GroupHeaderFooterToolsDesignNavigation, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -330,8 +330,8 @@
                             <dxb:BarButtonItemLink BarItemName="biHeaderFooterGoToNext"/>
                             <dxb:BarCheckItemLink BarItemName="biHeaderFooterLinkToPrevious"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barOptions" Caption="{Binding ConverterParameter=Caption_GroupHeaderFooterToolsDesignOptions, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barOptions" Caption="{Binding ConverterParameter=Caption_GroupHeaderFooterToolsDesignOptions, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -339,16 +339,16 @@
                             <dxb:BarCheckItemLink BarItemName="biHeaderFooterDifferentFirstPage"/>
                             <dxb:BarCheckItemLink BarItemName="biHeaderFooterDifferentOddEvenPages"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barClose" Caption="{Binding ConverterParameter=Caption_GroupHeaderFooterToolsDesignClose, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barClose" Caption="{Binding ConverterParameter=Caption_GroupHeaderFooterToolsDesignClose, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
                         <dxb:Bar.ItemLinks>
                             <dxb:BarButtonItemLink BarItemName="biHeaderFooterClose"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barTableStyleOptions" Caption="{Binding ConverterParameter=Caption_GroupTableStyleOptions, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barTableStyleOptions" Caption="{Binding ConverterParameter=Caption_GroupTableStyleOptions, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
@@ -360,15 +360,15 @@
                             <dxb:BarStaticItemLink BarItemName="biTableToggleBandedRows"/>
                             <dxb:BarStaticItemLink BarItemName="biTableToggleBandedColumns"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
-                    <!--<dxb:Bar x:Name="barTableStyles" Caption="{Binding ConverterParameter=Caption_GroupTableStyles, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
+                    </dxb:Bar>
+                    <dxb:Bar x:Name="barTableStyles" Caption="{Binding ConverterParameter=Caption_GroupTableStyles, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
                         </dxb:Bar.DockInfo>
                         <dxb:Bar.ItemLinks>
                             <dxre:RibbonStyleGalleryItemLink BarItemName="biGalleryTableStyle"/>
                         </dxb:Bar.ItemLinks>
-                    </dxb:Bar>-->
+                    </dxb:Bar>
                     <!--<dxb:Bar x:Name="barDrawBorders" Caption="{Binding ConverterParameter=Caption_GroupTableDrawBorders, Converter={StaticResource stringIdConverter}, Mode=OneTime, Source={StaticResource stringIdConverter}}">
                         <dxb:Bar.DockInfo>
                             <dxb:BarDockInfo ContainerType="Top"/>
@@ -934,7 +934,8 @@
                     <dxb:BarButtonItem x:Name="biPictureSendToBack" Command="{Binding PictureSendToBack, Mode=OneTime, Source={StaticResource commands}}"/>
                     <dxb:BarButtonItem x:Name="biPictureSendBehindText" Command="{Binding PictureSendBehindText, Mode=OneTime, Source={StaticResource commands}}"/>
                 </dxb:BarManager.Items>
-                <dxre:RichEditControl x:Name="richEditControl1" CommandBarStyle="Empty" ShowReviewingPane="False" BarManager="{Binding ElementName=barManager1, Mode=OneTime}"/>
+                <dxre:RichEditControl x:Name="richEditControl1" CommandBarStyle="Empty" ShowReviewingPane="False" ShowBorder="False" ActiveViewType="PrintLayout"   
+                                        BarManager="{Binding ElementName=barManager1, Mode=OneTime}"/>
             </dxb:BarManager>
         </Grid>
         </Grid> 

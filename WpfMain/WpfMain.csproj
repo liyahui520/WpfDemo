@@ -232,6 +232,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Module\DXNotes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Module\FrmNotes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -274,6 +278,9 @@
     </Compile>
     <Compile Include="Logic\ImageLogic.cs" />
     <Compile Include="Logic\TestLogic.cs" />
+    <Compile Include="Module\DXNotes.xaml.cs">
+      <DependentUpon>DXNotes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Module\FrmNotes.xaml.cs">
       <DependentUpon>FrmNotes.xaml</DependentUpon>
     </Compile>

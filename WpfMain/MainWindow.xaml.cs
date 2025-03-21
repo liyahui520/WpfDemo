@@ -75,6 +75,11 @@ namespace WpfMain
 
         private void UIElement_Print_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            DXNotes note = new DXNotes();
+            note.Owner = this;
+            note.ShowDialog();
+            return;
+
             FrmModule frm = new FrmModule(new FrmNotes());
             frm.title.Text = "模板";
             frm.Owner = this;
