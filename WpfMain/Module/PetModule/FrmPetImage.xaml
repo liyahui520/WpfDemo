@@ -340,7 +340,7 @@
                     <controlls:PropertyGridDemoCtl x:Name="PropertyGridDemoCtlTestResult"  Margin="10" Background="Transparent" ParentData="{Binding tInfos, Mode=TwoWay}"/>
 
                     <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,5">
-                        <Button Content="导出" Margin="20,0,20,0" Width="150" Click="Button_SaveTest" Style="{StaticResource ButtonSuccess}"/>
+                        <Button Content="保存" Margin="20,0,20,0" Width="150" Click="Button_SaveTest" Style="{StaticResource ButtonSuccess}"/>
                         <Button Content="打印" Click="ButtonBase_Print_OnClick" Margin="20,0,0,0" Width="150"   Style="{StaticResource ButtonPrimary}"/>
                     </VirtualizingStackPanel>
                 </StackPanel>

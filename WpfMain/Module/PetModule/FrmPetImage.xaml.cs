@@ -12,6 +12,7 @@ using WpfMain.Logic;
 using CuPrint;
 using System.Windows.Shapes;
 using Tools.Extend;
+using WpfMain.Controlls;
 
 namespace WpfMain.Module.PetModule
 {
@@ -251,8 +252,15 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void ButtonBase_Print_OnClick(object sender, RoutedEventArgs e)
         {
-            FrmModule frm = new FrmModule(new UCPrint(tInfos));
-            frm.ShowDialog();
+            if (!System.IO.File.Exists(tInfos.TestPath))
+            {
+                MessageBox.Show(AppStatic.MainWindow, "打印模板文件不存在！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            FrmModule f = new FrmModule(new UCPrintNotes(tInfos));
+            f.ShowDialog();
+            return;
         }
 
         private void screenshot_Click(object sender, RoutedEventArgs e)
