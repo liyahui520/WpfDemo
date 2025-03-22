@@ -82,7 +82,7 @@ namespace WpfMain.Controlls
 
 
 
-            InsertImageAfterText(richEditControl1, "\\{<Image \\S+>\\}", a);
+            InsertImageAfterText(richEditControl1, "\\{<image \\S+>\\}", a);
 
             //a.ForEach(s =>
             //{
@@ -204,7 +204,7 @@ namespace WpfMain.Controlls
                     //    DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive, searchRange).FirstOrDefault();
 
                     DocumentRange foundRange = richEdit.Document.FindAll(new Regex(targetText), searchRange).FirstOrDefault();
-
+                    string test = richEdit.Document.GetText(foundRange);
                     this.richEditControl1.Document.Replace(foundRange, "");
                     if (foundRange == null) return;
                     pos = foundRange.End;
