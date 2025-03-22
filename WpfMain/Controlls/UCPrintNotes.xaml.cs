@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,24 +66,35 @@ namespace WpfMain.Controlls
             //richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
             //// 获取复选框字段
             //var field = richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
-            
+
             // 设置复选框默认状态为选中
             //field.CodeText = "CHECKBOX &#92;* MERGEFORMAT &#92;b 1";
             //field.
 
-            var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
+
+
+
+            //var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
+            var a = tInfo.Result.Images;
+            if (a.Any(o => o.IsSelected))
+                a = tInfo.Result.Images.Where(o => o.IsSelected).ToList();
             string html = string.Empty;
-            a.ForEach(s =>
-            {
-                InsertImageAfterText(richEditControl1, "{<image 200*200>}", s);
-                    //html += "<div>\r\n      ";
-                    //s.ForEach(r =>
-                    //{
-                    //    html +=
-                    //        " <image  width=\"600\" height=\"450\" src=\"https://img-blog.csdnimg.cn/67a42fa43f5a47ca9e8abdb218b4d969.png#pic_center\"/>  \r\n ";
-                    //});
-                    //html += "\t</div>";
-                });
+
+
+
+            InsertImageAfterText(richEditControl1, "\\{<Image \\S+>\\}", a);
+
+            //a.ForEach(s =>
+            //{
+            //    InsertImageAfterText(richEditControl1, "{<image 200*200>}", s);
+            //        //html += "<div>\r\n      ";
+            //        //s.ForEach(r =>
+            //        //{
+            //        //    html +=
+            //        //        " <image  width=\"600\" height=\"450\" src=\"https://img-blog.csdnimg.cn/67a42fa43f5a47ca9e8abdb218b4d969.png#pic_center\"/>  \r\n ";
+            //        //});
+            //        //html += "\t</div>";
+            //    });
             this.richEditControl1.Refresh();
             //InsertHtmlAfterText("影像", html);
 
@@ -188,8 +200,11 @@ namespace WpfMain.Controlls
 
                     // 查找目标文字范围 
                     DocumentRange searchRange = richEdit.Document.CreateRange(0, richEdit.Document.Range.End.ToInt());
-                    DocumentRange foundRange = richEdit.Document.FindAll(targetText,
-                        DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive, searchRange).FirstOrDefault();
+                    //DocumentRange foundRange = richEdit.Document.FindAll(targetText,
+                    //    DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive, searchRange).FirstOrDefault();
+
+                    DocumentRange foundRange = richEdit.Document.FindAll(new Regex(targetText), searchRange).FirstOrDefault();
+
                     this.richEditControl1.Document.Replace(foundRange, "");
                     if (foundRange == null) return;
                     pos = foundRange.End;
@@ -246,11 +261,11 @@ namespace WpfMain.Controlls
             dic.Add("检查医生", new Valueformat(t.GetProperty("DCOperation"), null));
             dic.Add("宠物性别", new Valueformat(t.GetProperty("Gender"), null));
             dic.Add("主人名称", new Valueformat(t.GetProperty("Customer"), null));
-            dic.Add("检查时间", new Valueformat(t.GetProperty("TestDate"), null));
+            dic.Add("检查时间", new Valueformat(t.GetProperty("TestDate"), o =>((DateTime)o).ToString("yyyy-MM-dd")));
             dic.Add("宠物种类", new Valueformat(t.GetProperty("Type"), null));
             dic.Add("宠物品种", new Valueformat(t.GetProperty("Variety"), null));
-            dic.Add("检查所见", new Valueformat(r.GetProperty("Remark"), null));
-            dic.Add("宠物年龄", new Valueformat(t.GetProperty("Sex"), null));
+            dic.Add("检查所见", new Valueformat(t.GetProperty("See"), null));
+            dic.Add("宠物年龄", new Valueformat(t.GetProperty("Age"), null));
             dic.Add("是否绝育", new Valueformat(t.GetProperty("Neuter"), null));
             return dic;
         }

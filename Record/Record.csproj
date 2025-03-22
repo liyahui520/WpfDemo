@@ -165,48 +165,8 @@
     <Compile Include="WavRecorder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DLL\AForge.Controls.dll" />
-    <Content Include="DLL\AForge.Controls.xml" />
-    <Content Include="DLL\AForge.DebuggerVisualizers %282010%29.dll" />
-    <Content Include="DLL\AForge.dll" />
-    <Content Include="DLL\AForge.Fuzzy.dll" />
-    <Content Include="DLL\AForge.Fuzzy.xml" />
-    <Content Include="DLL\AForge.Genetic.dll" />
-    <Content Include="DLL\AForge.Genetic.xml" />
-    <Content Include="DLL\AForge.Imaging.Formats.dll" />
-    <Content Include="DLL\AForge.Imaging.Formats.xml" />
-    <Content Include="DLL\AForge.Imaging.IPPrototyper.dll" />
-    <Content Include="DLL\AForge.MachineLearning.dll" />
-    <Content Include="DLL\AForge.MachineLearning.xml" />
-    <Content Include="DLL\AForge.Neuro.dll" />
-    <Content Include="DLL\AForge.Neuro.xml" />
-    <Content Include="DLL\AForge.Robotics.Lego.dll" />
-    <Content Include="DLL\AForge.Robotics.Lego.xml" />
-    <Content Include="DLL\AForge.Robotics.Surveyor.dll" />
-    <Content Include="DLL\AForge.Robotics.Surveyor.xml" />
-    <Content Include="DLL\AForge.Robotics.TeRK.dll" />
-    <Content Include="DLL\AForge.Robotics.TeRK.xml" />
-    <Content Include="DLL\AForge.Video.DirectShow.dll" />
-    <Content Include="DLL\AForge.Video.dll" />
-    <Content Include="DLL\AForge.Video.FFMPEG.dll" />
-    <Content Include="DLL\AForge.Video.Kinect.dll" />
-    <Content Include="DLL\AForge.Video.VFW.dll" />
-    <Content Include="DLL\AForge.Video.Ximea.dll" />
-    <Content Include="DLL\AForge.Vision.dll" />
-    <Content Include="DLL\AForge.Vision.xml" />
-    <Content Include="DLL\avcodec-53.dll" />
-    <Content Include="DLL\avdevice-53.dll" />
-    <Content Include="DLL\avfilter-2.dll" />
-    <Content Include="DLL\avformat-53.dll" />
-    <Content Include="DLL\avutil-51.dll" />
-    <Content Include="DLL\IPPrototyper.exe" />
-    <Content Include="DLL\Microsoft.DirectX.DirectSound.dll" />
-    <Content Include="DLL\Microsoft.DirectX.dll" />
-    <Content Include="DLL\postproc-52.dll" />
-    <Content Include="DLL\swresample-0.dll" />
-    <Content Include="DLL\swscale-2.dll" />
+    <Folder Include="DLL\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy /y $(SolutionDir)Libs\*.dll  ..\$(OutDir)

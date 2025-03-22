@@ -289,9 +289,9 @@ namespace WpfMain.Module.PetModule
 
         private void Button_Save_Print_Test(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(tInfo.TestPath))
+            if (!System.IO.File.Exists(tInfo.TestPath))
             {
-                MessageBox.Show(AppStatic.MainWindow, "打印模板不能为空！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(AppStatic.MainWindow, "打印模板文件不存在！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

@@ -43,7 +43,7 @@ namespace WpfMain.Module.SysModule
             #region 图片设置初始化
             ImagePath.Text = AppStatic.VideoConfig.ImagePath;
             imageType.ItemsSource = new List<VideoType>() { new VideoType() { Name = "JPG" }, new VideoType() { Name = "PNG" } };
-            imageType.SelectedValue = string.IsNullOrEmpty(AppStatic.VideoConfig.ImageType) ? "JPG" : AppStatic.VideoConfig.VideoType.ToUpper();
+            imageType.SelectedValue = string.IsNullOrEmpty(AppStatic.VideoConfig.ImageType) ? "JPG" : AppStatic.VideoConfig.ImageType.ToUpper();
 
             #endregion
 

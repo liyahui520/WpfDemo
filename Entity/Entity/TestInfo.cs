@@ -20,6 +20,9 @@ namespace Entity.Entity
     /// </summary> 
     public class TestInfo : ObservableObject
     {
+
+        private static int no = 1000;
+
         public string Id { get; set; }
 
         /// <summary>
@@ -91,7 +94,7 @@ namespace Entity.Entity
         /// <summary>
         /// 年龄
         /// </summary>
-        public string Sex { get; set; }
+        public string Age { get; set; }
 
 
         /// <summary>
@@ -115,15 +118,15 @@ namespace Entity.Entity
         {
             TestDate = DateTime.Now;
             Customer = "测试用户";
-            DCOperation = AppStatic.AppHospital.UserName;
+            DCOperation = AppStatic.AppHospital.DcName;
             TestName = "分泌物";
-            TestPath = "";
             Gender = GenderEnum.公.ToString();
             Id = Guid.NewGuid().ToString();
             Neuter = NeuterEnum.未绝育.ToString();
             Type = "犬";
-            
-
+            Age = "1年3月";
+            Pet = "暧暧";
+            RecordNo = (no++).ToString();
         }
 
         public TestResult Result

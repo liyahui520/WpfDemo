@@ -29,13 +29,13 @@ namespace Tools.Extend
             {
                 object value = _property.GetValue(obj, null);
                 if (_action != null)
-                    return _action(value == null ? null : value.ToString());
+                    return _action.Invoke(value);
                 return value == null ? null : value.ToString();
             }
             return null;
         }
 
 
-        public delegate string StringAction(string o);
+        public delegate string StringAction(object o);
     }
 }

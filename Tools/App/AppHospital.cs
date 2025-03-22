@@ -17,6 +17,11 @@ namespace Tools.App
         public string UserName { get; set; }
 
         /// <summary>
+        /// 默认医生名称
+        /// </summary>
+        public string DcName { get; set; } = "化验室";
+
+        /// <summary>
         /// 联系人
         /// </summary>
         public string HospitalContacts { get; set; }
@@ -40,6 +45,9 @@ namespace Tools.App
         /// 配置路径全路径
         /// </summary>
         private static readonly string ConfigFullPath;
+
+
+
 
         static AppHospital()
         {

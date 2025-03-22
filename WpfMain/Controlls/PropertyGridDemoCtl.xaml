@@ -4,6 +4,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol" 
              xmlns:converters1="clr-namespace:Tools.Extend.Converters;assembly=Tools"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             Loaded="UserControl_Loaded"
              Background="{DynamicResource RegionBrush}" >
     <UserControl.Resources>
         <converters1:StrToIsCheckedConverter x:Key="StrToIsCheckedConverter"/>
@@ -30,7 +31,7 @@
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="病历号"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding RecordNo}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠主姓名"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}"  Margin="10,0,0,5" Text="{Binding Customer}"/>
                                 <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物名称"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Pet}"/>
-                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物年龄"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Sex}"/>
+                                <TextBox hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left"  hc:InfoElement.Title="宠物年龄"  hc:InfoElement.Necessary="False" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,5" Text="{Binding Age}"/>
                                 <ComboBox x:Name="neuter"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="绝      育" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="" SelectedItem="{Binding Neuter}"/>
                                 <ComboBox x:Name="gender"  hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="性      别" Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="" SelectedItem="{Binding Gender}"/>
                                 <ComboBox x:Name="petTypes" IsEditable="True" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="宠物种类" SelectedIndex="0" SelectionChanged="PetTypes_OnSelected" DisplayMemberPath="Name"  Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" Text="{Binding Type}"/>

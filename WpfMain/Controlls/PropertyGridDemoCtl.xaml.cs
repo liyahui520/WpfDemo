@@ -45,6 +45,7 @@ namespace WpfMain.Controlls
 
             baogaos.ItemsSource = TestLogic.AppTemps;// new List<string>() { "分泌物", "粪检", "尿检", "细胞学", "血涂片" }; 
             baogaos.SelectedIndex = 0;
+
             petTypes.ItemsSource = AppStatic.PetInfo.PetTypes;
             if (AppStatic.PetInfo?.PetTypes.Count > 0)
             {
@@ -85,6 +86,11 @@ namespace WpfMain.Controlls
         {
             if (baogaos.SelectedItem == null || ParentData == null) return;
             ParentData.TestPath = ((AppTemp)baogaos.SelectedItem).Path;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Baogaos_OnSelectionChanged(null,null);
         }
     }
 
