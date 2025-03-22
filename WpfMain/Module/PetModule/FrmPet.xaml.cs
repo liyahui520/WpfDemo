@@ -298,8 +298,8 @@ namespace WpfMain.Module.PetModule
             FrmModule f = new FrmModule(new UCPrintNotes(tInfo));
             f.ShowDialog();
             return;
-            FrmModule frm = new FrmModule(new UCPrint(tInfo));
-            frm.ShowDialog();
+            //FrmModule frm = new FrmModule(new UCPrint(tInfo));
+            //frm.ShowDialog();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

@@ -62,7 +62,14 @@ namespace WpfMain.Controlls
                 LoadBingDataValues(item);
 
 
-            richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
+            //richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
+            //// 获取复选框字段
+            //var field = richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
+            
+            // 设置复选框默认状态为选中
+            //field.CodeText = "CHECKBOX &#92;* MERGEFORMAT &#92;b 1";
+            //field.
+
             var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
             string html = string.Empty;
             a.ForEach(s =>
