@@ -188,8 +188,23 @@ namespace WpfMain.Controlls
             }
             return;
         }
+        public void ParseImageSize(string input)
+        {
+            var regex = new Regex(@"{<image\s+(\d+)\*(\d+)\s*>}");
+            var match = regex.Match(input);
+
+            if (match.Success &&
+                int.TryParse(match.Groups[1].Value, out int width) &&
+                int.TryParse(match.Groups[2].Value, out int height))
+            {
+                imgWidth = width;
+                imgHeight = height;
+            }
+        }
 
         private DocumentPosition pos = null;
+        private int imgWidth = 0;
+        private int imgHeight = 0;
         public void InsertImageAfterText(RichEditControl richEdit, string targetText, List<ImageItem> item)
         {
             richEditControl1.BeginUpdate();
@@ -205,6 +220,7 @@ namespace WpfMain.Controlls
 
                     DocumentRange foundRange = richEdit.Document.FindAll(new Regex(targetText), searchRange).FirstOrDefault();
                     string test = richEdit.Document.GetText(foundRange);
+                    ParseImageSize(test);
                     this.richEditControl1.Document.Replace(foundRange, "");
                     if (foundRange == null) return;
                     pos = foundRange.End;
@@ -222,7 +238,7 @@ namespace WpfMain.Controlls
                     {
                         // 插入图片并设置布局 
                         DocumentImage image = richEdit.Document.Images.Insert(pos, i.Bitmap.Byte2Bitmap());
-                        image.Size = new SizeF(900, 600);
+                        image.Size = new SizeF(imgWidth, imgHeight);
                         pos = image.Range.End;
 
                         // 调整段落行距 
@@ -261,7 +277,7 @@ namespace WpfMain.Controlls
             dic.Add("检查医生", new Valueformat(t.GetProperty("DCOperation"), null));
             dic.Add("宠物性别", new Valueformat(t.GetProperty("Gender"), null));
             dic.Add("主人名称", new Valueformat(t.GetProperty("Customer"), null));
-            dic.Add("检查时间", new Valueformat(t.GetProperty("TestDate"), o =>((DateTime)o).ToString("yyyy-MM-dd")));
+            dic.Add("检查时间", new Valueformat(t.GetProperty("TestDate"), o => ((DateTime)o).ToString("yyyy-MM-dd")));
             dic.Add("宠物种类", new Valueformat(t.GetProperty("Type"), null));
             dic.Add("宠物品种", new Valueformat(t.GetProperty("Variety"), null));
             dic.Add("检查所见", new Valueformat(t.GetProperty("See"), null));
@@ -278,7 +294,7 @@ namespace WpfMain.Controlls
             {
                 try
                 {
-                    var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{tInfo.TestName.ToString()}.docx"); 
+                    var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{tInfo.TestName.ToString()}.docx");
                     richEditControl1.SaveDocument(exportPath, DocumentFormat.OpenXml);
                     MessageBox.Show($"导出成功！路径：{exportPath}");
                 }
