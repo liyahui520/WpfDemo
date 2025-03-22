@@ -45,6 +45,7 @@ namespace WpfMain.Controlls
 
             baogaos.ItemsSource = TestLogic.AppTemps;// new List<string>() { "分泌物", "粪检", "尿检", "细胞学", "血涂片" }; 
             baogaos.SelectedIndex = 0;
+            ParentData.TestPath = TestLogic.AppTemps[0].Path;
             petTypes.ItemsSource = AppStatic.PetInfo.PetTypes;
             if (AppStatic.PetInfo?.PetTypes.Count > 0)
             {
