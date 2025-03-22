@@ -9,6 +9,7 @@
              xmlns:wm="clr-namespace:WpfMain.Module"
              d:DesignHeight="450" d:DesignWidth="1800"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             Loaded="UserControl_Loaded"
              >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -166,11 +167,11 @@
                     <RowDefinition />
                     <RowDefinition Height="0"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Column="0" CornerRadius="10">
+                <Border Grid.Column="0" CornerRadius="10" Name="BorderVideo">
                     <Border.Background>
                         <SolidColorBrush Color="#666666" Opacity="0.6"/>
                     </Border.Background>
-                    <Controlls:UCVideo x:Name="Video"/>
+                  
                 </Border>
 
  

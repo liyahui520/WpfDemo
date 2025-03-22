@@ -39,6 +39,7 @@ namespace WpfMain.Module.PetModule
         /// </summary>
         //public TestInfo tInfo = new TestInfo();
 
+        public UCVideo Video { get; set; }
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
             nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
@@ -297,8 +298,15 @@ namespace WpfMain.Module.PetModule
             FrmModule f = new FrmModule(new UCPrintNotes(tInfo));
             f.ShowDialog();
             return;
-            FrmModule frm = new FrmModule(new UCPrint(tInfo));
-            frm.ShowDialog();
+            //FrmModule frm = new FrmModule(new UCPrint(tInfo));
+            //frm.ShowDialog();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Video= new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
+            this.BorderVideo.Child = Video;
+
         }
     }
 }
