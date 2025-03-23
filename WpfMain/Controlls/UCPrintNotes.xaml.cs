@@ -308,7 +308,7 @@ namespace WpfMain.Controlls
 
         private void Print_OnClick(object sender, RoutedEventArgs e)
         {
-            richEditControl1.Print(new PrinterSettings() { PrinterName = PrinterSettings.InstalledPrinters[0] });
+            richEditControl1.Print();
         }
     }
     /// <summary>
