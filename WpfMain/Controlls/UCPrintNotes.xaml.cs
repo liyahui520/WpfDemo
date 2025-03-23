@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -303,6 +304,11 @@ namespace WpfMain.Controlls
                     MessageBox.Show($"导出失败：{ex.Message}");
                 }
             }
+        }
+
+        private void Print_OnClick(object sender, RoutedEventArgs e)
+        {
+            richEditControl1.Print(new PrinterSettings() { PrinterName = PrinterSettings.InstalledPrinters[0] });
         }
     }
     /// <summary>
