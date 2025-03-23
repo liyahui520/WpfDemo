@@ -10,6 +10,7 @@
     public enum NeuterEnum
     {
         已绝育,
-        未绝育
+        未绝育,
+        未知
     }
 }

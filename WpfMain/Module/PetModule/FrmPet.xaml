@@ -89,14 +89,19 @@
                                 </Expander.Background>
                                 <Border Height="50" BorderThickness="0,1,0,0"  BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4">
                                     <Border.Background>
-                                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                                        <SolidColorBrush Color="Black" Opacity="0.2"/>
                                     </Border.Background>
                                     <StackPanel Orientation="Horizontal">
-
+                                        <StackPanel.Resources>
+                                            <Style  BasedOn="{StaticResource ButtonDashedBaseStyle}"  TargetType="{x:Type Button}">
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter Property="BorderBrush" Value="White" />
+                                            </Style>
+                                        </StackPanel.Resources>
                                         <!--<Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="mask" Click="Mask_OnClick" ToolTip="遮罩" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
                                         <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="screenshot" ToolTip="截图"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>-->
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="mask" Command="wm:StartMaskhotCommand.StartMaskhot" ToolTip="遮罩(鼠标右键或ESC键取消)" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="screenshot" ToolTip="截图(鼠标右键或ESC键取消)"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
+                                        <Button Margin="5" x:Name="mask" Command="wm:StartMaskhotCommand.StartMaskhot" ToolTip="遮罩(鼠标右键或ESC键取消)" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
+                                        <Button Margin="5" x:Name="screenshot" ToolTip="截图(鼠标右键或ESC键取消)"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
 
                                     </StackPanel>
                                 </Border>

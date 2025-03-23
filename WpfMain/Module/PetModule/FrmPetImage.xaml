@@ -49,6 +49,14 @@
                 </Grid.RowDefinitions>
                 <TextBlock Margin="0,5,0,0" Padding="10" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" FontSize="14">检查拍摄</TextBlock>
                 <ScrollViewer Grid.Row="1" hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="10,0,10,10">
+                    <ScrollViewer.Resources>
+                        <Style  BasedOn="{StaticResource ButtonDashedBaseStyle}"  TargetType="{x:Type Button}">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="BorderBrush" Value="White" />
+                        </Style>
+                    </ScrollViewer.Resources>
+
+
                     <StackPanel Orientation="Vertical" >
 
                         <Expander Header="缩放/旋转" Margin="0,4,0,0" IsExpanded="True" Foreground="White"  BorderThickness="0">
@@ -57,16 +65,16 @@
                             </Expander.Background>
                             <Border  BorderThickness="0,1,0,0"  BorderBrush="{DynamicResource BorderBrush}"  CornerRadius="0,0,4,4"  Padding="10">
                                 <Border.Background>
-                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    <SolidColorBrush Color="Black" Opacity="0.2"/>
                                 </Border.Background>
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Click="Button_Click_Comparison" ToolTip="添加图片" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AddImageFileGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  Tag="0.25" ToolTip="放大" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AmplifyGeometry}" Click="Button_Click_Zoom"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  Tag="-0.25" ToolTip="缩小" Click="Button_Click_Zoom" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReduceGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  ToolTip="还原" Click="Button_Click_huanyuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RestoreGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  ToolTip="旋转" Click="Button_Click_xuanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RoteGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  ToolTip="翻转" Click="Button_Click_fanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReversalGeometry}"/>
+                                        <Button Margin="5" Click="Button_Click_Comparison" ToolTip="添加图片" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AddImageFileGeometry}"/>
+                                        <Button Margin="5"  Tag="0.25" ToolTip="放大" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AmplifyGeometry}" Click="Button_Click_Zoom"/>
+                                        <Button Margin="5"  Tag="-0.25" ToolTip="缩小" Click="Button_Click_Zoom" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReduceGeometry}"/>
+                                        <Button Margin="5"  ToolTip="还原" Click="Button_Click_huanyuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RestoreGeometry}"/>
+                                        <Button Margin="5"  ToolTip="旋转" Click="Button_Click_xuanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RoteGeometry}"/>
+                                        <Button Margin="5"  ToolTip="翻转" Click="Button_Click_fanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReversalGeometry}"/>
                                     </StackPanel>
                                     <!--<StackPanel Orientation="Horizontal">
                                         <hc:ButtonGroup>
@@ -121,12 +129,12 @@
                             </Expander.Background>
                             <Border BorderThickness="0,1,0,0"  BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4"  Padding="10">
                                 <Border.Background>
-                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    <SolidColorBrush Color="Black" Opacity="0.2"/>
                                 </Border.Background>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="-30" ToolTip="对比度-" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiYouGeometry}" Click="Button_Click_Duibi"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="30" ToolTip="对比度+" Click="Button_Click_Duibi" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiZuoGeometry}"/>
+                                        <Button Margin="5"  Tag="-30" ToolTip="对比度-" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiYouGeometry}" Click="Button_Click_Duibi"/>
+                                        <Button Margin="5"  Tag="30" ToolTip="对比度+" Click="Button_Click_Duibi" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiZuoGeometry}"/>
                                         <hc:ScrollViewer IsInertiaEnabled="True">
                                             <Slider Width="160" IsSnapToTickEnabled="True" Height="30" TickFrequency="30" Minimum="-90" Maximum="180" TickPlacement="TopLeft" Value="{Binding UCD.Threshold, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ValueChanged="RangeBase_OnValueChanged" />
                                         </hc:ScrollViewer>
@@ -157,17 +165,17 @@
                             </Expander.Background>
                             <Border Height="100"  BorderThickness="0,1,0,0"  BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4"  Padding="10">
                                 <Border.Background>
-                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    <SolidColorBrush Color="Black" Opacity="0.2"/>
                                 </Border.Background>
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Pointer" ToolTip="鼠标" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource PointerGeometry}" Click="Button_Click_1"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Pen" ToolTip="标记" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CuEditGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Ranging" ToolTip="测量" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RangingGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Area" ToolTip="面积" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AreaGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Angle" ToolTip="测角" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AngleGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Text" ToolTip="文字" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource TextGeometry}"/>
-                                        <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Clear" ToolTip="清理" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ClearGeometry}"/>
+                                        <Button Margin="5"  Tag="Pointer" ToolTip="鼠标" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource PointerGeometry}" Click="Button_Click_1"/>
+                                        <Button Margin="5"  Tag="Pen" ToolTip="标记" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CuEditGeometry}"/>
+                                        <Button Margin="5"  Tag="Ranging" ToolTip="测量" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RangingGeometry}"/>
+                                        <Button Margin="5"  Tag="Area" ToolTip="面积" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AreaGeometry}"/>
+                                        <Button Margin="5"  Tag="Angle" ToolTip="测角" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AngleGeometry}"/>
+                                        <Button Margin="5"  Tag="Text" ToolTip="文字" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource TextGeometry}"/>
+                                        <Button Margin="5"  Tag="Clear" ToolTip="清理" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ClearGeometry}"/>
 
                                     </StackPanel>
                                     <!--<StackPanel Orientation="Horizontal">
@@ -235,19 +243,19 @@
                             </Expander.Background>
                             <Border   BorderThickness="0,1,0,0"  BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4"   Padding="10">
                                 <Border.Background>
-                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    <SolidColorBrush Color="Black" Opacity="0.2"/>
                                 </Border.Background>
                                 <StackPanel Orientation="Horizontal">
 
                                     <!--<Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="mask" Command="wm:StartMaskhotCommand.StartMaskhot" ToolTip="遮罩(鼠标右键或ESC键取消)" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>-->
-                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="mask" Click="screenshot_Click" ToolTip="遮罩(鼠标右键或ESC键取消)" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
-                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" x:Name="screenshot" ToolTip="截图(鼠标右键或ESC键取消)"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
-                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Click="Button_Click_Comparison" ToolTip="打开对比" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ComparisonGeometry}"/>
-                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" ToolTip="关闭对比" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CloseFileGeometry}"/>
+                                    <Button Margin="5" x:Name="mask" Click="screenshot_Click" ToolTip="遮罩(鼠标右键或ESC键取消)" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
+                                    <Button Margin="5" x:Name="screenshot" ToolTip="截图(鼠标右键或ESC键取消)"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
+                                    <Button Margin="5" Click="Button_Click_Comparison" ToolTip="打开对比" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ComparisonGeometry}"/>
+                                    <Button Margin="5" ToolTip="关闭对比" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CloseFileGeometry}"/>
 
 
-                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" ToolTip="撤销" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CancelGeometry}"/>
-                                    <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" ToolTip="保存" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
+                                    <Button Margin="5" ToolTip="撤销" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CancelGeometry}"/>
+                                    <Button Margin="5" ToolTip="保存" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
 
                                 </StackPanel>
                             </Border>
@@ -311,21 +319,28 @@
             
             
             <StackPanel Orientation="Horizontal"  Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top">
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  Tag="0.25" ToolTip="放大" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AmplifyGeometry}" Click="Button_Click_Zoom"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  Tag="-0.25" ToolTip="缩小" Click="Button_Click_Zoom" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReduceGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  ToolTip="旋转" Click="Button_Click_xuanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RoteGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  ToolTip="翻转" Click="Button_Click_fanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReversalGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="-30" ToolTip="对比度-" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiYouGeometry}" Click="Button_Click_Duibi"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="30" ToolTip="对比度+" Click="Button_Click_Duibi" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiZuoGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Pointer" ToolTip="鼠标" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource PointerGeometry}" Click="Button_Click_1"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Pen" ToolTip="标记" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CuEditGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Ranging" ToolTip="测量" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RangingGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Area" ToolTip="面积" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AreaGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Angle" ToolTip="测角" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AngleGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" Tag="Text" ToolTip="文字" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource TextGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" ToolTip="撤销" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CancelGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}"  ToolTip="还原" Click="Button_Click_huanyuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RestoreGeometry}"/>
-                <Button Margin="5" Style="{StaticResource ButtonDashedInfo}" ToolTip="保存" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
+                <StackPanel.Resources>
+                    <Style  BasedOn="{StaticResource ButtonDashedBaseStyle}"  TargetType="{x:Type Button}">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="BorderBrush" Value="White" />
+                    </Style>
+                </StackPanel.Resources>
+                                   
+                <Button Margin="5"   Tag="0.25" ToolTip="放大" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AmplifyGeometry}" Click="Button_Click_Zoom"/>
+                <Button Margin="5"   Tag="-0.25" ToolTip="缩小" Click="Button_Click_Zoom" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReduceGeometry}"/>
+                <Button Margin="5"   ToolTip="旋转" Click="Button_Click_xuanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RoteGeometry}"/>
+                <Button Margin="5"   ToolTip="翻转" Click="Button_Click_fanzhuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ReversalGeometry}"/>
+                <Button Margin="5"  Tag="-30" ToolTip="对比度-" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiYouGeometry}" Click="Button_Click_Duibi"/>
+                <Button Margin="5"  Tag="30" ToolTip="对比度+" Click="Button_Click_Duibi" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource DuiBiZuoGeometry}"/>
+                <Button Margin="5"  Tag="Pointer" ToolTip="鼠标" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource PointerGeometry}" Click="Button_Click_1"/>
+                <Button Margin="5"  Tag="Pen" ToolTip="标记" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CuEditGeometry}"/>
+                <Button Margin="5"  Tag="Ranging" ToolTip="测量" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RangingGeometry}"/>
+                <Button Margin="5"  Tag="Area" ToolTip="面积" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AreaGeometry}"/>
+                <Button Margin="5"  Tag="Angle" ToolTip="测角" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource AngleGeometry}"/>
+                <Button Margin="5"  Tag="Text" ToolTip="文字" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource TextGeometry}"/>
+                <Button Margin="5"  ToolTip="撤销" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CancelGeometry}"/>
+                <Button Margin="5"   ToolTip="还原" Click="Button_Click_huanyuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RestoreGeometry}"/>
+                <Button Margin="5"  ToolTip="保存" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
 
             </StackPanel>
 
