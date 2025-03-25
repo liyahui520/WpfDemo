@@ -33,6 +33,16 @@ namespace Tools.App
         public string HospitalPhone { get; set; }
 
         /// <summary>
+        /// 医院简介
+        /// </summary>
+        public string HospitalBiref { get; set; }
+
+        /// <summary>
+        /// 医院描述
+        /// </summary>
+        public string HospitalRemark { get; set; }
+
+        /// <summary>
         /// LOGO
         /// </summary>
         public byte[] HospitalLogo { get; set; }

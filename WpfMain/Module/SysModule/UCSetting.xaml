@@ -33,6 +33,12 @@
                         <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalPhone" hc:InfoElement.Title="联系电话" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="jianjie" hc:InfoElement.Title="医院简介" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="miaosu" hc:InfoElement.Title="医院描述" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="110"/>
@@ -83,7 +89,7 @@
                     </StackPanel>
                 </hc:UniformSpacingPanel>
             </TabItem>
-          
+
         </TabControl>
         <hc:UniformSpacingPanel Grid.Row="1" Orientation="Vertical" HorizontalSpacing="10" HorizontalAlignment="Right" Spacing="32" Name="TabItemHospital">
             <WrapPanel>

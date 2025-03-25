@@ -279,6 +279,7 @@ namespace Entity.Entity
                 encoder.Save(ms);
                 bitmap = new Bitmap(ms);
                 ms.Close();
+                SetProperty(ref imageSource, value, nameof(ImageSource));
             }
         }
 
