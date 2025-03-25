@@ -255,7 +255,7 @@
 
 
                                     <Button Margin="5" ToolTip="撤销" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CancelGeometry}"/>
-                                    <Button Margin="5" ToolTip="保存" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
+                                    <Button Margin="5" ToolTip="保存" Click="Button_Click_save" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
 
                                 </StackPanel>
                             </Border>
@@ -340,7 +340,7 @@
                 <Button Margin="5"  Tag="Text" ToolTip="文字" Click="Button_Click_1" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource TextGeometry}"/>
                 <Button Margin="5"  ToolTip="撤销" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource CancelGeometry}"/>
                 <Button Margin="5"   ToolTip="还原" Click="Button_Click_huanyuan" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource RestoreGeometry}"/>
-                <Button Margin="5"  ToolTip="保存" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
+                <Button Margin="5"  ToolTip="保存 注意保存之后图片上的修改就不可以撤销与还原了" Click="Button_Click_CloseCmp" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource SaveImageFileGeometry}"/>
 
             </StackPanel>
 

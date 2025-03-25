@@ -307,6 +307,9 @@ namespace WpfMain.Module.PetModule
             Video= new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
             this.BorderVideo.Child = Video;
 
+
+            if (this.ActualHeight < 780)
+                Ctl.MaxHeight = 600;
         }
     }
 }

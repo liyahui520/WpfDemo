@@ -1,15 +1,18 @@
 ﻿
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using DevExpress.Utils.About;
 using DrawTools;
 using DrawTools.Utils;
 using Entity.Entity;
+using Newtonsoft.Json.Linq;
 using Tools.Extend;
 using WpfMain.Logic;
 
@@ -18,7 +21,7 @@ namespace PacsCore
     /// <summary>
     /// UserControl1.xaml 的交互逻辑
     /// </summary>
-    public partial class UCImageItemView : UserControl  
+    public partial class UCImageItemView : UserControl
     {
 
 
@@ -28,7 +31,7 @@ namespace PacsCore
         private double zoom = 1;
         private double szoom = 1;
         private int oldthreshold;
-        private ImageItem dinfo;
+        private ImageItem tinfo;
         private bool iszoom;
 
         /// <summary>
@@ -42,12 +45,12 @@ namespace PacsCore
                 if (value == 0)
                 {
                     //还原
-                    dicomImage1.Source = dinfo.ImageSource;
+                    dicomImage1.Source = tinfo.ImageSource;
                 }
                 else
                 {
                     // 绘制灰度图
-                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(dinfo.Bitmap.Byte2Bitmap(), value);
+                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(tinfo.Bitmap.Byte2Bitmap(), value);
                     dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
                 }
 
@@ -89,15 +92,14 @@ namespace PacsCore
             if (info?.Result?.Images == null && info?.Result?.Images.Count > 0)
                 return;
 
-            dinfo = info.Result?.Images[0];
-            dicomImage1.Source = dinfo.ImageSource;
+            tinfo = info.Result?.Images[0];
+            dicomImage1.Source = tinfo.ImageSource;
             Loaded += UCImageItemView_Loaded;
         }
         public UCImageItemView(ImageItem info)
         {
             InitializeComponent();
-            dinfo = info;
-            dicomImage1.Source = info?.ImageSource;
+            tinfo = info;
             Loaded += UCImageItemView_Loaded;
         }
         private void UCImageItemView_Loaded(object sender, RoutedEventArgs e)
@@ -140,16 +142,27 @@ namespace PacsCore
         /// <param name="delta"></param>
         public void DowheelZoom(Point point, double delta)
         {
-            TransformGroup group = IMG.FindResource("Imageview") as TransformGroup;
+            TransformGroup group = GridImage.RenderTransform as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;
-
-            if (transform.ScaleX + delta > 4) return;
-            if (transform.ScaleX + delta < 0.1) return;
 
             transform.CenterX = point.X;
             transform.CenterY = point.Y;
-            transform.ScaleX += delta;
-            transform.ScaleY += delta;
+
+            if (transform.CenterX > 0)
+            {
+                if (transform.ScaleX + delta > 4) return;
+                if (transform.ScaleX + delta < 0.1) return;
+                transform.ScaleX += delta;
+                transform.ScaleY += delta;
+            } else
+            {
+                if (transform.ScaleX - delta < -4) return;
+                if (transform.ScaleX - delta > -0.1) return;
+                transform.ScaleX -= delta;
+                transform.ScaleY -= delta;
+            }
+
+
             zoom = transform.ScaleX * szoom;
             LoadRuler();
         }
@@ -165,7 +178,7 @@ namespace PacsCore
         public void Rotate(int angle)
         {
 
-            var group = IMG.FindResource("Imageview") as TransformGroup;
+            var group = GridImage.RenderTransform as TransformGroup;
             var transform = group.Children[2] as RotateTransform;
             transform.CenterX = IMG.ActualWidth / 2;
             transform.CenterY = IMG.ActualHeight / 2;
@@ -190,7 +203,11 @@ namespace PacsCore
         /// <param name="e"></param>
         public void Flip()
         {
-            dicomImage1.FlowDirection = dicomImage1.FlowDirection == FlowDirection.LeftToRight ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+            var group = GridImage.RenderTransform as TransformGroup;
+            var scale = group.Children[0] as ScaleTransform;
+            scale.CenterX = IMG.ActualWidth / 2;
+            scale.CenterY = IMG.ActualHeight / 2;
+            scale.ScaleX = -scale.ScaleX;
         }
 
         /// <summary>
@@ -221,24 +238,31 @@ namespace PacsCore
 
         public void SaveImage()
         {
-            var renderBitmap = new RenderTargetBitmap((int)dicomImage1.ActualWidth, (int)dicomImage1.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            renderBitmap.Render(dicomImage1);
+            //var renderBitmap = new RenderTargetBitmap((int)dicomImage1.ActualWidth, (int)dicomImage1.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            //renderBitmap.Render(dicomImage1);
 
-            PngBitmapEncoder pbe = new PngBitmapEncoder();
-            pbe.Frames.Add(BitmapFrame.Create(renderBitmap));
+            //PngBitmapEncoder pbe = new PngBitmapEncoder();
+            //pbe.Frames.Add(BitmapFrame.Create(renderBitmap));
 
-            using (Stream sf = File.OpenWrite(DateTime.Now.ToString("yyyyMMddHHmmss") + ".png"))
-                pbe.Save(sf);
+            //using (Stream sf = File.OpenWrite(DateTime.Now.ToString("yyyyMMddHHmmss") + ".png"))
+            //    pbe.Save(sf);
 
 
 
-            var backgroundImage = this.dicomImage1.Source;
 
-            var frame = this.drawingCanvas.ToBitmapFrame((int)backgroundImage.Width, (int)backgroundImage.Height, DpiHelper.GetDpiFromVisual(this.drawingCanvas), backgroundImage);
+            var frame = ToBitmapFrame();
 
+            // 创建 PNG 编码器
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(frame);
+
+            //// 保存到文件
+            //using (FileStream stream = new FileStream("aa.png", FileMode.OpenOrCreate))
+            //    encoder.Save(stream);
+            tinfo.ImageSource = frame;
             dicomImage1.Source = frame;
             drawingCanvas.Clear();
-            drawingCanvas.Visibility = Visibility.Hidden;
+            //drawingCanvas.Visibility = Visibility.Hidden;
 
         }
         #endregion
@@ -270,7 +294,7 @@ namespace PacsCore
             //每像素0.25mm
             //每毫米一格  共10厘米
             double value = 1;
-            if (dinfo.PixelSpacing == 0)
+            if (tinfo.PixelSpacing == 0)
                 return;
 
 
@@ -312,29 +336,76 @@ namespace PacsCore
         private void LoadDicomImage()
         {
 
-            //BackFrame.Width = dinfo.ImageSource.Width;
-            //BackFrame.Height = dinfo.ImageSource.Height;
+            drawingCanvas.Width = dicomImage1.Width = tinfo.ImageSource.Width;
+            drawingCanvas.Height = dicomImage1.Height = tinfo.ImageSource.Height;
+            dicomImage1.Source = tinfo.ImageSource;
 
-            TransformGroup group = IMG.FindResource("Imageview") as TransformGroup;
+
+            /* 等比例缩放 代码
+            //double containerRatio = IMG.ActualWidth / IMG.ActualHeight;
+            //double imageRatio = dinfo.ImageSource.Width / dinfo.ImageSource.Height;
+
+            //double scale;
+            //double newWidth, newHeight;
+
+            //if (imageRatio > containerRatio)
+            //{
+            //    //按宽度缩放
+            //    scale = IMG.ActualWidth / dinfo.ImageSource.Width;
+            //    newWidth = IMG.ActualWidth;
+            //    newHeight = dinfo.ImageSource.Height * scale;
+            //}
+            //else
+            //{
+            //    //按高度缩放
+            //    scale = IMG.ActualHeight / dinfo.ImageSource.Height;
+            //    newHeight = IMG.ActualHeight;
+            //    newWidth = dinfo.ImageSource.Width * scale;
+            //}
+
+            //// 确保不超过容器尺寸
+            //if (newWidth > IMG.ActualWidth)
+            //{
+            //    scale = IMG.ActualWidth / newWidth;
+            //    newWidth = IMG.ActualWidth;
+            //    newHeight *= scale;
+            //}
+
+            //if (newHeight > IMG.ActualHeight)
+            //{
+            //    scale = IMG.ActualHeight / newHeight;
+            //    newHeight = IMG.ActualHeight;
+            //    newWidth *= scale;
+            //}
+
+            //this.Border1.Width = newWidth;
+            //this.Border1.Height = newHeight;
+            */
+
+            Zoom = 1;
+            TransformGroup group = GridImage.RenderTransform as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;
-            double w = IMG.ActualWidth / dinfo.ImageSource.Width;
-            double h = IMG.ActualHeight / dinfo.ImageSource.Height;
-            if (w < 1 || h < 1)
-            {
-                Zoom = w > h ? h : w;
-                transform.CenterX = (IMG.ActualWidth - (dinfo.ImageSource.Width * Zoom)) / 2;
-                transform.CenterY = (IMG.ActualHeight - (dinfo.ImageSource.Height * Zoom)) / 2;
-                transform.ScaleX = Zoom;
-                transform.ScaleY = Zoom;
-            }
-            else
-            {
-                transform.ScaleX = 1;
-                transform.ScaleY = 1;
-                Zoom = 1;
-            }
+            transform.ScaleX = Zoom;
+            transform.ScaleY = Zoom;
+            transform.CenterX = 0;
+            transform.CenterY = 0;
+            //double w = IMG.ActualWidth / dinfo.ImageSource.Width;
+            //double h = IMG.ActualHeight / dinfo.ImageSource.Height;
+            //if (w < 1 || h < 1)
+            //{
 
-            TranslateTransform transform1 = group.Children[1] as TranslateTransform;
+            //    //transform.CenterX = (IMG.ActualWidth - (dinfo.ImageSource.Width * Zoom)) / 2;
+            //    //transform.CenterY = (IMG.ActualHeight - (dinfo.ImageSource.Height * Zoom)) / 2;
+            //    //transform.ScaleX = Zoom;
+            //    //transform.ScaleY = Zoom;
+            //}
+            //if (w != 1 || h != 1)
+            //{
+            //    Zoom = w > h ? h : w;
+            //}
+
+
+            TranslateTransform transform1 = group.Children[3] as TranslateTransform;
             transform1.X = transform1.Y = 0;
 
             RotateTransform transform2 = group.Children[2] as RotateTransform;
@@ -345,6 +416,56 @@ namespace PacsCore
         }
 
 
+        /// <summary>
+        /// 转为图片
+        /// </summary>
+        /// <param name="pixelWidth"></param>
+        /// <param name="pixelHeight"></param>
+        /// <param name="dpi"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public BitmapFrame ToBitmapFrame()
+        {
+            //var backgroundImage = this.dicomImage1.Source;
+            //var frame = this.drawingCanvas.ToBitmapFrame((int)backgroundImage.Width, (int)backgroundImage.Height, DpiHelper.GetDpiFromVisual(this.drawingCanvas), backgroundImage);
+
+            var backgroundImage = this.dicomImage1.Source;
+            Dpi dpi = DpiHelper.GetDpiFromVisual(drawingCanvas);
+            var visual = GetDrawingVisual(backgroundImage.Width, backgroundImage.Height, dpi, backgroundImage);
+
+            if (visual == null)
+                return null;
+
+            var renderBitmap = new RenderTargetBitmap((int)backgroundImage.Width, (int)backgroundImage.Height, dpi.DpiX, dpi.DpiY, PixelFormats.Pbgra32);
+            renderBitmap.Render(visual);
+
+            return BitmapFrame.Create(renderBitmap);
+        }
+
+        private DrawingVisual GetDrawingVisual(double pixelWidth, double pixelHeight, Dpi dpi, ImageSource image = null)
+        {
+            var root = new DrawingVisual();
+            var dc = root.RenderOpen();
+
+            if (image != null)
+                dc.DrawImage(image, new Rect(new Size(pixelWidth * dpi.Px2WpfX, pixelHeight * dpi.Px2WpfY)));
+
+            foreach (var draw in drawingCanvas.GetDrawGeometries())
+            {
+
+                //if (dicomImage1.FlowDirection == FlowDirection.RightToLeft)
+                //    draw.Drawing.Transform = new SkewTransform(180, 0, pixelWidth / 2, pixelHeight / 2);
+                //else
+                //    draw.Drawing.Transform = new SkewTransform(0, 0, 0, 0);
+                dc.DrawDrawing(draw.Drawing);
+            }
+
+
+
+            dc.Close();
+
+            return root;
+        }
         #endregion
 
         #region 事件
@@ -407,8 +528,8 @@ namespace PacsCore
             {
                 return;
             }
-            var group = IMG.FindResource("Imageview") as TransformGroup;
-            var transform = group.Children[1] as TranslateTransform;
+            var group = GridImage.RenderTransform as TransformGroup;
+            var transform = group.Children[3] as TranslateTransform;
 
             var rotatetransform = group.Children[2] as RotateTransform;
 
@@ -459,6 +580,9 @@ namespace PacsCore
             }
 
         }
+
+
+
         #endregion
     }
 

@@ -310,6 +310,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Module\PetModule\微信图片_20241212184200.png" />
+    <Content Include="Module\PetModule\微信图片_20250325151116.png" />
     <Content Include="Static\Images\pen.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -6,31 +6,31 @@
              xmlns:local="clr-namespace:PacsCore"
              xmlns:dt="clr-namespace:DrawTools;assembly=DrawTools"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1300">
     <Grid>
 
         <Grid x:Name="IMG">
-            <Grid.Resources>
-                <TransformGroup x:Key="Imageview">
-                    <ScaleTransform/>
-                    <TranslateTransform/>
-                    <RotateTransform/>
-
-                </TransformGroup>
-            </Grid.Resources>
-
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Focusable="False" x:Name="BackFrame" >
 
                 <Border  Name="BorderImg" BorderBrush="Black" BorderThickness="1" Background="Black" >
 
-                    <Grid RenderTransform="{StaticResource Imageview}"  RenderOptions.BitmapScalingMode="NearestNeighbor">
-                        <Image Name="dicomImage1"   Stretch="Uniform"/>
-                        <dt:DrawingCanvas x:Name="drawingCanvas"  Brush="White"  StrokeThickness="3"  Background="#02FFFFFF" DrawingToolType="Pointer"  />
-                        <Border  Background="#02FFFFFF" Name="Bordermove" Cursor="SizeAll" 
+                    <Grid Name="GridImage" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderTransformOrigin="0,0">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform  />
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Image Name="dicomImage1"   Stretch="Uniform" Source="/Module/PetModule/微信图片_20250325151116.png" RenderTransformOrigin="0.5,0.5">
+                        </Image>
+                        <dt:DrawingCanvas x:Name="drawingCanvas"   Brush="White"  StrokeThickness="3" Background="#02FFFFFF" DrawingToolType="Pointer"/>
+                        <Border  Background="#02FFFFFF" Name="Bordermove" Cursor="SizeAll"
                             MouseLeftButtonDown="IMG1_MouseLeftButtonDown"
                              MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
                              MouseMove="IMG1_MouseMove"
-                             MouseWheel="IMG1_MouseWheel"></Border>
+                             MouseWheel="IMG1_MouseWheel"  ></Border>
                     </Grid>
                 </Border>
             </ScrollViewer>
