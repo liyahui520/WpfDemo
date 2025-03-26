@@ -31,6 +31,8 @@ namespace WpfMain.Controlls
         public PropertyGridDemoCtl()
         {
             InitializeComponent();
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
             //DemoModel = new PropertyGridDemoModel
             //{
             //    姓名 = "TestString",

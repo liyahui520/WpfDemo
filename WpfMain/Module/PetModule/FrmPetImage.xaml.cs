@@ -13,6 +13,7 @@ using CuPrint;
 using System.Windows.Shapes;
 using Tools.Extend;
 using WpfMain.Controlls;
+using DevExpress.Utils.About;
 
 namespace WpfMain.Module.PetModule
 {
@@ -153,10 +154,12 @@ namespace WpfMain.Module.PetModule
             if (odf.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
-            ImageDuibi.Source =  new BitmapImage(new Uri(odf.FileName));
 
-            //GridRowContent2.Height = new GridLength(5, GridUnitType.Star);
-            GridRowContent2.Width = new GridLength(5, GridUnitType.Star);
+            tInfos.Result.Images.Add(new ImageItem
+            {
+                ImageSource = new BitmapImage(new Uri(odf.FileName)),
+                Name = System.IO.Path.GetFileNameWithoutExtension(odf.FileName)
+            });
         }
 
         /// <summary>
@@ -187,7 +190,7 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
         {
-            ButtonColor.Background = ColorPicker.SelectedBrush;
+            ButtonColor.Foreground = ColorPicker.SelectedBrush;
             if (UCD != null)
                 UCD.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
         }

@@ -220,6 +220,9 @@ namespace Entity.Entity
         [XmlIgnore]
         [NonSerialized]
         private ImageSource imageSource;
+        [XmlIgnore]
+        [NonSerialized]
+        private byte[] buffer;
 
         /// <summary>
         /// 像素间距
@@ -233,22 +236,34 @@ namespace Entity.Entity
 
         [XmlIgnore]
         [JsonIgnore]
-        public byte[] Bitmap
+        public byte[] BitBuffer
         {
             get
             {
-                if (bitmap != null)
-                    return bitmap.Bitmap2Byte();
+                if (buffer != null)
+                    return buffer;
 
-                if (Type != MediaSourceType.LocalPath)
-                    return null;
-                if (File.Exists(Source))
-                    bitmap = new Bitmap(Source);
-                return bitmap.Bitmap2Byte();
-            }
-            set
-            {
-                bitmap = value.Byte2Bitmap();
+                if (bitmap != null)
+                    buffer= bitmap.Bitmap2Byte();
+
+                if (!string.IsNullOrEmpty(Source))
+                {
+                    switch (Type)
+                    {
+                        case MediaSourceType.Base64:
+                            buffer = Convert.FromBase64String(Source);
+                            break;
+                        case MediaSourceType.Url:
+                            //暂时不会有网上下载
+                            break;
+                        case MediaSourceType.LocalPath:
+                            if(File.Exists(Source))
+                                buffer = File.ReadAllBytes(Source);
+                            break;
+                    }
+                }
+
+                return buffer;
             }
         }
         [XmlIgnore]
@@ -261,7 +276,7 @@ namespace Entity.Entity
                 if (imageSource != null)
                     return imageSource;
 
-                if (Bitmap != null)
+                if (BitBuffer != null)
                 {
                     MemoryStream stream = new MemoryStream();
                     bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
