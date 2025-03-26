@@ -53,7 +53,7 @@ namespace WpfMain.Logic
 
                 tInfo.Result?.Images?.ForEach(x =>
                 {
-                    new Bitmap(x.Bitmap.Byte2Bitmap()).Save(Path.Combine(dname, x.Name));
+                    new Bitmap(x.BitBuffer.Byte2Bitmap()).Save(Path.Combine(dname, x.Name));
                     x.Source = Path.Combine(dname, x.Name);
                     x.Type = MediaSourceType.LocalPath;
                     x.Name = x.Name;

@@ -279,7 +279,7 @@ namespace WpfMain.Controlls
                     item.ForEach(i =>
                     {
                         // 插入图片并设置布局 
-                        DocumentImage image = richEdit.Document.Images.Insert(pos, i.Bitmap.Byte2Bitmap());
+                        DocumentImage image = richEdit.Document.Images.Insert(pos, i.BitBuffer.Byte2Bitmap());
                         image.Size = new SizeF(imgWidth, imgHeight);
                         pos = image.Range.End;
 

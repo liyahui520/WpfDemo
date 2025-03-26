@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -57,7 +56,7 @@ namespace PacsCore
                 else
                 {
                     // 绘制灰度图
-                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(tinfo.Bitmap.Byte2Bitmap(), value);
+                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(tinfo.BitBuffer.Byte2Bitmap(), value);
                     dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
                 }
 
@@ -345,8 +344,8 @@ namespace PacsCore
         private void LoadDicomImage()
         {
 
-            drawingCanvas.Width = dicomImage1.Width = tinfo.ImageSource.Width;
-            drawingCanvas.Height = dicomImage1.Height = tinfo.ImageSource.Height;
+            IMG.MinWidth = drawingCanvas.MinWidth = drawingCanvas.Width = dicomImage1.MinWidth = dicomImage1.Width = tinfo.ImageSource.Width;
+            IMG.MinHeight = drawingCanvas.MinHeight = drawingCanvas.Height = dicomImage1.MinHeight = dicomImage1.Height = tinfo.ImageSource.Height;
             dicomImage1.Source = tinfo.ImageSource;
 
 
@@ -544,7 +543,7 @@ namespace PacsCore
 
             var position = e.GetPosition(img);
 
-            Console.WriteLine($"X:{position.X}--{mouseXY.X} \r\n Y:{position.Y}--{mouseXY.Y}");
+            //Console.WriteLine($"X:{position.X}--{mouseXY.X} \r\n Y:{position.Y}--{mouseXY.Y}");
 
             if (rotatetransform.Angle == 90)
             {

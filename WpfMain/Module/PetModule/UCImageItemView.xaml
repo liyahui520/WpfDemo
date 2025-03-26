@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:PacsCore"
              xmlns:dt="clr-namespace:DrawTools;assembly=DrawTools"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1300">
+             d:DesignHeight="450" d:DesignWidth="1300" >
     <Grid>
 
-        <Grid x:Name="IMG">
+        <Grid x:Name="IMG" >
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Focusable="False" x:Name="BackFrame" >
 
                 <Border  Name="BorderImg" BorderBrush="Black" BorderThickness="1" Background="Black" >
