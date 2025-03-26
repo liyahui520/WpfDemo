@@ -197,7 +197,7 @@ namespace WpfMain.Controlls
                                     DocumentRange foundRange = rs.FirstOrDefault();
                                     if (foundRange == null) break;
                                     header.Replace(foundRange, "");
-                                    if (AppStatic.AppHospital.HospitalLogo.Length > 0)
+                                    if (AppStatic.AppHospital?.HospitalLogo?.Length > 0)
                                     {
                                         // 移动光标到目标文字末尾 
                                         var inserImg = header.Images.Insert(foundRange.End,
