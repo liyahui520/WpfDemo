@@ -8,8 +8,10 @@ using System.Windows.Media.Imaging;
 using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
+using System.Linq;
 using HandyControl.Tools.Extension;
 using System.Windows.Controls.Primitives;
+using DevExpress.Office.Utils;
 
 namespace WpfMain.Module.SysModule
 {
@@ -36,14 +38,30 @@ namespace WpfMain.Module.SysModule
         {
             #region 视频设置初始化
             VideoPath.Text = AppStatic.VideoConfig.VideoPath;
-            videoType.ItemsSource = new List<VideoType>() { new VideoType() { Name = "AVI" } };//, new VideoType() { Name = "MP4" }, new VideoType() { Name = "WMV" } 
-            videoType.SelectedValue = string.IsNullOrEmpty(AppStatic.VideoConfig.VideoType) ? "AVI" : AppStatic.VideoConfig.VideoType.ToUpper();
+            List<VideoType> videoTypes = new List<VideoType>() { new VideoType() { Name = "AVI" } };
+            videoType.ItemsSource = videoTypes;//, new VideoType() { Name = "MP4" }, new VideoType() { Name = "WMV" } 
+            videoType.SelectedIndex = 0;
+            if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoType))
+            {
+                VideoType vt = videoTypes.FirstOrDefault(o => o.Name == AppStatic.VideoConfig.VideoType.ToUpper());
+                if (vt != null)
+                    videoType.SelectedItem = vt;
+            }
+
+
             #endregion
 
             #region 图片设置初始化
             ImagePath.Text = AppStatic.VideoConfig.ImagePath;
-            imageType.ItemsSource = new List<VideoType>() { new VideoType() { Name = "JPG" }, new VideoType() { Name = "PNG" } };
-            imageType.SelectedValue = string.IsNullOrEmpty(AppStatic.VideoConfig.ImageType) ? "JPG" : AppStatic.VideoConfig.ImageType.ToUpper();
+            List < VideoType > imagetypes= new List<VideoType>() { new VideoType() { Name = "JPG" }, new VideoType() { Name = "PNG" } };
+            imageType.ItemsSource = imagetypes;
+            imageType.SelectedIndex = 0;
+            if (!string.IsNullOrEmpty(AppStatic.VideoConfig.ImageType))
+            {
+                VideoType vt = imagetypes.FirstOrDefault(o => o.Name == AppStatic.VideoConfig.ImageType.ToUpper());
+                if (vt != null)
+                    imageType.SelectedItem = vt;
+            }
 
             #endregion
 
@@ -63,7 +81,7 @@ namespace WpfMain.Module.SysModule
                 switch (_title)
                 {
                     case "医院设置":
-                        Selector.SetIsSelected(TabItemHospital,true);
+                        Selector.SetIsSelected(TabItemHospital, true);
                         break;
                     case "设置":
                         Selector.SetIsSelected(TabItemVideo, true);
@@ -80,7 +98,12 @@ namespace WpfMain.Module.SysModule
                 deviceList.Add(new VideoType() { Name = videoDevices[i].Name, VideoString = videoDevices[i].MonikerString });
             }
             device.ItemsSource = deviceList;
-            device.SelectedValue = AppStatic.VideoConfig.VideoDecive;
+            if (deviceList != null && deviceList.Count != 0)
+            {
+                device.SelectedIndex = 0;
+                if (!string.IsNullOrEmpty(AppStatic.VideoConfig?.VideoDecive))
+                    device.SelectedValue = AppStatic.VideoConfig.VideoDecive;
+            }
         }
 
         /// <summary>
@@ -148,7 +171,7 @@ namespace WpfMain.Module.SysModule
             hospital.HospitalPhone = hospitalPhone.Text.Trim();
             hospital.HospitalLogo = ((BitmapImage)img.Source)?.ToByteArray();
             hospital.HospitalBiref = jianjie.Text.Trim();
-            hospital.HospitalAddress = address.Text.Trim(); 
+            hospital.HospitalAddress = address.Text.Trim();
             AppStatic.AppHospital = hospital;
             hospital.Save();
             DialogResult = true;
