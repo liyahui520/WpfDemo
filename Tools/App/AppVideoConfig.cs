@@ -58,7 +58,7 @@ namespace Tools.App
         /// <summary>
         /// 图片类型
         /// </summary>
-        public string ImageType { get; set; } = "jpge";
+        public string ImageType { get; set; } = "png";
 
         public static AppVideoConfig GetConfig()
         {
