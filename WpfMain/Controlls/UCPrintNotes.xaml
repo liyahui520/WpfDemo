@@ -16,6 +16,6 @@
             <Button Content="导出" Margin="5" Style="{StaticResource ButtonPrimary}" Click="ButtonBase_OnClick"/>
             <Button Content="打印" Margin="5" Style="{StaticResource ButtonPrimary}" Click="Print_OnClick"/>
         </StackPanel>
-        <dxre:RichEditControl Grid.Row="1" x:Name="richEditControl1" CommandBarStyle="Empty"  BarManager="{Binding ElementName=barManager1, Mode=OneTime}"/>
+        <dxre:RichEditControl Grid.Row="1" x:Name="richEditControl1" CommandBarStyle="Empty"/>
     </Grid>
 </UserControl>

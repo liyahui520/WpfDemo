@@ -7,6 +7,8 @@ using System.Reflection;
 using System.IO;
 using Entity.Entity;
 using Tools.App;
+using DevExpress.Utils.About;
+using Newtonsoft.Json;
 
 namespace WpfMain
 {
@@ -55,6 +57,21 @@ namespace WpfMain
             //Global.InitDllPath();
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
+            string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            foreach (string file in files)
+            {
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
+                {
+                    if (stream != null)
+                    {
+                        byte[] assemblyData = new byte[stream.Length];
+                        stream.Read(assemblyData, 0, assemblyData.Length);
+                        Assembly.Load(assemblyData);
+                    }
+
+                }
+            }
+
 #if !DEBUG
             try
             {

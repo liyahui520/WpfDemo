@@ -1,31 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Printing;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DevExpress.Xpf.RichEdit;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
-using DevExpress.XtraRichEdit.API.Native.Implementation;
-using DevExpress.XtraRichEdit.Model;
 using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
-using Image = System.Windows.Controls.Image;
 using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
 
 namespace WpfMain.Controlls
@@ -50,7 +37,14 @@ namespace WpfMain.Controlls
         /// <param name="e"></param>
         private void UCPrintNotes_OnLoaded(object sender, RoutedEventArgs e)
         {
-            //var data = "D:\\Works\\Wpf\\WpfMain\\打印模板(1)\\尿检.docx".ReadFileToBytes();
+            Thread thread = new Thread(Init);
+            thread.IsBackground = true;
+            thread.Start(); 
+
+        }
+
+        public void Init()
+        {
             RichConntext frtext = new RichConntext();
             frtext.ConntextType = RichConntextType.docx;
             frtext.BindData = new List<RichConntext.RichConntextBindData>();
@@ -58,53 +52,23 @@ namespace WpfMain.Controlls
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = AppStatic.AppHospital });
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo });
             frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo.Result });
-            //using (frtext.Conntext = new System.IO.MemoryStream(data))
-            //{
-            this.richEditControl1.Document.LoadDocument(tInfo.TestPath, ConvertToDevType(RichConntextType.docx));
+            Dispatcher.Invoke(() =>
+            {
+                this.richEditControl1.Document.LoadDocument(tInfo.TestPath, ConvertToDevType(RichConntextType.docx));
+            });
+
             foreach (var item in frtext.BindData)
                 LoadBingDataValues(item);
-
-
-            //richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
-            //// 获取复选框字段
-            //var field = richEditControl1.Document.Fields.Create(richEditControl1.Document.CaretPosition, "CHECKBOX");
-
-            // 设置复选框默认状态为选中
-            //field.CodeText = "CHECKBOX &#92;* MERGEFORMAT &#92;b 1";
-            //field.
-
-
-
-
-            //var a = ObjectExtension.ChunkBy(tInfo.Result.Images.Where(s => s.IsSelected).ToList(), 2).ToList();
             var a = tInfo.Result.Images;
             if (a.Any(o => o.IsSelected))
                 a = tInfo.Result.Images.Where(o => o.IsSelected).ToList();
             string html = string.Empty;
+            Dispatcher.Invoke(() =>
+            {
+                InsertImageAfterText(richEditControl1, "\\{<image \\S+>\\}", a);
+                this.richEditControl1.Refresh();
+            });
 
-
-
-            InsertImageAfterText(richEditControl1, "\\{<image \\S+>\\}", a);
-
-            //a.ForEach(s =>
-            //{
-            //    InsertImageAfterText(richEditControl1, "{<image 200*200>}", s);
-            //        //html += "<div>\r\n      ";
-            //        //s.ForEach(r =>
-            //        //{
-            //        //    html +=
-            //        //        " <image  width=\"600\" height=\"450\" src=\"https://img-blog.csdnimg.cn/67a42fa43f5a47ca9e8abdb218b4d969.png#pic_center\"/>  \r\n ";
-            //        //});
-            //        //html += "\t</div>";
-            //    });
-            this.richEditControl1.Refresh();
-            //InsertHtmlAfterText("影像", html);
-
-            //tInfo.Result.Images.ForEach(s =>
-            //{
-            //    InsertImageAfterText(richEditControl1, "影像", s.Bitmap.Byte2Bitmap());
-            //});
-            //}
         }
 
         // 动态插入HTML到指定文字后 
@@ -183,46 +147,50 @@ namespace WpfMain.Controlls
                         value = ((Valueformat)kv.Value).GetValue(BindData.BindData);
 
                         news = value == null ? "" : value.ToString();
-                        DevExpress.XtraRichEdit.API.Native.DocumentRange[] rs = this.richEditControl1.Document.FindAll(olds, DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive);
-                        if (rs.Length <= 0)
+                        Dispatcher.Invoke(() =>
                         {
-                            // 显式设置页眉搜索范围 
-                            foreach (var section in richEditControl1.Document.Sections)
+
+                            DevExpress.XtraRichEdit.API.Native.DocumentRange[] rs = this.richEditControl1.Document.FindAll(olds, DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive);
+                            if (rs.Length <= 0)
                             {
-                                var header = section.BeginUpdateHeader();
-                                var options = SearchOptions.CaseSensitive;
-                                rs = header.FindAll(olds, options);
-                                if (kv.Key == "医院Logo")
+                                // 显式设置页眉搜索范围 
+                                foreach (var section in richEditControl1.Document.Sections)
                                 {
-                                    DocumentRange foundRange = rs.FirstOrDefault();
-                                    if (foundRange == null) break;
-                                    header.Replace(foundRange, "");
-                                    if (AppStatic.AppHospital?.HospitalLogo?.Length > 0)
+                                    var header = section.BeginUpdateHeader();
+                                    var options = SearchOptions.CaseSensitive;
+                                    rs = header.FindAll(olds, options);
+                                    if (kv.Key == "医院Logo")
                                     {
-                                        // 移动光标到目标文字末尾 
-                                        var inserImg = header.Images.Insert(foundRange.End,
-                                            image: (AppStatic.AppHospital.HospitalLogo.Byte2Bitmap()));
-                                        inserImg.Size = new SizeF(200, 100);
+                                        DocumentRange foundRange = rs.FirstOrDefault();
+                                        if (foundRange == null) break;
+                                        header.Replace(foundRange, "");
+                                        if (AppStatic.AppHospital?.HospitalLogo?.Length > 0)
+                                        {
+                                            // 移动光标到目标文字末尾 
+                                            var inserImg = header.Images.Insert(foundRange.End,
+                                                image: (AppStatic.AppHospital.HospitalLogo.Byte2Bitmap()));
+                                            inserImg.Size = new SizeF(200, 100);
+                                        }
                                     }
-                                }
-                                else
-                                {
+                                    else
+                                    {
 
-                                    //rs = this.richEditControl1.Document.FindAll(olds, options);
-                                    foreach (var reange in rs)
-                                        header.Replace(reange, news.ToString());
-                                }
+                                        //rs = this.richEditControl1.Document.FindAll(olds, options);
+                                        foreach (var reange in rs)
+                                            header.Replace(reange, news.ToString());
+                                    }
 
-                                section.EndUpdateHeader(header);
-                                break;
+                                    section.EndUpdateHeader(header);
+                                    break;
+                                }
                             }
-                        }
-                        else
-                        {
-                            foreach (var reange in rs)
-                                this.richEditControl1.Document.Replace(reange, news.ToString());
-                        }
+                            else
+                            {
+                                foreach (var reange in rs)
+                                    this.richEditControl1.Document.Replace(reange, news.ToString());
+                            }
 
+                        });
                     }
                 }
 
@@ -249,7 +217,7 @@ namespace WpfMain.Controlls
         private int imgHeight = 0;
         public void InsertImageAfterText(RichEditControl richEdit, string targetText, List<ImageItem> item)
         {
-            richEditControl1.BeginUpdate();
+            richEdit.BeginUpdate();
             try
             {
                 if (pos == null)
@@ -263,7 +231,7 @@ namespace WpfMain.Controlls
                     DocumentRange foundRange = richEdit.Document.FindAll(new Regex(targetText), searchRange).FirstOrDefault();
                     string test = richEdit.Document.GetText(foundRange);
                     ParseImageSize(test);
-                    this.richEditControl1.Document.Replace(foundRange, "");
+                    richEdit.Document.Replace(foundRange, "");
                     if (foundRange == null) return;
                     pos = foundRange.End;
                 }
@@ -303,7 +271,7 @@ namespace WpfMain.Controlls
             }
             finally
             {
-                richEditControl1.EndUpdate();
+                richEdit.EndUpdate();
             }
         }
 
