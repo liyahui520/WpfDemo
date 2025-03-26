@@ -55,7 +55,7 @@ namespace WpfMain.Module.SysModule
             img.Source = AppStatic.AppHospital.HospitalLogo?.FromByteArray();
             UserName.Text = AppStatic.AppHospital.UserName;
             jianjie.Text = AppStatic.AppHospital.HospitalBiref;
-            miaosu.Text = AppStatic.AppHospital.HospitalRemark;
+            address.Text = AppStatic.AppHospital.HospitalAddress;
             #endregion
 
             if (!string.IsNullOrEmpty(_title))
@@ -148,7 +148,7 @@ namespace WpfMain.Module.SysModule
             hospital.HospitalPhone = hospitalPhone.Text.Trim();
             hospital.HospitalLogo = ((BitmapImage)img.Source)?.ToByteArray();
             hospital.HospitalBiref = jianjie.Text.Trim();
-            hospital.HospitalRemark = miaosu.Text.Trim(); 
+            hospital.HospitalAddress = address.Text.Trim(); 
             AppStatic.AppHospital = hospital;
             hospital.Save();
             DialogResult = true;

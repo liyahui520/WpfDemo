@@ -649,6 +649,13 @@ namespace Tools.Extend
             return null;
         }
 
+        public static Image String2Image(this byte[] bytes)
+        {
+            MemoryStream ms = new MemoryStream(bytes);
+            Image image = System.Drawing.Image.FromStream(ms);
+            return image;
+        }
+
         public static Bitmap Byte2Bitmap(this byte[] bytes)
         {
             byte[] bytelist = bytes;

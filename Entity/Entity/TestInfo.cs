@@ -138,6 +138,8 @@ namespace Entity.Entity
 
     public class TestResult : ObservableObject
     {
+        private List<ImageItem> _images;
+
         /// <summary>
         /// 结果集
         /// </summary>
@@ -147,7 +149,11 @@ namespace Entity.Entity
         /// <summary>
         /// 图片集
         /// </summary>
-        public List<ImageItem> Images { get; set; }
+        public List<ImageItem> Images
+        {
+            get => _images;
+            set => SetProperty(ref _images, value, nameof(Images));
+        }
 
         /// <summary>
         /// 视频集

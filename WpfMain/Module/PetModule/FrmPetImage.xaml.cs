@@ -2,6 +2,7 @@
 using PacsCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -42,10 +43,10 @@ namespace WpfMain.Module.PetModule
 
 
         public static readonly DependencyProperty DemoModel1Property = DependencyProperty.Register(
-            nameof(DemoModel1), typeof(PropertyGridDemoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyGridDemoModel)));
+            nameof(DemoModel1), typeof(PropertyGridDemoModel), typeof(FrmPetImage), new PropertyMetadata(default(PropertyGridDemoModel)));
 
         public static readonly DependencyProperty TestInfoProperty = DependencyProperty.Register(
-            nameof(tInfos), typeof(TestInfo), typeof(FrmPet), new PropertyMetadata(default(TestInfo)));
+            nameof(tInfos), typeof(TestInfo), typeof(FrmPetImage), new PropertyMetadata(default(TestInfo)));
 
         public static readonly DependencyProperty UCDProperty = DependencyProperty.Register(
     nameof(UCD), typeof(UCImageItemView), typeof(FrmPetImage));
@@ -68,6 +69,7 @@ namespace WpfMain.Module.PetModule
             DataContext = this;
             UCFilesImageAndVideo.SelectedImageItem = item;
             UCD = new UCImageItemView(item);
+            UCD.SaveClick += UCD_SaveClick;
             BorderImageContent.Child = UCD;
         }
 
@@ -153,7 +155,7 @@ namespace WpfMain.Module.PetModule
             if (odf.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
-            ImageDuibi.Source =  new BitmapImage(new Uri(odf.FileName));
+            ImageDuibi.Source = new BitmapImage(new Uri(odf.FileName));
 
             //GridRowContent2.Height = new GridLength(5, GridUnitType.Star);
             GridRowContent2.Width = new GridLength(5, GridUnitType.Star);
@@ -242,8 +244,21 @@ namespace WpfMain.Module.PetModule
         {
             BorderImageContent.Child = null;
             UCD = new UCImageItemView(UCFilesImageAndVideo.SelectedImageItem);
+            UCD.SaveClick += UCD_SaveClick;
             BorderImageContent.Child = UCD;
         }
+
+        private void UCD_SaveClick(object sender, ImageItem e)
+        {
+            var old = tInfos.Result;
+            tInfos.Result = null;
+            var del = old.Images.FirstOrDefault(s => s.Name == e.Name);
+            del = e;
+            tInfos.Result = old;
+            UCFilesImageAndVideo.SelectedImageItem = e;
+
+        }
+
         /// <summary>
         /// 打印预览
         /// </summary>

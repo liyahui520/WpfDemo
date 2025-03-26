@@ -34,6 +34,13 @@ namespace PacsCore
         private ImageItem tinfo;
         private bool iszoom;
 
+        public event EventHandler<ImageItem> SaveClick;
+
+        private void RaiseSomeActionTriggered(ImageItem entity)
+        {
+            SaveClick?.Invoke(this, entity);
+        }
+
         /// <summary>
         /// 对比度
         /// </summary>
@@ -154,7 +161,8 @@ namespace PacsCore
                 if (transform.ScaleX + delta < 0.1) return;
                 transform.ScaleX += delta;
                 transform.ScaleY += delta;
-            } else
+            }
+            else
             {
                 if (transform.ScaleX - delta < -4) return;
                 if (transform.ScaleX - delta > -0.1) return;
@@ -258,10 +266,11 @@ namespace PacsCore
 
             //// 保存到文件
             //using (FileStream stream = new FileStream("aa.png", FileMode.OpenOrCreate))
-            //    encoder.Save(stream);
+            //    encoder.Save(stream); 
             tinfo.ImageSource = frame;
             dicomImage1.Source = frame;
             drawingCanvas.Clear();
+            RaiseSomeActionTriggered(tinfo);
             //drawingCanvas.Visibility = Visibility.Hidden;
 
         }

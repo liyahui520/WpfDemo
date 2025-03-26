@@ -38,9 +38,9 @@ namespace Tools.App
         public string HospitalBiref { get; set; }
 
         /// <summary>
-        /// 医院描述
+        /// 医院地址
         /// </summary>
-        public string HospitalRemark { get; set; }
+        public string HospitalAddress { get; set; }
 
         /// <summary>
         /// LOGO

@@ -25,6 +25,7 @@ using DevExpress.XtraRichEdit.Model;
 using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
+using Image = System.Windows.Controls.Image;
 using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
 
 namespace WpfMain.Controlls
@@ -159,7 +160,7 @@ namespace WpfMain.Controlls
         private void LoadBingDataValues(RichConntext.RichConntextBindData BindData)
         {
             string olds;
-            string news;
+            object news;
             Type t;
 
             if (BindData == null)
@@ -176,19 +177,59 @@ namespace WpfMain.Controlls
                 {
                     if (dic.Values.Any(o => o != null && o.ToString() == item.DeclaringType.Name + "." + item.Name))
                     {
+                        object value = null;
                         KeyValuePair<string, object> kv = dic.First(o => o.Value.ToString() == item.DeclaringType.Name + "." + item.Name);
                         olds = "{<" + kv.Key + ">}";
-                        object value = ((Valueformat)kv.Value).GetValue(BindData.BindData);
+                        value = ((Valueformat)kv.Value).GetValue(BindData.BindData);
+
                         news = value == null ? "" : value.ToString();
                         DevExpress.XtraRichEdit.API.Native.DocumentRange[] rs = this.richEditControl1.Document.FindAll(olds, DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive);
-                        foreach (var reange in rs)
-                            this.richEditControl1.Document.Replace(reange, news);
+                        if (rs.Length <= 0)
+                        {
+                            // 显式设置页眉搜索范围 
+                            foreach (var section in richEditControl1.Document.Sections)
+                            {
+                                var header = section.BeginUpdateHeader();
+                                var options = SearchOptions.CaseSensitive;
+                                rs = header.FindAll(olds, options);
+                                if (kv.Key == "医院Logo")
+                                {
+                                    DocumentRange foundRange = rs.FirstOrDefault();
+                                    if (foundRange == null) break;
+                                    header.Replace(foundRange, "");
+                                    if (AppStatic.AppHospital.HospitalLogo.Length > 0)
+                                    {
+                                        // 移动光标到目标文字末尾 
+                                        var inserImg = header.Images.Insert(foundRange.End,
+                                            image: (AppStatic.AppHospital.HospitalLogo.Byte2Bitmap()));
+                                        inserImg.Size = new SizeF(200, 100);
+                                    }
+                                }
+                                else
+                                {
+
+                                    //rs = this.richEditControl1.Document.FindAll(olds, options);
+                                    foreach (var reange in rs)
+                                        header.Replace(reange, news.ToString());
+                                }
+
+                                section.EndUpdateHeader(header);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            foreach (var reange in rs)
+                                this.richEditControl1.Document.Replace(reange, news.ToString());
+                        }
+
                     }
                 }
 
             }
             return;
         }
+
         public void ParseImageSize(string input)
         {
             var regex = new Regex(@"{<image\s+(\d+)\*(\d+)\s*>}");
@@ -284,6 +325,10 @@ namespace WpfMain.Controlls
             dic.Add("检查所见", new Valueformat(t.GetProperty("See"), null));
             dic.Add("宠物年龄", new Valueformat(t.GetProperty("Age"), null));
             dic.Add("是否绝育", new Valueformat(t.GetProperty("Neuter"), null));
+            dic.Add("医院名称", new Valueformat(appHo.GetProperty("HospitalName"), null));
+            dic.Add("医院Logo", new Valueformat(appHo.GetProperty("HospitalLogo"), null));
+            dic.Add("医院地址", new Valueformat(appHo.GetProperty("HospitalAddress"), null));
+            dic.Add("医院简介", new Valueformat(appHo.GetProperty("HospitalBiref"), null));
             return dic;
         }
 

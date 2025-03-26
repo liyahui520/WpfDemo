@@ -33,10 +33,14 @@
                         <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="hospitalPhone" hc:InfoElement.Title="联系电话" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="jianjie" hc:InfoElement.Title="医院简介" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="address" hc:InfoElement.Title="医院地址"  Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" x:Name="miaosu" hc:InfoElement.Title="医院描述" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
+                        <TextBox Width="380" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left"  TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch" x:Name="jianjie" hc:InfoElement.Title="医院简介" MaxLines="3" MinLines="2" Style="{StaticResource TextBoxExtend}" Margin="10,0,0,0" Text=""/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid>
