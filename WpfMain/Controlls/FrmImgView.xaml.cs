@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Entity.Entity;
+using Tools.Extend;
 
 namespace WpfMain.Controlls
 {
@@ -36,7 +37,7 @@ namespace WpfMain.Controlls
             Data = testInfo;
             DataContext = Data;
             imgView.Height = SystemParameters.PrimaryScreenHeight - 30;
-            imgView.Width = SystemParameters.PrimaryScreenWidth - 300;
+            imgView.Width = SystemParameters.PrimaryScreenWidth - 200;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -54,7 +55,8 @@ namespace WpfMain.Controlls
         {
             var entity = (ImageItem)((System.Windows.FrameworkElement)e.Source).DataContext;
             SelectName = entity.Name;
-            imgView.ImageSource = (BitmapFrame)entity.ImageSource;
+            imgView.ImageSource = BitmapFrame.Create(entity.BitBuffer.FromByteArray());
+            //imgView.ImageSource = entity.BitBuffer.Byte2Bitmap();
         }
     }
 }

@@ -1,18 +1,16 @@
-﻿<hc:Window x:Class="WpfMain.Controlls.FrmImgView"
+﻿<Window x:Class="WpfMain.Controlls.FrmImgView"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
            xmlns:local="clr-namespace:WpfMain.Controlls"
            xmlns:hc="https://handyorg.github.io/handycontrol"
-           xmlns:entity="clr-namespace:Entity.Entity;assembly=Entity"
-           ShowNonClientArea="False"
-           ShowTitle="True" 
+           xmlns:entity="clr-namespace:Entity.Entity;assembly=Entity" 
            WindowStartupLocation="CenterScreen"  WindowState="Maximized"
            mc:Ignorable="d" WindowStyle="None"   DataContext="{Binding }">
-    <hc:Window.Background>
+    <Window.Background>
         <ImageBrush ImageSource="pack://SiteOfOrigin:,,,/Static/Images/background.jpg"  Opacity="0.9"/>
-    </hc:Window.Background>
+    </Window.Background>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180"/>
@@ -43,15 +41,16 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="StackPanel">
             <StackPanel.Background>
                 <SolidColorBrush Color="White" Opacity="0.2"/>
             </StackPanel.Background>
-            <hc:ImageViewer VerticalAlignment="Center" HorizontalAlignment="Center" Background="{DynamicResource SecondaryRegionBrush}" x:Name="imgView"  Padding="30"/>
+            <hc:ImageViewer VerticalAlignment="Center" HorizontalAlignment="Center" Background="{DynamicResource SecondaryRegionBrush}" x:Name="imgView" IsFullScreen="True"  Padding="30"> 
+            </hc:ImageViewer>
          
         </StackPanel>
         <DockPanel Grid.Column="1" Dock="Top" Width="35" Height="35" VerticalAlignment="Top" HorizontalAlignment="Right">
             <Button Margin="5" hc:IconElement.Geometry="{StaticResource CloseGeometry}" Click="ButtonBase_OnClick" Width="30" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
         </DockPanel>
     </Grid>
-</hc:Window>
+</Window>

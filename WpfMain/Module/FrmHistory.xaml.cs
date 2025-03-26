@@ -87,9 +87,16 @@ namespace WpfMain.Module
         private void ButtonBase_San_OnClick(object sender, RoutedEventArgs e)
         {
             var entity = (TestInfo)(((System.Windows.FrameworkElement)sender).Tag);
-            FrmModule frm = new FrmModule(new UCPrint(entity));
-            frm.ShowDialog();
+            //FrmModule frm = new FrmModule(new UCPrint(entity));
+            //frm.ShowDialog();
+            if (!System.IO.File.Exists(entity.TestPath))
+            {
+                MessageBox.Show(AppStatic.MainWindow, "打印模板文件不存在！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
+            FrmModule f = new FrmModule(new UCPrintNotes(entity));
+            f.ShowDialog();
 
         }
     }

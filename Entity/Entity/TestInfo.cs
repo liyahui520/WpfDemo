@@ -285,7 +285,7 @@ namespace Entity.Entity
                 if (BitBuffer != null)
                 {
                     MemoryStream stream = new MemoryStream();
-                    bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                    BitBuffer.Byte2Bitmap().Save(stream, System.Drawing.Imaging.ImageFormat.Png);
                     imageSource = (ImageSource)new ImageSourceConverter().ConvertFrom(stream);
                 }
 
