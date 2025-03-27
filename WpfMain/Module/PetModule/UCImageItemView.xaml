@@ -23,7 +23,7 @@
                                 <TranslateTransform/>
                             </TransformGroup>
                         </Grid.RenderTransform>
-                        <Image Name="dicomImage1"   Stretch="Uniform" Source="/Module/PetModule/微信图片_20250325151116.png" RenderTransformOrigin="0.5,0.5">
+                        <Image Name="dicomImage1"   Stretch="Uniform"  RenderTransformOrigin="0.5,0.5">
                         </Image>
                         <dt:DrawingCanvas x:Name="drawingCanvas"   Brush="White"  StrokeThickness="3" Background="#02FFFFFF" DrawingToolType="Pointer"/>
                         <Border  Background="#02FFFFFF" Name="Bordermove" Cursor="SizeAll"
