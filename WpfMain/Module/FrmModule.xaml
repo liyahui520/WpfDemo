@@ -26,7 +26,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="90"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center">
                 <hc:SimpleText x:Name="title" Foreground="White" FontSize="24" FontWeight="Bold" Margin="20,0,0,0"></hc:SimpleText>
@@ -35,7 +35,8 @@
                 <Button Margin="5" Click="ButtonSetting_OnClick"  hc:IconElement.Geometry="{StaticResource SettingGeometry}" Width="40" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
                 <hc:Divider LineStrokeThickness="2" LineStroke="{DynamicResource DarkPrimaryBrush}" Orientation="Vertical" MaxHeight="20"/>
             </StackPanel>
-            <StackPanel  Grid.Column="2"   HorizontalAlignment="Right" VerticalAlignment="Top">
+            <StackPanel  Grid.Column="2"   HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal">
+                <Button Margin="5" Click="MinButton_Click"  hc:IconElement.Geometry="{StaticResource WindowMinGeometry}" Width="30" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
                 <Button Margin="5" Click="ButtonBase_OnClick"  hc:IconElement.Geometry="{StaticResource CloseGeometry}" Width="30" Style="{StaticResource ButtonOpacityCustom}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0"/>
             </StackPanel>
         </Grid>
