@@ -15,7 +15,7 @@ namespace WpfMain.Module
         public FrmModule(UserControl control)
         {
             InitializeComponent();
-            this.Control.Content = control;
+            this.Control.Content = control; 
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -39,5 +39,13 @@ namespace WpfMain.Module
                 if (this.Control.Content is ICustom)
                     ((ICustom)this.Control.Content)?.Refresh();
         }
+
+        private void MinButton_Click(object sender, RoutedEventArgs e)
+        {
+            AppStatic.MainWindow.WindowState = WindowState.Minimized;
+        }
+         
+
+
     }
 }
