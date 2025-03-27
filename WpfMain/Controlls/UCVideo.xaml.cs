@@ -42,7 +42,7 @@ namespace WpfMain.Controlls
             }
             else
             {
-                System.Windows.MessageBox.Show("摄像头未获取到");
+                HandyControl.Controls.MessageBox.Error($"摄像头未获取到", "系统提示"); 
             }
         }
 

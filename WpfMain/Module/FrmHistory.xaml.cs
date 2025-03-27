@@ -1,6 +1,7 @@
 ﻿using CuPrint;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Entity.Entity;
@@ -52,13 +53,13 @@ namespace WpfMain.Module
             if (string.IsNullOrWhiteSpace(startTime.Text.Trim()) ||
                 !DateTime.TryParse(startTime.Text.Trim().ToString(), out d))
             {
-                MessageBox.Show(AppStatic.MainWindow, "开始时间不能为空！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                HandyControl.Controls.MessageBox.Error("开始时间不能为空！", "系统提示");
                 return;
             }
             if (string.IsNullOrWhiteSpace(endTime.Text.Trim()) ||
                 !DateTime.TryParse(endTime.Text.Trim().ToString(), out d))
             {
-                MessageBox.Show(AppStatic.MainWindow, "结束时间不能为空！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                HandyControl.Controls.MessageBox.Error("结束时间不能为空！", "系统提示");
                 return;
             }
             InitData();
@@ -91,12 +92,28 @@ namespace WpfMain.Module
             //frm.ShowDialog();
             if (!System.IO.File.Exists(entity.TestPath))
             {
-                MessageBox.Show(AppStatic.MainWindow, "打印模板文件不存在！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                HandyControl.Controls.MessageBox.Error( "打印模板文件不存在！", "系统提示");
                 return;
             }
 
             FrmModule f = new FrmModule(new UCPrintNotes(entity));
             f.ShowDialog();
+
+        }
+
+        private void Delete_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (HandyControl.Controls.MessageBox.Ask("确定删除当前记录吗？", "系统提示") ==
+                MessageBoxResult.OK)
+            {
+                var entity = (TestInfo)((System.Windows.FrameworkElement)e.Source).Tag;
+                string name = $"{entity.TestDate:yyyyMMddHHmmss}_{entity.Id}";
+                string jsonfileName = Path.Combine(TestLogic.JsonDataPath, $"{name}.json");
+                File.Delete(jsonfileName);
+                TestLogic.Delete(entity);
+                HandyControl.Controls.MessageBox.Success("删除成功！", "系统提示");
+                InitData();
+            }
 
         }
     }

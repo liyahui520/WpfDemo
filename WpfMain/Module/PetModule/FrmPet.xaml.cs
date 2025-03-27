@@ -215,12 +215,12 @@ namespace WpfMain.Module.PetModule
         private void Button_SaveTest(object sender, RoutedEventArgs e)
         {
             if (tInfo?.Result?.Images?.Count == 0)
-                if (MessageBox.Show("尚未添加任何图片,是否确定导出", "系统提示", MessageBoxButton.OKCancel, MessageBoxImage.Warning)== MessageBoxResult.OK)
+                if (HandyControl.Controls.MessageBox.Ask($"摄像头未获取到", "系统提示") == MessageBoxResult.OK)
                     return;
 
             if (Video.isStart)
             {
-                MessageBox.Show(AppStatic.MainWindow, "正在录像中，请先停止！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                HandyControl.Controls.MessageBox.Warning($"正在录像中，请先停止！", "系统提示");
                 return;
             }
             TestLogic.Save(tInfo);
@@ -236,7 +236,7 @@ namespace WpfMain.Module.PetModule
                 AppStatic.PetInfo.PetTypes.Add(new PetType() { Name = tInfo.Type, PetVarietys = new List<PetVariety>() { new PetVariety() { Name = tInfo.Variety } } });
             }
             AppStatic.PetInfo.Save();
-            MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
+            HandyControl.Controls.MessageBox.Success($"保存成功！", "系统提示"); 
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace WpfMain.Module.PetModule
         {
             if (!System.IO.File.Exists(tInfo.TestPath))
             {
-                MessageBox.Show(AppStatic.MainWindow, "打印模板文件不存在！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示"); 
                 return;
             }
 
@@ -304,7 +304,7 @@ namespace WpfMain.Module.PetModule
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Video= new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
+            Video = new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
             this.BorderVideo.Child = Video;
 
 

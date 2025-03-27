@@ -310,11 +310,11 @@ namespace WpfMain.Controlls
                 {
                     var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{tInfo.TestName.ToString()}.docx");
                     richEditControl1.SaveDocument(exportPath, DocumentFormat.OpenXml);
-                    MessageBox.Show($"导出成功！路径：{exportPath}");
+                    HandyControl.Controls.MessageBox.Success($"导出成功！", "系统提示"); 
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"导出失败：{ex.Message}");
+                    HandyControl.Controls.MessageBox.Error($"导出失败：{ex.Message}","系统提示");
                 }
             }
         }

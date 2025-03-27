@@ -153,7 +153,7 @@ namespace Record
 				deviceGuid = devices[0].DriverGuid;
 			else
 			{
-				MessageBox.Show("系统中没有音频捕捉设备");
+				HandyControl.Controls.MessageBox.Error("系统中没有音频捕捉设备", "系统提示"); 
 				return false;
 			}
 
@@ -164,7 +164,7 @@ namespace Record
 			}
 			catch (DirectXException e)
 			{
-				MessageBox.Show(e.ToString());
+				HandyControl.Controls.MessageBox.Error(e.ToString(), "系统提示"); 
 				return false;
 			}
 			return true;

@@ -9,6 +9,8 @@ using Entity.Entity;
 using Tools.App;
 using DevExpress.Utils.About;
 using Newtonsoft.Json;
+using Tools.Extend;
+using WpfMain.Logic;
 
 namespace WpfMain
 {
@@ -57,20 +59,22 @@ namespace WpfMain
             //Global.InitDllPath();
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
-            string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-            foreach (string file in files)
-            {
-                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
-                {
-                    if (stream != null)
-                    {
-                        byte[] assemblyData = new byte[stream.Length];
-                        stream.Read(assemblyData, 0, assemblyData.Length);
-                        Assembly.Load(assemblyData);
-                    }
+            LogUtil.Info("系统启动");
 
-                }
-            }
+            //string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            //foreach (string file in files)
+            //{
+            //    using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
+            //    {
+            //        if (stream != null)
+            //        {
+            //            byte[] assemblyData = new byte[stream.Length];
+            //            stream.Read(assemblyData, 0, assemblyData.Length);
+            //            Assembly.Load(assemblyData);
+            //        }
+
+            //    }
+            //}
 
 #if !DEBUG
             try
@@ -89,17 +93,20 @@ namespace WpfMain
         // 在垃圾回收机制触发的时候，才能捕捉到Task异常
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
+            LogUtil.Error(e.Exception.Message.ToString());
             // 
         }
         // 全局处理异常 不可以捕获Task
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            // 可以记录下日志
+            // 可以记录下日志 
+            LogUtil.Error(e.ExceptionObject.ToString());
         }
         // 处理UI异常
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             //MessageBox.Show(e.Exception.Message, "系统提示", MessageBoxButton.OK, MessageBoxImage.Error);
+            LogUtil.Error(e.Exception.Message.ToString());
             e.Handled = true;
         }
 

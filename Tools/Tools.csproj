@@ -71,6 +71,7 @@
     <Compile Include="Extend\Converters\EnumValueToEnumNameConverter.cs" />
     <Compile Include="Extend\Converters\StringToBoolConverter.cs" />
     <Compile Include="Extend\Converters\StrToIsCheckedConverter.cs" />
+    <Compile Include="Extend\LogUtil.cs" />
     <Compile Include="Extend\ObjectExtension.cs" />
     <Compile Include="Extend\ObservableObject.cs" />
     <Compile Include="Extend\Valueformat.cs" />

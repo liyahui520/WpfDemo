@@ -142,13 +142,13 @@ namespace Record
                 }
                 else
                 {
-                    MessageBox.Show("摄像头不存在!");
+                    HandyControl.Controls.MessageBox.Error("摄像头不存在!","系统提示");
                     return null;
                 }
             }
             catch
             {
-                MessageBox.Show("摄像头不存在!");
+                HandyControl.Controls.MessageBox.Error("摄像头不存在!", "系统提示");
                 return null;
             }
         }

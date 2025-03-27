@@ -76,6 +76,11 @@ namespace WpfMain.Logic
             return infos.Where(o => o.TestDate >= startTime && o.TestDate <= endTime).ToList();
         }
 
+        public static void Delete(TestInfo info)
+        {
+            infos.Remove(info);
+        }
+
 
         /// <summary>
         /// 读取数据并缓存，所有json数据只读取一次

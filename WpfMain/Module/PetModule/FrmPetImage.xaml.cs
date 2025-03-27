@@ -240,7 +240,7 @@ namespace WpfMain.Module.PetModule
         private void Button_SaveTest(object sender, RoutedEventArgs e)
         {
             TestLogic.Save(tInfos);
-            MessageBox.Show(AppStatic.MainWindow, "保存成功！", "系统提示", MessageBoxButton.OK, MessageBoxImage.None);
+            HandyControl.Controls.MessageBox.Success($"保存成功！", "系统提示"); 
         }
 
         private void UCFiles_ImagesClick(object sender, TestInfo e)
@@ -272,7 +272,7 @@ namespace WpfMain.Module.PetModule
         {
             if (!System.IO.File.Exists(tInfos.TestPath))
             {
-                MessageBox.Show(AppStatic.MainWindow, "打印模板文件不存在！", "系统提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示"); 
                 return;
             }
 

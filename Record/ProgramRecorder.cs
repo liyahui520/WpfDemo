@@ -56,7 +56,7 @@ namespace Record
 		{
 			if (hwnd == IntPtr.Zero)
 			{
-				MessageBox.Show($"没有找到程序【{programName}】!");
+				HandyControl.Controls.MessageBox.Error($"没有找到程序【{programName}】!", "系统提示"); 
 				return;
 			}
 			//首先获取一张，并设置成此大小
