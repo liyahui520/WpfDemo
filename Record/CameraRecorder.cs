@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static AForge.Robotics.Surveyor.SVS;
 using AForge.Video.VFW;
-
+using Tools.App;
 namespace Record
 {
     /// <summary>
@@ -81,7 +81,7 @@ namespace Record
             this.VideoWriter = new VideoFileWriter();
             this.FolderBrowser = new FolderBrowserDialog();
             this.VideoCodec = videoCodec;
-            this.BitRate = 3000000; 
+            this.BitRate = 3000000;
             //是否需要录制声音
             if (isLoopingWav)
                 wavRecorder = new WavRecorder(wavFilePath);
@@ -130,9 +130,18 @@ namespace Record
             {
                 //获取摄像头列表
                 var devs = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+
                 if (devs.Count != 0)
                 {
-                    Camera = new VideoCaptureDevice(devs[0].MonikerString);
+                    string cname = devs[0].MonikerString;
+
+                    if (!string.IsNullOrEmpty(AppStatic.VideoConfig?.VideoDecive))
+                    {
+                        foreach (FilterInfo dev in devs)
+                            if (dev.MonikerString == AppStatic.VideoConfig.VideoDecive)
+                                cname = dev.MonikerString;
+                    }
+                    Camera = new VideoCaptureDevice(cname);
                     //配置录像参数(宽,高,帧率,比特率等参数)VideoCapabilities这个属性会返回摄像头支持哪些配置,从这里面选一个赋值接即可,我选了第1个
                     Camera.VideoResolution = Camera.VideoCapabilities[0];
 
