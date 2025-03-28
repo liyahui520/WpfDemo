@@ -247,6 +247,7 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void UCFiles_OnImagesClick(object sender, TestInfo e)
         {
+            Video?.Close();
             Files.SelectedImageItem = (sender as UCFiles).SelectedImageItem;
             FrmBackModule pet = new FrmBackModule(new FrmPetImage(e, (sender as UCFiles).SelectedImageItem));
             pet.title.Text = "查看";
@@ -254,6 +255,7 @@ namespace WpfMain.Module.PetModule
             pet.ShowDialog();
             tInfo = new TestInfo();
             tInfo = e;
+            Video?.InitVideo();
 
         }
 

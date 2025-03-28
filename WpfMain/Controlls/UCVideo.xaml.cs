@@ -6,6 +6,7 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using Record;
 using System.IO;
+using System.Threading.Tasks;
 using Image = System.Drawing.Image;
 using AForge.Video.FFMPEG;
 using Tools.App;
@@ -42,7 +43,7 @@ namespace WpfMain.Controlls
             }
             else
             {
-                HandyControl.Controls.MessageBox.Error($"摄像头未获取到", "系统提示"); 
+                HandyControl.Controls.MessageBox.Error($"摄像头未获取到", "系统提示");
             }
         }
 
@@ -65,13 +66,13 @@ namespace WpfMain.Controlls
             _vw = width;
             _vh = height;
         }
-        private void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
+        private async void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
 
             videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
             wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
-            recorder = new CameraRecorder(videoFileName, wavFileName, 30, true, VideoCodec.MSMPEG4v3);
-            InitVideo();
+            recorder = await Task.FromResult(new CameraRecorder(videoFileName, wavFileName, 30, false, VideoCodec.MSMPEG4v3));
+            await Task.Run(InitVideo);
 
         }
 
@@ -82,7 +83,8 @@ namespace WpfMain.Controlls
                 if (CaptureDevice.IsRunning)
                 {
                     CaptureDevice.SignalToStop(); // 请求停止摄像头数据接收
-                    CaptureDevice.WaitForStop();  // 等待摄像头停止
+                    CaptureDevice.WaitForStop(); // 等待摄像头停止 
+
                 }
 
                 CaptureDevice = null; // 重置videoSource对象
@@ -91,9 +93,12 @@ namespace WpfMain.Controlls
             if (!string.IsNullOrWhiteSpace(AppStatic.VideoConfig.VideoDecive))
             {
                 CaptureDevice = recorder.initCapture(AppStatic.VideoConfig.VideoDecive);
-                sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
-                sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height;
-                sourcePlayer.VideoSource = CaptureDevice;
+                //sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
+                //sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height;
+                Dispatcher.Invoke(() =>
+                {
+                    sourcePlayer.VideoSource = CaptureDevice;
+                });
                 //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
                 button_Play_Click(this, null);
             }
@@ -105,20 +110,24 @@ namespace WpfMain.Controlls
                 {   // 默认设备
                     //CaptureDevice = new VideoCaptureDevice(videoDevices[0].MonikerString);
                     CaptureDevice = recorder.initCapture(videoDevices[0].MonikerString);
-                    sourcePlayer.Width = CaptureDevice.VideoResolution.FrameSize.Width;
-                    sourcePlayer.Height = CaptureDevice.VideoResolution.FrameSize.Height;
-                    sourcePlayer.VideoSource = CaptureDevice;
+                    Dispatcher.Invoke(() =>
+                    {
+                        sourcePlayer.VideoSource = CaptureDevice;
+                    });
                     //CaptureDevice.NewFrame += new NewFrameEventHandler(video_NewFrame);
                     button_Play_Click(this, null);
                 }
             }
-
-            view.Width = _vw;
-            view.Height = _vh;
-            if (_vw / CaptureDevice.VideoResolution.FrameSize.Width < _vw / CaptureDevice.VideoResolution.FrameSize.Height)
-                view.Height = (double)CaptureDevice.VideoResolution.FrameSize.Height / (double)CaptureDevice.VideoResolution.FrameSize.Width * _vw;
-            else
-                view.Width = (double)CaptureDevice.VideoResolution.FrameSize.Width / (double)CaptureDevice.VideoResolution.FrameSize.Height * _vh;
+            Dispatcher.Invoke(() =>
+            {
+                view.Width = _vw;
+                view.Height = _vh;
+                if (_vw / CaptureDevice.VideoResolution.FrameSize.Width < _vw / CaptureDevice.VideoResolution.FrameSize.Height)
+                    view.Height = (double)CaptureDevice.VideoResolution.FrameSize.Height / (double)CaptureDevice.VideoResolution.FrameSize.Width * _vw;
+                else
+                    view.Width = (double)CaptureDevice.VideoResolution.FrameSize.Width / (double)CaptureDevice.VideoResolution.FrameSize.Height * _vh;
+            });
+            
 
 
 
@@ -274,11 +283,11 @@ namespace WpfMain.Controlls
         }
 
 
-
-        private void button_Play_Click(object sender, RoutedEventArgs e)
+        public delegate void MyInvoke();
+        private async void button_Play_Click(object sender, RoutedEventArgs e)
         {
             SetAviFilePath();
-            sourcePlayer.Start();
+            System.Windows.Application.Current.Dispatcher.Invoke(() => sourcePlayer.Start()); 
         }
 
         private void button_Capture_Click(object sender, RoutedEventArgs e)

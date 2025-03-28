@@ -11,6 +11,8 @@ using DevExpress.Utils.About;
 using Newtonsoft.Json;
 using Tools.Extend;
 using WpfMain.Logic;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace WpfMain
 {
@@ -40,7 +42,7 @@ namespace WpfMain
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             // 处理Task没有捕获到全局异常
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; // 默认情况下，WPF 会自动选择最适合的模式
 
 
 
