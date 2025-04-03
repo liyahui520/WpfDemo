@@ -72,7 +72,7 @@ namespace WpfMain.Controlls
             videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
             wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
             recorder = await Task.FromResult(new CameraRecorder(videoFileName, wavFileName, 30, false, VideoCodec.MSMPEG4v3));
-            await Task.Run(InitVideo);
+            await Task.Run(() => { InitVideo();});
 
         }
 

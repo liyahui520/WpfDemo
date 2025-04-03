@@ -7,6 +7,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol" 
              mc:Ignorable="d" 
              xmlns:wm="clr-namespace:WpfMain.Module"
+             xmlns:cameraMf="clr-namespace:CameraMF;assembly=CameraMF"
              d:DesignHeight="450" d:DesignWidth="1800"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              Loaded="UserControl_Loaded"
@@ -172,11 +173,11 @@
                     <RowDefinition />
                     <RowDefinition Height="0"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Column="0" CornerRadius="10" Name="BorderVideo">
+                <Border Grid.Column="0" Grid.Row="0" CornerRadius="10" Name="BorderVideo">
                     <Border.Background>
                         <SolidColorBrush Color="#666666" Opacity="0.6"/>
                     </Border.Background>
-                  
+                    <cameraMf:UCMFVideo/>
                 </Border>
 
  

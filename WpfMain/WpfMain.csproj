@@ -406,6 +406,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CameraMF\CameraMF.csproj">
+      <Project>{6075ea03-75ab-46f1-939e-6f7a3f537903}</Project>
+      <Name>CameraMF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CuPrint\CuPrint.csproj">
       <Project>{bd9cfe42-fede-4b42-a476-908bd40373a7}</Project>
       <Name>CuPrint</Name>

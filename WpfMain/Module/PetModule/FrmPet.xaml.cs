@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
+using CameraMF;
 using CuPrint;
 using Entity.Entity;
 using Tools.App;
@@ -40,6 +41,7 @@ namespace WpfMain.Module.PetModule
         //public TestInfo tInfo = new TestInfo();
 
         public UCVideo Video { get; set; }
+        public UCMFVideo VideoMF { get; set; }
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
             nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
@@ -204,7 +206,7 @@ namespace WpfMain.Module.PetModule
 
         public void Refresh()
         {
-            Video?.InitVideo();
+            //Video?.InitVideo();
         }
 
         /// <summary>
@@ -306,12 +308,14 @@ namespace WpfMain.Module.PetModule
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Video = new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
-            this.BorderVideo.Child = Video;
+            //Video = new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
+            //this.BorderVideo.Child = Video;
 
+            //VideoMF = new UCMFVideo();
+            //this.BorderVideo.Child = VideoMF;
 
-            if (this.ActualHeight < 780)
-                Ctl.MaxHeight = 600;
+            //if (this.ActualHeight < 780)
+            //    Ctl.MaxHeight = 600;
         }
     }
 }

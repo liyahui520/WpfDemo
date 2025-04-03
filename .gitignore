@@ -24,3 +24,7 @@ Record/.vs/
 /Entity/.vs/Entity.csproj.dtbcache.json
 /Libs/PrintTemp/~$血涂片.docx
 .vs/
+CameraMF/bin/
+CameraMF/obj/
+packages/
+MigrationBackup/
