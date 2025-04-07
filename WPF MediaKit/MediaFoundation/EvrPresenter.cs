@@ -64,8 +64,9 @@ namespace WPFMediaKit.MediaFoundation
     [ComVisible(true)]
     public class EvrPresenter : ICustomAllocator, IEVRPresenterCallback
     {
-        private IntPtr m_lastSurface;
         private const int PRESENTER_BUFFER_COUNT = 5;
+        private IntPtr m_lastSurface;
+        private IMFVideoPresenter m_VideoPresenter;
 
         private EvrPresenter()
         {
@@ -120,7 +121,11 @@ namespace WPFMediaKit.MediaFoundation
         /// <summary>
         /// The custom EVR video presenter COM object
         /// </summary>
-        public IMFVideoPresenter VideoPresenter { get; private set; }
+        public IMFVideoPresenter VideoPresenter
+        {
+            get { return m_VideoPresenter; }
+            private set { m_VideoPresenter = value; }
+        }
 
         #region ICustomAllocator Members
         /// <summary>
@@ -138,17 +143,28 @@ namespace WPFMediaKit.MediaFoundation
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        protected void Dispose(bool disp)
+        protected void Dispose(bool dispose)
         {
-            if (VideoPresenter != null)
+            if (dispose)
             {
-                Marshal.FinalReleaseComObject(VideoPresenter);
-                VideoPresenter = null;
+                var settings = m_VideoPresenter as IEVRPresenterSettings;
+
+                if (settings != null)
+                    settings.RegisterCallback(null);
             }
+            COMUtil.TryFinalRelease(ref m_VideoPresenter);
+        }
+
+        public void Stop()
+        {
+            var settings = m_VideoPresenter as IEVRPresenterSettings;
+
+            if (settings != null)
+                settings.RegisterCallback(null);
         }
 
         #endregion
@@ -217,10 +233,10 @@ namespace WPFMediaKit.MediaFoundation
                 evrPresenter.VideoPresenter = presenter;
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 COMUtil.TryFinalRelease(ref presenter);
-                throw new Exception("Could not create IMFVideoPresenter", e);
+                throw new WPFMediaKitException("Could not create EnhancedVideoRenderer", ex);
             }
 
             return evrPresenter;

@@ -87,7 +87,7 @@
     <Reference Include="DevExpress.Xpf.RichEdit.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DirectShowLib-2005, Version=2.1.0.17035, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dll\DirectShowLib-2005.dll</HintPath>
+      <HintPath>..\WPF MediaKit\Assemblies\DirectShowLib-2005.dll</HintPath>
     </Reference>
     <Reference Include="DrawTools">
       <HintPath>..\Libs\DrawTools.dll</HintPath>
@@ -120,6 +120,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controlls\EnumToBooleanConverter.cs" />
     <Compile Include="Controlls\PropertyGridDemoCtl.xaml.cs">
       <DependentUpon>PropertyGridDemoCtl.xaml</DependentUpon>
     </Compile>
