@@ -1,5 +1,6 @@
 ﻿#region Usings
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using DirectShowLib;
 #endregion
@@ -27,11 +28,13 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
     /// </summary>
     public class MediaUriPlayer : MediaSeekingPlayer
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(MediaUriPlayer));
+
         /// <summary>
         /// The name of the default audio render.  This is the
         /// same on all versions of windows
         /// </summary>
-        private const string DEFAULT_AUDIO_RENDERER_NAME = "Default DirectSound Device";
+        public const string DEFAULT_AUDIO_RENDERER_NAME = "Default DirectSound Device";
 
         /// <summary>
         /// Set the default audio renderer property backing
@@ -92,6 +95,21 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
         }
 
         /// <summary>
+        /// Return Source as a string path or uri.
+        /// </summary>
+        private string FileSource
+        {
+            get
+            {
+                if (m_sourceUri == null)
+                    return null;
+                if (m_sourceUri.IsFile)
+                    return m_sourceUri.LocalPath;
+                return m_sourceUri.ToString();
+            }
+        }
+
+        /// <summary>
         /// The renderer type to use when
         /// rendering video
         /// </summary>
@@ -114,12 +132,6 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             set
             {
                 VerifyAccess();
-
-                if (string.IsNullOrEmpty(value))
-                {
-                    value = DEFAULT_AUDIO_RENDERER_NAME;
-                }
-
                 m_audioRenderer = value;
             }
         }
@@ -254,10 +266,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             /* Make sure we clean up any remaining mess */
             FreeResources();
 
-            if (m_sourceUri == null)
-                return;
-
-            string fileSource = m_sourceUri.OriginalString;
+            string fileSource = FileSource;
 
             if (string.IsNullOrEmpty(fileSource))
                 return;
@@ -268,32 +277,33 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 m_graph = new FilterGraphNoThread() as IGraphBuilder;
 
                 if (m_graph == null)
-                    throw new Exception("Could not create a graph");
+                    throw new WPFMediaKitException("Could not create a graph");
 
                 var filterGraph = m_graph as IFilterGraph2;
 
                 if (filterGraph == null)
-                    throw new Exception("Could not QueryInterface for the IFilterGraph2");
+                    throw new WPFMediaKitException("Could not QueryInterface for the IFilterGraph2");
 
                 IBaseFilter sourceFilter;
                 int hr;
 
-                //var file = System.IO.File.CreateText(@"M:\DirectShowLog.txt");
-                //filterGraph.SetLogFile((file.BaseStream as System.IO.FileStream).SafeFileHandle.DangerousGetHandle());
-
 
                 // Set LAV Splitter
-                LAVSplitterSource reader = new LAVSplitterSource();
-                sourceFilter = reader as IBaseFilter;
-                var objectWithSite = reader as IObjectWithSite;
-                if (objectWithSite != null)
-                {
-                    objectWithSite.SetSite(this);
-                }
+                /* LAVSplitterSource reader = new LAVSplitterSource();
+                 sourceFilter = reader as IBaseFilter;
+                 var objectWithSite = reader as IObjectWithSite;
+                 if (objectWithSite != null)
+                 {
+                     objectWithSite.SetSite(this);
+                 }
 
-                hr = m_graph.AddFilter(sourceFilter, SplitterSource);
-                DsError.ThrowExceptionForHR(hr);
 
+                 hr = m_graph.AddFilter(sourceFilter, SplitterSource);
+                 DsError.ThrowExceptionForHR(hr);*/
+
+                sourceFilter = DirectShowUtil.AddFilterToGraph(m_graph, SplitterSource, Guid.Empty);
+                if (sourceFilter == null)
+                    throw new WPFMediaKitException("Could not add SplitterSource to graph.");
 
                 IFileSourceFilter interfaceFile = (IFileSourceFilter)sourceFilter;
                 hr = interfaceFile.Load(fileSource, null);
@@ -324,45 +334,38 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                     }
                     Marshal.ReleaseComObject(videoPinFrom);
                     videoPinFrom = null;
+
+                    HasVideo = true;
+                }
+                else
+                {
+                    HasVideo = false;
                 }
 
                 DirectShowUtil.AddFilterToGraph(m_graph, VideoDecoder, Guid.Empty);
 
-                // Set Audio Codec
-                // Remove Pin
-                var audioPinFrom = DirectShowLib.DsFindPin.ByName(sourceFilter, "Audio");
-                IPin audioPinTo;
-                if (audioPinFrom != null)
+                try
                 {
-                    hr = audioPinFrom.ConnectedTo(out audioPinTo);
-                    if (hr >= 0 && audioPinTo != null)
-                    {
-                        PinInfo pInfo;
-                        audioPinTo.QueryPinInfo(out pInfo);
-                        FilterInfo fInfo;
-                        pInfo.filter.QueryFilterInfo(out fInfo);
-
-                        DirectShowUtil.DisconnectAllPins(m_graph, pInfo.filter);
-                        m_graph.RemoveFilter(pInfo.filter);
-
-                        DsUtils.FreePinInfo(pInfo);
-                        Marshal.ReleaseComObject(fInfo.pGraph);
-                        Marshal.ReleaseComObject(audioPinTo);
-                        audioPinTo = null;
-                    }
-                    Marshal.ReleaseComObject(audioPinFrom);
-                    audioPinFrom = null;
+                    // use preffered audio filter
+                    InsertAudioFilter(sourceFilter, AudioDecoder);
+                }
+                catch (Exception ex)
+                {
+                    // codecs misconfigured
+                    log.Error(ex, "Cannot add audio decoder: {0}", AudioDecoder);
                 }
 
-                DirectShowUtil.AddFilterToGraph(m_graph, AudioDecoder, Guid.Empty);
-
-
-                /* Add our prefered audio renderer */
-                InsertAudioRenderer(AudioRenderer);
+                // use prefered audio renderer
+                try
+                {
+                    InsertAudioRenderer(AudioRenderer);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex, "Cannot add audio render: {0}", AudioRenderer);
+                }
 
                 IBaseFilter renderer = CreateVideoRenderer(VideoRenderer, m_graph, 2);
-
-
 
                 /* We will want to enum all the pins on the source filter */
                 IEnumPins pinEnum;
@@ -390,14 +393,6 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                     }
                 }
 
-                /* Test using FFDShow Video Decoder Filter
-                var ffdshow = new FFDShow() as IBaseFilter;
-
-                if (ffdshow != null)
-                    m_graph.AddFilter(ffdshow, "ffdshow");
-                */
-
-
                 /* Loop over each pin of the source filter */
                 while (pinEnum.Next(pins.Length, pins, fetched) == 0)
                 {
@@ -415,7 +410,138 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 Marshal.ReleaseComObject(sourceFilter);
 
                 if (pinsRendered == 0)
-                    throw new Exception("Could not render any streams from the source Uri");
+                    throw new WPFMediaKitException("Could not render any streams from the source Uri");
+
+#if DEBUG
+                /* Adds the GB to the ROT so we can view
+                 * it in graphedit */
+                m_dsRotEntry = new DsROTEntry(m_graph);
+#endif
+                /* Configure the graph in the base class */
+                SetupFilterGraph(m_graph);
+            }
+            catch (Exception ex)
+            {
+                /* This exection will happen usually if the media does
+                 * not exist or could not open due to not having the
+                 * proper filters installed */
+
+
+                // Fallback try auto graph:
+                var result = oldOpenSource();
+
+                if (!result)
+                {
+                    FreeResources();
+
+                    HasVideo = false;
+
+                    /* Fire our failed event */
+                    InvokeMediaFailed(new MediaFailedEventArgs(ex.Message, ex));
+
+                    return;
+                }
+            }
+
+            InvokeMediaOpened();
+        }
+
+        private bool oldOpenSource()
+        {
+            /* Make sure we clean up any remaining mess */
+            FreeResources();
+
+            string fileSource = FileSource;
+
+            if (string.IsNullOrEmpty(fileSource))
+                return false;
+
+            try
+            {
+                /* Creates the GraphBuilder COM object */
+                m_graph = new FilterGraphNoThread() as IGraphBuilder;
+
+                if (m_graph == null)
+                    throw new WPFMediaKitException("Could not create a graph");
+
+                // use prefered audio renderer
+                try
+                {
+                    InsertAudioRenderer(AudioRenderer);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex, "Cannot add audio render: {0}", AudioRenderer);
+                }
+
+                IBaseFilter renderer = CreateVideoRenderer(VideoRenderer, m_graph, 2);
+
+                var filterGraph = m_graph as IFilterGraph2;
+
+                if (filterGraph == null)
+                    throw new WPFMediaKitException("Could not QueryInterface for the IFilterGraph2");
+
+                IBaseFilter sourceFilter;
+
+                /* Have DirectShow find the correct source filter for the Uri */
+                int hr = filterGraph.AddSourceFilter(fileSource, fileSource, out sourceFilter);
+                DsError.ThrowExceptionForHR(hr);
+
+                /* Check for video stream*/
+                var videoPinFrom = DsFindPin.ByName(sourceFilter, "Video");
+                if (videoPinFrom != null)
+                {
+                    Marshal.ReleaseComObject(videoPinFrom);
+                    HasVideo = true;
+                }
+                else
+                {
+                    HasVideo = false;
+                }
+
+                /* We will want to enum all the pins on the source filter */
+                IEnumPins pinEnum;
+
+                hr = sourceFilter.EnumPins(out pinEnum);
+                DsError.ThrowExceptionForHR(hr);
+
+                IntPtr fetched = IntPtr.Zero;
+                IPin[] pins = { null };
+
+                /* Counter for how many pins successfully rendered */
+                int pinsRendered = 0;
+
+                if (VideoRenderer == VideoRendererType.VideoMixingRenderer9)
+                {
+                    var mixer = renderer as IVMRMixerControl9;
+
+                    if (mixer != null)
+                    {
+                        VMR9MixerPrefs dwPrefs;
+                        mixer.GetMixingPrefs(out dwPrefs);
+                        dwPrefs &= ~VMR9MixerPrefs.RenderTargetMask;
+                        dwPrefs |= VMR9MixerPrefs.RenderTargetRGB;
+                        //mixer.SetMixingPrefs(dwPrefs);
+                    }
+                }
+
+
+                /* Loop over each pin of the source filter */
+                while (pinEnum.Next(pins.Length, pins, fetched) == 0)
+                {
+                    if (filterGraph.RenderEx(pins[0],
+                                             AMRenderExFlags.RenderToExistingRenderers,
+                                             IntPtr.Zero) >= 0)
+                        pinsRendered++;
+
+                    Marshal.ReleaseComObject(pins[0]);
+                }
+
+                Marshal.ReleaseComObject(pinEnum);
+                Marshal.ReleaseComObject(sourceFilter);
+
+                if (pinsRendered == 0)
+                    throw new WPFMediaKitException("Could not render any streams from the source Uri");
 
 #if DEBUG
                 /* Adds the GB to the ROT so we can view
@@ -425,7 +551,6 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 /* Configure the graph in the base class */
                 SetupFilterGraph(m_graph);
 
-                HasVideo = true;
                 /* Sets the NaturalVideoWidth/Height */
                 //SetNativePixelSizes(renderer);
             }
@@ -438,21 +563,59 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
 
                 /* Fire our failed event */
                 InvokeMediaFailed(new MediaFailedEventArgs(ex.Message, ex));
+
+                return false;
             }
 
             InvokeMediaOpened();
+
+            return true;
         }
 
         /// <summary>
-        /// Inserts the audio renderer by the name of
-        /// the audio renderer that is passed
+        /// Inserts the audio renderer by the name.
         /// </summary>
-        protected virtual void InsertAudioRenderer(string audioDeviceName)
+        protected virtual void InsertAudioRenderer(string audioRenderer)
         {
-            if (m_graph == null)
+            if (string.IsNullOrEmpty(audioRenderer))
                 return;
 
-            AddFilterByName(m_graph, DirectShowLib.FilterCategory.AudioRendererCategory, audioDeviceName);
+            /* Add our prefered audio renderer */
+            AddFilterByName(m_graph, DirectShowLib.FilterCategory.AudioRendererCategory, audioRenderer);
+        }
+
+        protected virtual void InsertAudioFilter(IBaseFilter sourceFilter, string audioDecoder)
+        {
+            if (string.IsNullOrEmpty(audioDecoder))
+                return;
+
+            // Set Audio Codec
+            // Remove Pin
+            var audioPinFrom = DirectShowLib.DsFindPin.ByName(sourceFilter, "Audio");
+            IPin audioPinTo;
+            if (audioPinFrom != null)
+            {
+                int hr = audioPinFrom.ConnectedTo(out audioPinTo);
+                if (hr >= 0 && audioPinTo != null)
+                {
+                    PinInfo pInfo;
+                    audioPinTo.QueryPinInfo(out pInfo);
+                    FilterInfo fInfo;
+                    pInfo.filter.QueryFilterInfo(out fInfo);
+
+                    DirectShowUtil.DisconnectAllPins(m_graph, pInfo.filter);
+                    m_graph.RemoveFilter(pInfo.filter);
+
+                    DsUtils.FreePinInfo(pInfo);
+                    Marshal.ReleaseComObject(fInfo.pGraph);
+                    Marshal.ReleaseComObject(audioPinTo);
+                    audioPinTo = null;
+                }
+                Marshal.ReleaseComObject(audioPinFrom);
+                audioPinFrom = null;
+            }
+
+            DirectShowUtil.AddFilterToGraph(m_graph, audioDecoder, Guid.Empty);
         }
 
         /// <summary>
@@ -474,19 +637,22 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
              * Dispatcher VeryifyAccess() issues because
              * this may be called from the GC */
             StopInternal();
-
-            /* Let's clean up the base 
-             * class's stuff first */
-            base.FreeResources();
-
+            
             if (m_graph != null)
             {
+                DirectShowUtil.RemoveFilters(m_graph);
                 Marshal.ReleaseComObject(m_graph);
                 m_graph = null;
+
+                base.FreeResources();
 
                 /* Only run the media closed if we have an
                  * initialized filter graph */
                 InvokeMediaClosed(new EventArgs());
+            }
+            else
+            {
+                base.FreeResources();
             }
         }
     }

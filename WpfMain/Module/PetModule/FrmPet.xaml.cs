@@ -202,13 +202,13 @@ namespace WpfMain.Module.PetModule
         public void Closed()
         {
             //Video?.Close();
-            VideoMF.Stop();
+           // VideoMF.Stop();
         }
 
         public void Refresh()
         {
             //Video?.InitVideo();
-            VideoMF.VideoInit();
+            //VideoMF.VideoInit();
         }
 
         /// <summary>

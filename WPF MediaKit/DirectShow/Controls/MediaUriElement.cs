@@ -28,7 +28,7 @@ namespace WPFMediaKit.DirectShow.Controls
 
         public static readonly DependencyProperty VideoRendererProperty =
             DependencyProperty.Register("VideoRenderer", typeof(VideoRendererType), typeof(MediaUriElement),
-                new FrameworkPropertyMetadata(VideoRendererType.VideoMixingRenderer9,
+                new FrameworkPropertyMetadata(VideoRendererType.EnhancedVideoRenderer,
                     new PropertyChangedCallback(OnVideoRendererChanged)));
 
         public VideoRendererType VideoRenderer
@@ -63,11 +63,11 @@ namespace WPFMediaKit.DirectShow.Controls
 
         public static readonly DependencyProperty AudioRendererProperty =
             DependencyProperty.Register("AudioRenderer", typeof(string), typeof(MediaUriElement),
-                new FrameworkPropertyMetadata("Default DirectSound Device",
+                new FrameworkPropertyMetadata(MediaUriPlayer.DEFAULT_AUDIO_RENDERER_NAME,
                     new PropertyChangedCallback(OnAudioRendererChanged)));
 
         /// <summary>
-        /// The name of the audio renderer device to use
+        /// The name of the audio renderer device to use. Null to disable audio.
         /// </summary>
         public string AudioRenderer
         {

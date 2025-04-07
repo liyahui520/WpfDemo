@@ -68,7 +68,7 @@ namespace WPFMediaKit.DirectShow.Controls
         private void PlayerSetMediaPosition()
         {
             var position = MediaPosition;
-            if (MediaPlayerBase.Dispatcher.Shutdown || MediaPlayerBase.Dispatcher.ShuttingDown)
+            if (MediaPlayerBase.Dispatcher.ShuttingOrShutDown)
                 return;
 
             MediaPlayerBase.Dispatcher.BeginInvoke((Action)
@@ -262,7 +262,7 @@ namespace WPFMediaKit.DirectShow.Controls
             base.InitializeMediaPlayer();
 
             if (MediaSeekingPlayer == null)
-                throw new Exception("MediaSeekingPlayer is null or does not inherit MediaSeekingPlayer");
+                throw new WPFMediaKitException("MediaSeekingPlayer is null or does not inherit MediaSeekingPlayer");
 
             /* Let us know when the media position has changed */
             MediaSeekingPlayer.MediaPositionChanged += OnMediaPlayerPositionChangedPrivate;
@@ -298,27 +298,19 @@ namespace WPFMediaKit.DirectShow.Controls
         /// </summary>
         protected override void OnMediaPlayerOpened()
         {
-            /* Pull out our values of our properties */
+            MediaPositionFormat positionFormat = MediaSeekingPlayer.CurrentPositionFormat;
             long duration = MediaSeekingPlayer.Duration;
-            long position = 0;// MediaSeekingPlayer.MediaPosition;
-            double rate = 1; // MediaSeekingPlayer.SpeedRatio;
-            double volume = 1;
-
-            var positionFormat = MediaSeekingPlayer.CurrentPositionFormat;
 
             Dispatcher.BeginInvoke((Action)delegate
             {
-                position = MediaPosition;
                 /* Set our DP values */
                 SetCurrentPositionFormat(positionFormat);
+                SetMediaPositionInternal(0);
                 SetMediaDuration(duration);
-                //SetMediaPositionInternal(position);
-                //SpeedRatio = rate;
-                rate = SpeedRatio;
-                volume = Volume;
+                double rate = SpeedRatio;
+                double volume = Volume;
                 MediaSeekingPlayer.Dispatcher.BeginInvoke((Action) delegate
                 {
-                    //MediaSeekingPlayer.MediaPosition = position;
                     MediaSeekingPlayer.SpeedRatio = rate;
                     MediaPlayerBase.Volume = volume;
                 });

@@ -56,7 +56,9 @@ namespace WpfMain
             FrmModule pet = new FrmModule(video);
             pet.title.Text = "新检查";
             pet.Owner = this;
-            pet.ShowDialog();
+            pet.Show();
+
+            //new UCMFVideo().Show();
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

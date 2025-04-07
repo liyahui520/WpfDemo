@@ -173,10 +173,15 @@
                     <RowDefinition />
                     <RowDefinition Height="0"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Column="0" Grid.Row="0" CornerRadius="10" Name="BorderVideo">
+                <Border  CornerRadius="10" Name="BorderVideo" >
                     <Border.Background>
-                        <SolidColorBrush Color="#666666" Opacity="0.6"/>
+                        <SolidColorBrush Color="#665666" Opacity="0.6"/>
                     </Border.Background>
+                    
+                    
+                    
+                    
+                    
                 </Border>
                 <!--<Controlls:UCMFVideo x:Name="UcmfVideo"/>-->
 
