@@ -8,7 +8,7 @@
         xmlns:players="clr-namespace:WPFMediaKit.DirectShow.MediaPlayers;assembly=WPFMediaKit"
              mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
-             Height="450" Width="825">
+            >
     <UserControl.Resources>
         <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </UserControl.Resources>
