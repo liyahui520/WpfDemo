@@ -38,7 +38,8 @@ namespace WpfMain.Controlls
                 vce.Pause();
                 vce.EnableSampleGrabbing = true;
                 vce.VideoCaptureDevice = device;
-                vce.UseYuv = true;
+                vce.Play();
+                vce.ShowPropertyPage();
 
             }
             else
