@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Windows.UI.Xaml.Controls;
+using DirectShowLib;
+using Tools.App;
 using WPFMediaKit.DirectShow.Controls;
 
 namespace CameraMF
@@ -29,9 +31,16 @@ namespace CameraMF
 
         private void UCMFVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
-            vce.Pause();
-            vce.VideoCaptureSource = MultimediaUtil.VideoInputNames[0];
-            vce.Play();
+            var devices = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            var device = devices.FirstOrDefault(d => d.DevicePath == AppStatic.VideoConfig.VideoDecive);
+            if (device != null)
+            {
+                vce.VideoCaptureDevice = device;
+            }
+            else
+            {
+                MessageBox.Show("Video device not found.");
+            }
         }
     }
 }
