@@ -7,8 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
-using CameraMF;
 using CuPrint;
+using DirectShowLib;
 using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
@@ -87,7 +87,7 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Video?.OnVideoSetCamera(VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()), VideoProcAmpFlags.Manual);
+            Video?.OnVideoSetCamera(AForge.Video.DirectShow.VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()), AForge.Video.DirectShow.VideoProcAmpFlags.Manual);
         }
 
         private void StartCamp_OnClick(object sender, RoutedEventArgs e)
@@ -201,12 +201,14 @@ namespace WpfMain.Module.PetModule
 
         public void Closed()
         {
-            Video?.Close();
+            //Video?.Close();
+            VideoMF.Stop();
         }
 
         public void Refresh()
         {
             //Video?.InitVideo();
+            VideoMF.VideoInit();
         }
 
         /// <summary>
@@ -311,9 +313,10 @@ namespace WpfMain.Module.PetModule
             //Video = new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
             //this.BorderVideo.Child = Video;
 
-            //VideoMF = new UCMFVideo();
-            //this.BorderVideo.Child = VideoMF;
+            VideoMF = new UCMFVideo();
+            this.BorderVideo.Child = VideoMF;
 
+            //VideoMF.VideoInit();
             //if (this.ActualHeight < 780)
             //    Ctl.MaxHeight = 600;
         }

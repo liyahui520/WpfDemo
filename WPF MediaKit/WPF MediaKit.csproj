@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6075EA03-75AB-46F1-939E-6F7A3F537903}</ProjectGuid>
+    <ProjectGuid>{1CF6161B-74F6-40A4-9363-60BD027418E4}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CameraMF</RootNamespace>
-    <AssemblyName>CameraMF</AssemblyName>
+    <RootNamespace>WPFMediaKit</RootNamespace>
+    <AssemblyName>WPFMediaKit</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -26,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,10 +41,12 @@
   <ItemGroup>
     <Reference Include="DirectShowLib-2005, Version=2.1.0.17035, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dll\DirectShowLib-2005.dll</HintPath>
+      <HintPath>Assemblies\DirectShowLib-2005.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,19 +56,49 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Windows">
-      <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.17763.0\Windows.winmd</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WPFMediaKit, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dll\WPFMediaKit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\CameraInfo.cs" />
+    <Compile Include="Threading\WorkDispatcher.cs" />
+    <Compile Include="Threading\WorkDispatcherObject.cs" />
+    <Compile Include="DirectShow\Controls\D3DRenderer.cs" />
+    <Compile Include="DirectShow\Controls\DvdPlayerElement.cs" />
+    <Compile Include="DirectShow\Controls\MediaDetectorElement.cs" />
+    <Compile Include="DirectShow\Controls\MediaElementBase.cs" />
+    <Compile Include="DirectShow\Controls\MediaSeekingElement.cs" />
+    <Compile Include="DirectShow\Controls\MediaUriElement.cs" />
+    <Compile Include="DirectShow\Controls\MultimediaUtil.cs" />
+    <Compile Include="DirectShow\Controls\ValueConverters.cs" />
+    <Compile Include="DirectShow\Controls\VideoCaptureElement.cs" />
+    <Compile Include="DirectShow\MediaPlayers\BaseClasses.cs" />
+    <Compile Include="DirectShow\MediaPlayers\ClassId.cs" />
+    <Compile Include="DirectShow\MediaPlayers\DirectShowUtil.cs" />
+    <Compile Include="DirectShow\MediaPlayers\DvdPlayer.cs" />
+    <Compile Include="DirectShow\MediaPlayers\FilterFromFile.cs" />
+    <Compile Include="DirectShow\MediaPlayers\Filters.cs" />
+    <Compile Include="DirectShow\MediaPlayers\MediaDetector.cs" />
+    <Compile Include="DirectShow\MediaPlayers\MediaSeekingPlayer.cs" />
+    <Compile Include="DirectShow\MediaPlayers\MediaUriPlayer.cs" />
+    <Compile Include="DirectShow\MediaPlayers\PropertyPageHelper.cs" />
+    <Compile Include="DirectShow\MediaPlayers\VideoCapturePlayer.cs" />
+    <Compile Include="DirectShow\MediaPlayers\Vmr9Allocator.cs" />
+    <Compile Include="DirectX\Direct3D.cs" />
+    <Compile Include="Effects\DeeperColor.cs" />
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MediaDetectorGeneric.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MediaFoundation\COMUtils.cs" />
+    <Compile Include="MediaFoundation\EvrPresenter.cs" />
+    <Compile Include="MediaFoundation\Interop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -81,29 +112,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="UCMFVideo.xaml.cs">
-      <DependentUpon>UCMFVideo.xaml</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Effects\DeeperColor.ps" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UCMFVideo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tools\Tools.csproj">
-      <Project>{53cf764a-ba45-4827-852a-185b4c341b48}</Project>
-      <Name>Tools</Name>
-    </ProjectReference>
+    <Content Include="Assemblies\DirectShowLib-2005.dll" />
+    <Content Include="Effects\DeeperColor.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

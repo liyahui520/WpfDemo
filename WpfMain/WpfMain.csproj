@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -84,6 +85,10 @@
     <Reference Include="DevExpress.Xpf.Printing.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Ribbon.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.RichEdit.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DirectShowLib-2005, Version=2.1.0.17035, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dll\DirectShowLib-2005.dll</HintPath>
+    </Reference>
     <Reference Include="DrawTools">
       <HintPath>..\Libs\DrawTools.dll</HintPath>
     </Reference>
@@ -149,6 +154,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controlls\UCMFVideo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controlls\UCPrintNotes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -195,6 +204,9 @@
     </Compile>
     <Compile Include="Controlls\UCMenu.xaml.cs">
       <DependentUpon>UCMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controlls\UCMFVideo.xaml.cs">
+      <DependentUpon>UCMFVideo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controlls\UCPrintNotes.xaml.cs">
       <DependentUpon>UCPrintNotes.xaml</DependentUpon>
@@ -402,10 +414,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CameraMF\CameraMF.csproj">
-      <Project>{6075ea03-75ab-46f1-939e-6f7a3f537903}</Project>
-      <Name>CameraMF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CuPrint\CuPrint.csproj">
       <Project>{bd9cfe42-fede-4b42-a476-908bd40373a7}</Project>
       <Name>CuPrint</Name>
@@ -421,6 +429,10 @@
     <ProjectReference Include="..\Tools\Tools.csproj">
       <Project>{53cf764a-ba45-4827-852a-185b4c341b48}</Project>
       <Name>Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPF MediaKit\WPF MediaKit.csproj">
+      <Project>{1cf6161b-74f6-40a4-9363-60bd027418e4}</Project>
+      <Name>WPF MediaKit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

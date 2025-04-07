@@ -12,29 +12,34 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Windows.UI.Xaml.Controls;
 using DirectShowLib;
-using Tools.App;
-using WPFMediaKit.DirectShow.Controls;
 
-namespace CameraMF
+namespace WpfMain.Controlls
 {
     /// <summary>
     /// UCMFVideo.xaml 的交互逻辑
     /// </summary>
-    public partial class UCMFVideo : System.Windows.Controls.UserControl
-    { 
+    public partial class UCMFVideo : UserControl
+    {
         public UCMFVideo()
         {
             InitializeComponent();
-            var devices = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
-            var device = devices.FirstOrDefault(d => d.DevicePath == AppStatic.VideoConfig.VideoDecive);
+            VideoInit();
+
+
+        }
+
+        public void VideoInit()
+        {
+            var devices = DsDevice.GetDevicesOfCat(DirectShowLib.FilterCategory.VideoInputDevice);
+            var device = devices[0];
             if (device != null)
             {
                 vce.Pause();
+                vce.EnableSampleGrabbing = true;
                 vce.VideoCaptureDevice = device;
-                vce.Play();
-                vce.ShowPropertyPage();
+                vce.UseYuv = true;
+
             }
             else
             {
@@ -42,9 +47,9 @@ namespace CameraMF
             }
         }
 
-        private void UCMFVideo_OnLoaded(object sender, RoutedEventArgs e)
+        public void Stop()
         {
-           
+            vce.Pause();
         }
     }
 }

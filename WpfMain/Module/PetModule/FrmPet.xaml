@@ -6,8 +6,8 @@
              xmlns:local="clr-namespace:WpfMain.Module.PetModule"
              xmlns:hc="https://handyorg.github.io/handycontrol" 
              mc:Ignorable="d" 
-             xmlns:wm="clr-namespace:WpfMain.Module"
-             xmlns:cameraMf="clr-namespace:CameraMF;assembly=CameraMF"
+             xmlns:wm="clr-namespace:WpfMain.Module" 
+             xmlns:controls1="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
              d:DesignHeight="450" d:DesignWidth="1800"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              Loaded="UserControl_Loaded"
@@ -177,10 +177,9 @@
                     <Border.Background>
                         <SolidColorBrush Color="#666666" Opacity="0.6"/>
                     </Border.Background>
-                    <cameraMf:UCMFVideo/>
                 </Border>
+                <!--<Controlls:UCMFVideo x:Name="UcmfVideo"/>-->
 
- 
             </Grid>
             <Grid Grid.Column="2">
                 <Border  CornerRadius="10">
