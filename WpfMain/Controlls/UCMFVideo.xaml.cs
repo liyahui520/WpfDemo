@@ -1,8 +1,18 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using DirectShowLib;
+using Tools.App;
+using Tools.Extend;
 using WPFMediaKit.DirectShow.Controls;
+using WPFMediaKit.DirectShow.MediaPlayers;
+using WPFMediaKit.Manager;
+using MediaState = WPFMediaKit.DirectShow.MediaPlayers.MediaState;
 
 namespace WpfMain.Controlls
 {
@@ -13,11 +23,18 @@ namespace WpfMain.Controlls
     {
         private bool sliderDrag;
         private bool sliderMediaChange;
+        public bool isStart = false;
+
+        private static string videoFileName = Path.Combine(AppVideoConfig.TempPath, "{0}." + AppStatic.VideoConfig.VideoType);
+        private static string wavFileName = Path.Combine(AppVideoConfig.TempPath, "{0}.wav");
+
+        private CameraRecorderManager Camra;
 
         public UCMFVideo()
         {
             InitializeComponent();
             SetCameraCaptureElementVisible(false);
+            Camra = new CameraRecorderManager(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")), string.Format(wavFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
         }
 
         private void SetCameraCaptureElementVisible(bool visible)
@@ -92,12 +109,77 @@ namespace WpfMain.Controlls
         private void cobVideoSource_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             SetCameraCaptureElementVisible(true);
-            cameraCaptureElement.VideoCaptureDevice = MultimediaUtil.VideoInputDevices[1];
+            cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
+            cameraCaptureElement.OutputFileName = string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss"));
+            cameraCaptureElement.LoadedBehavior = MediaState.Play;
+            Camra.Camera = cameraCaptureElement;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            cobVideoSource_SelectionChanged(null,null);
+            cobVideoSource_SelectionChanged(null, null);
         }
+
+        #region 录像，拍照功能
+
+        /// <summary>
+        /// 拍照
+        /// </summary>
+        /// <returns></returns>
+        public System.Drawing.Image Capture()
+        {
+            System.Drawing.Image img = null;
+            // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)cameraCaptureElement.ActualWidth, (int)cameraCaptureElement.ActualHeight, 96, 96, PixelFormats.Default);
+            // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
+            cameraCaptureElement.Measure(cameraCaptureElement.RenderSize);
+            cameraCaptureElement.Arrange(new Rect(cameraCaptureElement.RenderSize));
+            bmp.Render(cameraCaptureElement);
+
+            // 创建一个JPEG编码器 
+            BitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmp));
+
+            // 使用内存流保存编码后的图像数据 
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                encoder.Save(ms);
+                byte[] captureData = ms.ToArray();
+                img = captureData.String2Image();
+            }
+
+            return img;
+        }
+
+        public async void Start()
+        {
+            Camra.SetAviFilePath(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
+            await Camra.Start();
+        }
+
+        private void CameraCaptureElement_NewVideoSample(object sender, VideoSampleArgs e)
+        {
+
+        }
+
+
+        public void AutoWavRecorder(bool isOpen)
+        {
+            Camra.AutoWavRecorder(string.Format(wavFileName, DateTime.Now.ToString("yyyyMMddHHmmss")), isOpen);
+            isStart = true;
+        }
+
+        public string End()
+        {
+            return Camra.End();
+        }
+
+        public void Stop()
+        {
+            Camra.Pause();
+        }
+
+        #endregion
+
     }
 }

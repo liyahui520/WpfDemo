@@ -39,9 +39,18 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge.Video.FFMPEG">
+      <HintPath>..\Libs\AForge.Video.FFMPEG.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.VFW">
+      <HintPath>..\Libs\AForge.Video.VFW.dll</HintPath>
+    </Reference>
     <Reference Include="DirectShowLib-2005, Version=2.1.0.26626, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\DirectShowLib-2005.dll</HintPath>
+    </Reference>
+    <Reference Include="HandyControl">
+      <HintPath>..\Libs\HandyControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -95,6 +104,8 @@
     <Compile Include="Effects\DeeperColor.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="LogManager.cs" />
+    <Compile Include="Manager\CameraRecorderManager.cs" />
+    <Compile Include="Manager\MediaResourceManager.cs" />
     <Compile Include="MediaFoundation\COMUtils.cs" />
     <Compile Include="MediaFoundation\EvrPresenter.cs" />
     <Compile Include="MediaFoundation\Interop.cs" />
@@ -128,6 +139,16 @@
   <ItemGroup>
     <None Include="Assemblies\DirectShowLib-2005.dll" />
     <Content Include="Effects\DeeperColor.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Record\Record.csproj">
+      <Project>{503C2C71-8334-4930-B711-69E286E10B24}</Project>
+      <Name>Record</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Tools.csproj">
+      <Project>{53cf764a-ba45-4827-852a-185b4c341b48}</Project>
+      <Name>Tools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

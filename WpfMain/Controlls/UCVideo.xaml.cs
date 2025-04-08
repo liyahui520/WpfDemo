@@ -65,14 +65,15 @@ namespace WpfMain.Controlls
             InitializeComponent();
             _vw = width;
             _vh = height;
+            videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
+            wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
+            recorder = new CameraRecorder(videoFileName, wavFileName, 30, false, VideoCodec.MSMPEG4v3);
+            Task.Run(() => { InitVideo(); });
         }
         private async void UCVideo_OnLoaded(object sender, RoutedEventArgs e)
         {
 
-            videoFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + "." + AppStatic.VideoConfig.VideoType);
-            wavFileName = Path.Combine(AppVideoConfig.TempPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
-            recorder = await Task.FromResult(new CameraRecorder(videoFileName, wavFileName, 30, false, VideoCodec.MSMPEG4v3));
-            await Task.Run(() => { InitVideo();});
+
 
         }
 
@@ -127,7 +128,7 @@ namespace WpfMain.Controlls
                 else
                     view.Width = (double)CaptureDevice.VideoResolution.FrameSize.Width / (double)CaptureDevice.VideoResolution.FrameSize.Height * _vh;
             });
-            
+
 
 
 
@@ -287,7 +288,7 @@ namespace WpfMain.Controlls
         private async void button_Play_Click(object sender, RoutedEventArgs e)
         {
             SetAviFilePath();
-            System.Windows.Application.Current.Dispatcher.Invoke(() => sourcePlayer.Start()); 
+            System.Windows.Application.Current.Dispatcher.Invoke(() => sourcePlayer.Start());
         }
 
         private void button_Capture_Click(object sender, RoutedEventArgs e)

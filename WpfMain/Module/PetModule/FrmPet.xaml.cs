@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AForge.Video.DirectShow;
+using AForge.Video.FFMPEG;
 using CuPrint;
 using DirectShowLib;
 using Entity.Entity;
+using Record;
 using Tools.App;
 using Tools.Extend;
 using WpfMain.Controlls;
@@ -23,24 +26,7 @@ namespace WpfMain.Module.PetModule
     /// FrmPet.xaml 的交互逻辑
     /// </summary>
     public partial class FrmPet : UserControl, ICustom
-    {
-        //public List<object> ResolutionDataList = new List<object>();
-
-        //public static readonly DependencyProperty DemoModelProperty = DependencyProperty.Register(
-        //    nameof(DemoModel), typeof(PropertyGridDemoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyGridDemoModel)));
-
-        //public PropertyGridDemoModel DemoModel
-        //{
-        //    get => (PropertyGridDemoModel)GetValue(DemoModelProperty);
-        //    set => SetValue(DemoModelProperty, value);
-        //}
-
-        /// <summary>
-        /// 当前检查信息
-        /// </summary>
-        //public TestInfo tInfo = new TestInfo();
-
-        public UCVideo Video { get; set; }
+    { 
         public UCMFVideo VideoMF { get; set; }
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
@@ -59,8 +45,7 @@ namespace WpfMain.Module.PetModule
         {
             get => (TestInfo)GetValue(TestInfoProperty);
             set => SetValue(TestInfoProperty, value);
-        }
-
+        } 
         public FrmPet()
         {
             InitializeComponent();
@@ -72,7 +57,7 @@ namespace WpfMain.Module.PetModule
             tInfo.Result = new TestResult();
             tInfo.Result.Images = new List<ImageItem>();
             DataContext = this;
-            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
+            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped; 
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -86,9 +71,10 @@ namespace WpfMain.Module.PetModule
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            Video?.OnVideoSetCamera(AForge.Video.DirectShow.VideoProcAmpProperty.Brightness, int.Parse(e.NewValue.ToString()), AForge.Video.DirectShow.VideoProcAmpFlags.Manual);
+        { 
         }
+
+        private bool isStart = false;
 
         private void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
@@ -100,14 +86,14 @@ namespace WpfMain.Module.PetModule
 
                     UCSetting setting = new UCSetting();
                     setting.Owner = AppStatic.MainWindow;
-                    setting.ShowDialog();
-                    Video.SetAviFilePath();
+                    setting.ShowDialog(); 
                     return;
                 }
-            }
-            if (Video.isStart)
+            } 
+            if (isStart)
             {
-                string videoPath = Video?.End();
+                isStart = false;
+                string videoPath = VideoMF?.End();
                 if (tInfo.Result.Vedios == null)
                     tInfo.Result.Vedios = new List<MediaItem>();
                 var old = tInfo.Result;
@@ -117,13 +103,13 @@ namespace WpfMain.Module.PetModule
                 old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
                 tInfo.Result = old;
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
-                StartCamp.Content = "开始录像";
+                StartCamp.Content = "开始录像"; 
             }
             else
             {
-
-                Video?.SetAviFilePath();
-                Video?.Start();
+                isStart = true;
+                //Video?.SetAviFilePath(); 
+                VideoMF?.Start();
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = false };
                 StartCamp.Content = "停止录像";
             }
@@ -131,7 +117,7 @@ namespace WpfMain.Module.PetModule
 
         private void StopCamp_OnClick(object sender, RoutedEventArgs e)
         {
-            Video?.Stop();
+            VideoMF?.Stop();
         }
 
         //拍照
@@ -150,11 +136,11 @@ namespace WpfMain.Module.PetModule
                 }
             }
             EndCamp.IsEnabled = false;
-            System.Drawing.Image img = Video?.Capture();
+            System.Drawing.Image img = VideoMF?.Capture();
             if (img != null)
             {
                 //string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;
-                string fullName = $"0{tInfo.Result.Images.Count + 1}.{AppStatic.VideoConfig.ImageType}";
+                string fullName = $"0{tInfo.Result?.Images?.Count + 1}.{AppStatic.VideoConfig.ImageType}";
                 try
                 {
                     if (tInfo.Result.Images == null)
@@ -184,8 +170,7 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            VideoModel.ExposureModel = new Exposure() { IsAuto = true, IsEnable = VideoModel.ExposureModel.IsEnable };
-            Video?.AutoWavRecorder(true);
+            VideoMF?.AutoWavRecorder(true);
         }
 
         /// <summary>
@@ -195,14 +180,13 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void ToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            VideoModel.ExposureModel = new Exposure() { IsAuto = false, IsEnable = VideoModel.ExposureModel.IsEnable };
-            Video?.AutoWavRecorder(false);
+            VideoMF?.AutoWavRecorder(false);
         }
 
         public void Closed()
         {
             //Video?.Close();
-           // VideoMF.Stop();
+            //VideoMF.Stop();
         }
 
         public void Refresh()
@@ -222,7 +206,7 @@ namespace WpfMain.Module.PetModule
                 if (HandyControl.Controls.MessageBox.Ask($"摄像头未获取到", "系统提示") == MessageBoxResult.OK)
                     return;
 
-            if (Video.isStart)
+            if (VideoMF.isStart)
             {
                 HandyControl.Controls.MessageBox.Warning($"正在录像中，请先停止！", "系统提示");
                 return;
@@ -251,7 +235,7 @@ namespace WpfMain.Module.PetModule
         /// <exception cref="NotImplementedException"></exception>
         private void UCFiles_OnImagesClick(object sender, TestInfo e)
         {
-            Video?.Close();
+            VideoMF?.Stop();
             Files.SelectedImageItem = (sender as UCFiles).SelectedImageItem;
             FrmBackModule pet = new FrmBackModule(new FrmPetImage(e, (sender as UCFiles).SelectedImageItem));
             pet.title.Text = "查看";
@@ -259,7 +243,7 @@ namespace WpfMain.Module.PetModule
             pet.ShowDialog();
             tInfo = new TestInfo();
             tInfo = e;
-            Video?.InitVideo();
+            VideoMF?.Start();
 
         }
 
