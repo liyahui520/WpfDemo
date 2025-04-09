@@ -25,7 +25,7 @@ using System.Windows.Controls;
 
 namespace WPFMediaKit.Manager
 {
-    public class CameraRecorderManager 
+    public class CameraRecorderManager
     {
         #region Fields
         private int DEFAULT_FRAME_RATE = 10;
@@ -35,7 +35,7 @@ namespace WPFMediaKit.Manager
         private int FrameRate;
         private Rectangle ScreenArea;
         protected VideoFileWriter VideoWriter;
-        private FolderBrowserDialog FolderBrowser; 
+        private FolderBrowserDialog FolderBrowser;
         private AVIWriter aviWriter;
         private VideoCodec VideoCodec;
 
@@ -127,32 +127,17 @@ namespace WPFMediaKit.Manager
         /// <exception cref="NotImplementedException"></exception>
         public DsDevice initCapture()
         {
-            DsDevice devs ;
-            try
-            {
-                device =
-                    MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
-                if (device == null)
-                {
-                    HandyControl.Controls.MessageBox.Error("未获取到摄像头信息", "系统提示");
-                    return null;
-                }
-
-                devs= device;
-            }
-            catch
-            {
-                HandyControl.Controls.MessageBox.Error("摄像头不存在!", "系统提示");
-                return null;
-            }
-            return devs;
+            device = MultimediaUtil.VideoInputDevices?.First();
+            if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoDecive))
+                device = MultimediaUtil.VideoInputDevices?.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
+            return device;
         }
 
         /// <summary>
         /// 开始
         /// </summary> 
         public virtual async Task Start()
-        { 
+        {
             this.RecorderStatus = RecorderStatus.Start;
             isProcessingStream = true;
             ////设置回调,aforge会不断从这个回调推出图像数据
@@ -172,7 +157,7 @@ namespace WPFMediaKit.Manager
             {
                 while (isProcessingStream)
                 {
-                    
+
                     Dispatcher.CurrentDispatcher.Invoke(() =>
                     {
                         var renderTarget = new RenderTargetBitmap(
@@ -208,7 +193,7 @@ namespace WPFMediaKit.Manager
                             {
                             }
                         }
-                       
+
                     });
 
                     // 控制处理频率（约30fps）
@@ -225,7 +210,7 @@ namespace WPFMediaKit.Manager
         {
             try
             {
-              
+
                 Dispatcher.CurrentDispatcher.Invoke(() =>
                 {
                     var renderTarget = new RenderTargetBitmap(
@@ -243,7 +228,7 @@ namespace WPFMediaKit.Manager
             }
             finally
             {
-                
+
             }
 
             return null;
@@ -252,14 +237,14 @@ namespace WPFMediaKit.Manager
         // 停止视频流处理 
         public void StopStream()
         {
-            isProcessingStream = false; 
+            isProcessingStream = false;
         }
 
         public void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             // 确保停止所有处理 
             isProcessingStream = false;
-            Camera.Close(); 
+            Camera.Close();
         }
 
         private void Camera_NewVideoSample()
@@ -302,7 +287,7 @@ namespace WPFMediaKit.Manager
                 // ignored
                 Console.WriteLine(ex.Message);
             }
-        } 
+        }
         /// <summary>
         /// 结束
         /// </summary>
@@ -354,7 +339,7 @@ namespace WPFMediaKit.Manager
         /// 暂停
         /// </summary>
         public void Pause()
-        {  
+        {
             this.RecorderStatus = RecorderStatus.Pause;
         }
 
