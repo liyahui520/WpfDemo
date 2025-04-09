@@ -163,10 +163,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controlls\UCVideo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controlls\UCWpfViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -211,9 +207,6 @@
     </Compile>
     <Compile Include="Controlls\UCPrintNotes.xaml.cs">
       <DependentUpon>UCPrintNotes.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controlls\UCVideo.xaml.cs">
-      <DependentUpon>UCVideo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controlls\UCWpfViewer.xaml.cs">
       <DependentUpon>UCWpfViewer.xaml</DependentUpon>
