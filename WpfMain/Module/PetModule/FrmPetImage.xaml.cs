@@ -286,6 +286,16 @@ namespace WpfMain.Module.PetModule
             Point screenPoint = UCD.PointToScreen(new Point(0, 0));
             new MaskWindow(new Rectangle { RadiusX = screenPoint.X, RadiusY = screenPoint.Y, Width = UCD.ActualWidth, Height = UCD.ActualHeight }).Show();
         }
+
+        /// <summary>
+        /// 撤销
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            UCD.Revoke();
+        }
     }
 }
 

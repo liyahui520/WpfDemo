@@ -1,18 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using DrawTools;
+using DrawTools.Utils;
+using Entity.Entity;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
-using DrawTools;
-using DrawTools.Utils;
-using Entity.Entity;
-using Newtonsoft.Json.Linq;
 using Tools.Extend;
 using WpfMain.Logic;
 
@@ -23,16 +21,10 @@ namespace PacsCore
     /// </summary>
     public partial class UCImageItemView : UserControl
     {
-
-
+        private List<Operate> operates = new List<Operate>();
         private bool mouseDown;
         private Point mouseXY;
-        private Point imageSize;
-        private double zoom = 1;
-        private double szoom = 1;
-        private int oldthreshold;
         private ImageItem tinfo;
-        private bool iszoom;
 
         public event EventHandler<ImageItem> SaveClick;
 
@@ -59,6 +51,8 @@ namespace PacsCore
                     // 绘制灰度图
                     System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(tinfo.BitBuffer.Byte2Bitmap(), value);
                     dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
+                    operates.Add(new Operate(OperateType.Threshold, Threshold));
+
                 }
 
                 SetValue(ThresholdProperty, value);
@@ -107,7 +101,7 @@ namespace PacsCore
 
         private void DrawingCanvas_OnVisualChildrenAdd(Visual obj)
         {
-
+            operates.Add(new Operate( OperateType.Dring, obj));
         }
 
         private void UCImageItemView_Loaded(object sender, RoutedEventArgs e)
@@ -130,17 +124,7 @@ namespace PacsCore
             LoadDicomImage();
             FileInfo();
             LoadRuler();
-            iszoom = true;
-        }
-
-        /// <summary>
-        /// 调对比度
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void SetThreshold(int threshold)
-        {
-
+            //iszoom = true;
         }
 
         /// <summary>
@@ -170,11 +154,14 @@ namespace PacsCore
                 transform.ScaleX -= delta;
                 transform.ScaleY -= delta;
             }
-
-
-            zoom = transform.ScaleX * szoom;
+            operates.Add(new Operate(OperateType.Zoom,new Rect(transform.CenterX, transform.CenterY, transform.ScaleX, transform.ScaleY)));
             LoadRuler();
         }
+
+        /// <summary>
+        /// 缩放
+        /// </summary>
+        /// <param name="delta"></param>
         public void DowheelZoom(double delta)
         {
             DowheelZoom(new Point(IMG.ActualWidth / 2, IMG.ActualHeight / 2), delta);
@@ -186,11 +173,11 @@ namespace PacsCore
         /// <param name="e"></param>
         public void Rotate(int angle)
         {
-
             var group = GridImage.RenderTransform as TransformGroup;
             var transform = group.Children[2] as RotateTransform;
             transform.CenterX = IMG.ActualWidth / 2;
             transform.CenterY = IMG.ActualHeight / 2;
+            operates.Add(new Operate(OperateType.Rotate, transform.Angle));
             if (transform.Angle + angle == 360)
             {
                 transform.Angle = 0;
@@ -211,6 +198,7 @@ namespace PacsCore
             scale.CenterX = IMG.ActualWidth / 2;
             scale.CenterY = IMG.ActualHeight / 2;
             scale.ScaleX = -scale.ScaleX;
+            operates.Add(new Operate(OperateType.Flip, 0));
         }
 
         /// <summary>
@@ -221,13 +209,73 @@ namespace PacsCore
             Threshold = 0;
             LoadDicomImage();
             LoadRuler();
+            operates.Clear();
         }
+
+        /// <summary>
+        /// 撤销上一步操作
+        /// </summary>
+        public void Revoke()
+        {
+            if (operates.Count == 0)
+                return;
+            Operate ot = operates.Last();
+            var group = GridImage.RenderTransform as TransformGroup;
+            switch (ot.Type)
+            {
+                case OperateType.Dring:
+                    this.drawingCanvas.DeleteVisual((Visual)ot.Value);
+                    break;
+                case OperateType.Threshold:
+                    System.Drawing.Bitmap newBitmap = ScreenUtils.Contrast(tinfo.BitBuffer.Byte2Bitmap(), (int)ot.Value);
+                    dicomImage1.Source = ScreenUtils.ConvertBitmapToBitmapImage(newBitmap);
+                    SetValue(ThresholdProperty, (int)ot.Value);
+            break;
+                case OperateType.Flip:
+                    var scale = group.Children[0] as ScaleTransform;
+                    scale.CenterX = IMG.ActualWidth / 2;
+                    scale.CenterY = IMG.ActualHeight / 2;
+                    scale.ScaleX = -scale.ScaleX;
+                    break;
+                case OperateType.Rotate:
+                    var ortateform = group.Children[2] as RotateTransform;
+                    ortateform.CenterX = IMG.ActualWidth / 2;
+                    ortateform.CenterY = IMG.ActualHeight / 2;
+                    ortateform.Angle = (double)ot.Value;
+                    break;
+                case OperateType.Zoom:
+                    ScaleTransform scaleform = group.Children[0] as ScaleTransform;
+                    Rect rect = (Rect)ot.Value;
+                    scaleform.CenterX = rect.X;
+                    scaleform.CenterY = rect.Y;
+                    scaleform.ScaleX = rect.Width;
+                    scaleform.ScaleY = rect.Height;
+                    break;
+                case OperateType.Move:
+                    var transform = group.Children[3] as TranslateTransform;
+                    var po = (Point)ot.Value;
+                    transform.X = po.X;
+                    transform.Y = po.Y;
+                    mouseXY = po;
+                    break;
+
+            }
+            operates.Remove(ot);
+        }
+
+
+        /// <summary>
+        /// 清理所有画图
+        /// </summary>
         public void Clear()
         {
             drawingCanvas.Clear();
         }
 
-
+        /// <summary>
+        /// 设置画图工具
+        /// </summary>
+        /// <param name="type"></param>
         public void Draw(DrawToolType type)
         {
             drawingCanvas.DrawingToolType = type;
@@ -241,7 +289,9 @@ namespace PacsCore
 
         }
 
-
+        /// <summary>
+        /// 保存图片
+        /// </summary>
         public void SaveImage()
         {
             var frame = ToBitmapFrame();
@@ -258,14 +308,15 @@ namespace PacsCore
 
         #region 私有
 
+
+
         /// <summary>
         /// 显示图片信息
         /// </summary>
         private void FileInfo()
         {
             StackPanelInfo.Children.Clear();
-            imageSize = new Point();
-
+            //imageSize = new Point();
         }
 
 
@@ -423,12 +474,30 @@ namespace PacsCore
         private void IMG1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             mouseDown = false;
+
+
+            if (operates.Count == 0)
+                return;
+
+            var op = operates.Last();
+            if (op.Type != OperateType.Move)
+                return;
+
+            var po = (Point)op.Value;
+            var group = GridImage.RenderTransform as TransformGroup;
+            var transform = group.Children[3] as TranslateTransform;
+            if (po.X == transform.X && po.Y == transform.Y)
+                operates.Remove(op);
         }
         private void IMG1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var img = BorderImg;
             mouseDown = true;
             mouseXY = e.GetPosition(img);
+
+            var group = GridImage.RenderTransform as TransformGroup;
+            var transform = group.Children[3] as TranslateTransform;
+            operates.Add(new Operate(OperateType.Move, new Point(transform.X, transform.Y)));
         }
 
         /// <summary>
@@ -448,8 +517,6 @@ namespace PacsCore
             var rotatetransform = group.Children[2] as RotateTransform;
 
             var position = e.GetPosition(img);
-
-            //Console.WriteLine($"X:{position.X}--{mouseXY.X} \r\n Y:{position.Y}--{mouseXY.Y}");
 
             if (rotatetransform.Angle == 90)
             {
@@ -504,6 +571,12 @@ namespace PacsCore
 
     public class Operate
     {
+        public Operate() { }
+        public Operate(OperateType type, object value)
+        {
+            Type = type;
+            Value = value;
+        }
         public OperateType Type { get; set; }
 
         public object Value { get; set; }
@@ -530,13 +603,17 @@ namespace PacsCore
         /// <summary>
         /// 旋转
         /// </summary>
-        Rotate=4,
+        Rotate = 4,
 
         /// <summary>
         /// 缩放
         /// </summary>
-        Zoom =5,
+        Zoom = 5,
 
+        /// <summary>
+        /// 移动
+        /// </summary>
+        Move=6,
     }
 
 }
