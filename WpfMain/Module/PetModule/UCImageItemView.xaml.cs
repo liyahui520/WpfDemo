@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -72,12 +73,6 @@ namespace PacsCore
             get => (double)GetValue(ZoomProperty);
             set
             {
-                //if (!iszoom)
-                //    return;
-                //if (value == zoom)
-                //    return;
-                //DowheelZoom(zoom > value ? 0.25 : -0.25);
-
                 SetValue(ZoomProperty, value);
             }
         }
@@ -107,7 +102,14 @@ namespace PacsCore
             InitializeComponent();
             tinfo = info;
             Loaded += UCImageItemView_Loaded;
+            drawingCanvas.OnVisualChildrenAdd += DrawingCanvas_OnVisualChildrenAdd;
         }
+
+        private void DrawingCanvas_OnVisualChildrenAdd(Visual obj)
+        {
+
+        }
+
         private void UCImageItemView_Loaded(object sender, RoutedEventArgs e)
         {
             SetDataset();
@@ -197,12 +199,6 @@ namespace PacsCore
             transform.Angle += angle;
         }
 
-
-        public void Clear()
-        {
-            drawingCanvas.Clear();
-        }
-
         /// <summary>
         /// 翻转
         /// </summary>
@@ -226,7 +222,10 @@ namespace PacsCore
             LoadDicomImage();
             LoadRuler();
         }
-
+        public void Clear()
+        {
+            drawingCanvas.Clear();
+        }
 
 
         public void Draw(DrawToolType type)
@@ -245,33 +244,15 @@ namespace PacsCore
 
         public void SaveImage()
         {
-            //var renderBitmap = new RenderTargetBitmap((int)dicomImage1.ActualWidth, (int)dicomImage1.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            //renderBitmap.Render(dicomImage1);
-
-            //PngBitmapEncoder pbe = new PngBitmapEncoder();
-            //pbe.Frames.Add(BitmapFrame.Create(renderBitmap));
-
-            //using (Stream sf = File.OpenWrite(DateTime.Now.ToString("yyyyMMddHHmmss") + ".png"))
-            //    pbe.Save(sf);
-
-
-
-
             var frame = ToBitmapFrame();
 
             // 创建 PNG 编码器
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(frame);
-
-            //// 保存到文件
-            //using (FileStream stream = new FileStream("aa.png", FileMode.OpenOrCreate))
-            //    encoder.Save(stream); 
             tinfo.ImageSource = frame;
             dicomImage1.Source = frame;
             drawingCanvas.Clear();
             RaiseSomeActionTriggered(tinfo);
-            //drawingCanvas.Visibility = Visibility.Hidden;
-
         }
         #endregion
 
@@ -305,13 +286,11 @@ namespace PacsCore
             if (tinfo.PixelSpacing == 0)
                 return;
 
-
             //resolution
             Thickness ltk = new Thickness(0, 0, 0, 0);
             Thickness btk = new Thickness(0, 0, 0, 0);
             double x1, y2, cl = 100 / value * Zoom;
             double c2 = cl / 100;
-
 
             {
                 //右侧竖标尺
@@ -348,48 +327,6 @@ namespace PacsCore
             IMG.MinHeight = drawingCanvas.MinHeight = drawingCanvas.Height = dicomImage1.MinHeight = dicomImage1.Height = tinfo.ImageSource.Height;
             dicomImage1.Source = tinfo.ImageSource;
 
-
-            /* 等比例缩放 代码
-            //double containerRatio = IMG.ActualWidth / IMG.ActualHeight;
-            //double imageRatio = dinfo.ImageSource.Width / dinfo.ImageSource.Height;
-
-            //double scale;
-            //double newWidth, newHeight;
-
-            //if (imageRatio > containerRatio)
-            //{
-            //    //按宽度缩放
-            //    scale = IMG.ActualWidth / dinfo.ImageSource.Width;
-            //    newWidth = IMG.ActualWidth;
-            //    newHeight = dinfo.ImageSource.Height * scale;
-            //}
-            //else
-            //{
-            //    //按高度缩放
-            //    scale = IMG.ActualHeight / dinfo.ImageSource.Height;
-            //    newHeight = IMG.ActualHeight;
-            //    newWidth = dinfo.ImageSource.Width * scale;
-            //}
-
-            //// 确保不超过容器尺寸
-            //if (newWidth > IMG.ActualWidth)
-            //{
-            //    scale = IMG.ActualWidth / newWidth;
-            //    newWidth = IMG.ActualWidth;
-            //    newHeight *= scale;
-            //}
-
-            //if (newHeight > IMG.ActualHeight)
-            //{
-            //    scale = IMG.ActualHeight / newHeight;
-            //    newHeight = IMG.ActualHeight;
-            //    newWidth *= scale;
-            //}
-
-            //this.Border1.Width = newWidth;
-            //this.Border1.Height = newHeight;
-            */
-
             Zoom = 1;
             TransformGroup group = GridImage.RenderTransform as TransformGroup;
             ScaleTransform transform = group.Children[0] as ScaleTransform;
@@ -397,21 +334,6 @@ namespace PacsCore
             transform.ScaleY = Zoom;
             transform.CenterX = 0;
             transform.CenterY = 0;
-            //double w = IMG.ActualWidth / dinfo.ImageSource.Width;
-            //double h = IMG.ActualHeight / dinfo.ImageSource.Height;
-            //if (w < 1 || h < 1)
-            //{
-
-            //    //transform.CenterX = (IMG.ActualWidth - (dinfo.ImageSource.Width * Zoom)) / 2;
-            //    //transform.CenterY = (IMG.ActualHeight - (dinfo.ImageSource.Height * Zoom)) / 2;
-            //    //transform.ScaleX = Zoom;
-            //    //transform.ScaleY = Zoom;
-            //}
-            //if (w != 1 || h != 1)
-            //{
-            //    Zoom = w > h ? h : w;
-            //}
-
 
             TranslateTransform transform1 = group.Children[3] as TranslateTransform;
             transform1.X = transform1.Y = 0;
@@ -460,16 +382,8 @@ namespace PacsCore
 
             foreach (var draw in drawingCanvas.GetDrawGeometries())
             {
-
-                //if (dicomImage1.FlowDirection == FlowDirection.RightToLeft)
-                //    draw.Drawing.Transform = new SkewTransform(180, 0, pixelWidth / 2, pixelHeight / 2);
-                //else
-                //    draw.Drawing.Transform = new SkewTransform(0, 0, 0, 0);
                 dc.DrawDrawing(draw.Drawing);
             }
-
-
-
             dc.Close();
 
             return root;
@@ -508,28 +422,20 @@ namespace PacsCore
 
         private void IMG1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //var img = sender as Border;// ContentControl;
-            //if (img == null)
-            //{
-            //    return;
-            //}
-            var img = BorderImg;
-            //img.ReleaseMouseCapture();
             mouseDown = false;
         }
         private void IMG1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //var img = sender as Border;//ContentControl;
-            //if (img == null)
-            //    return;
-
             var img = BorderImg;
-
-            //img.CaptureMouse();
             mouseDown = true;
             mouseXY = e.GetPosition(img);
         }
 
+        /// <summary>
+        /// 移动
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="e"></param>
         private void Domousemove(Border img, MouseEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
@@ -596,6 +502,41 @@ namespace PacsCore
 
 
 
+    public class Operate
+    {
+        public OperateType Type { get; set; }
 
+        public object Value { get; set; }
+
+    }
+
+    public enum OperateType
+    {
+        /// <summary>
+        /// 画图
+        /// </summary>
+        Dring = 1,
+
+        /// <summary>
+        /// 对比度
+        /// </summary>
+        Threshold = 2,
+
+        /// <summary>
+        /// 翻转
+        /// </summary>
+        Flip = 3,
+
+        /// <summary>
+        /// 旋转
+        /// </summary>
+        Rotate=4,
+
+        /// <summary>
+        /// 缩放
+        /// </summary>
+        Zoom =5,
+
+    }
 
 }
