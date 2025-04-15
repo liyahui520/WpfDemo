@@ -1,12 +1,10 @@
-﻿using Record.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -20,8 +18,10 @@ using Record.Extension;
 using Tools.App;
 using Tools.Extend;
 using WPFMediaKit.DirectShow.Controls;
+using AForge.Video.DirectShow;
 using WPFMediaKit.DirectShow.MediaPlayers;
-using System.Windows.Controls;
+using System.Threading;
+using System.Windows.Media.Media3D;
 
 namespace WPFMediaKit.Manager
 {
@@ -127,27 +127,111 @@ namespace WPFMediaKit.Manager
         /// <exception cref="NotImplementedException"></exception>
         public DsDevice initCapture()
         {
-            device = MultimediaUtil.VideoInputDevices?.First();
-            if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoDecive))
-                device = MultimediaUtil.VideoInputDevices?.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
-            return device;
+            DsDevice devs;
+            try
+            {
+                device =
+                    MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
+                if (device == null)
+                {
+                    HandyControl.Controls.MessageBox.Error("未获取到摄像头信息", "系统提示");
+                    return null;
+                }
+
+                devs = device;
+            }
+            catch
+            {
+                HandyControl.Controls.MessageBox.Error("摄像头不存在!", "系统提示");
+                return null;
+            }
+            return devs;
         }
+
 
         /// <summary>
         /// 开始
         /// </summary> 
-        public virtual async Task Start()
+        public virtual void Start()
         {
             this.RecorderStatus = RecorderStatus.Start;
             isProcessingStream = true;
-            ////设置回调,aforge会不断从这个回调推出图像数据
-            //Camera.NewVideoSample += Camera_NewVideoSample;
+            //Camera.Start(AviFilePath);
             //Camera.LoadedBehavior = MediaState.Play;
             ////是否需要录制声音
             //if (wavRecorder != null)
             //    wavRecorder.Start();
             //Camera_NewVideoSample();
-            await Task.Run(ProcessVideoStream);
+            //var bitmap = new Bitmap((int)Camera.Width, (int)Camera.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            //var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, bitmap.PixelFormat);
+            //try
+            //{
+            //    Camera.VideoCaptureDevice.GetCurrentVideoFrame(out IntPtr frame);
+            //    System.Runtime.InteropServices.Marshal.Copy(frame, 0, bitmapData.Scan0, (int)(Camera.Width * Camera.Height * 3));
+            //}
+            //finally
+            //{
+            //    bitmap.UnlockBits(bitmapData);
+            //}
+            //Dispatcher.CurrentDispatcher.Invoke(() => { Camera.Play(); });
+            //var captureDevice = new VideoCaptureDevice(Camera.VideoCaptureDevice.DevicePath);
+            //captureDevice.NewFrame += (sender, e) =>
+            //{
+            //    // 应用灰度滤镜 
+            //    var grayFrame = Grayscale.CommonAlgorithms.BT709.Apply((Bitmap)e.Frame.Clone());
+            //    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+            //    {
+            //        while (isProcessingStream)
+            //        {
+            //            // 获取当前视频帧 
+            //            var frame = grayFrame;
+            //            try
+            //            {
+            //                var img = ((Bitmap)frame.Clone());
+            //                if (!File.Exists(AviFilePath))
+            //                {
+            //                    Console.WriteLine("地址：" + AviFilePath);
+            //                    VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
+            //                }
+
+            //                this.VideoWriter?.WriteVideoFrame(img);
+            //                if ((TotalFrame++) % 100 == 0)
+            //                {
+            //                    WindowApi.ClearMemory();
+            //                }
+            //                img.Dispose();
+            //            }
+            //            catch (Exception e)
+            //            {
+            //                Console.WriteLine(e);
+            //            }
+            //            finally
+            //            {
+            //            } 
+            //            // 控制处理频率（约30fps）
+            //            //System.Threading.Thread.Sleep(30);
+            //        }
+            //    }));
+            //};
+            //captureDevice.Start();
+
+            //ProcessVideoStream();
+            //await Task.Run(ProcessVideoStream);
+        }
+
+        private void Camera_NewVideoSample2(object sender, VideoSampleArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Camera_Initialized(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Camera_NewVideoSample1(object sender, DirectShow.MediaPlayers.VideoSampleArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         // 视频流处理线程 
@@ -155,47 +239,48 @@ namespace WPFMediaKit.Manager
         {
             try
             {
+                //var renderTarget = new RenderTargetBitmap(
+                //    (int)Camera.ActualWidth,
+                //    (int)Camera.ActualHeight,
+                //    96, 96, PixelFormats.Pbgra32);
                 while (isProcessingStream)
                 {
-
-                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)Camera.NaturalVideoWidth, (int)Camera.NaturalVideoHeight, 96, 96, PixelFormats.Rgb128Float);
+                    // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
+                    //Camera.Measure(Camera.RenderSize);
+                    //Camera.Arrange(new Rect(Camera.RenderSize));
+                    renderTarget.Render(Camera);
+                    //renderTarget.Render(Camera);
+                    if (renderTarget != null)
                     {
-                        var renderTarget = new RenderTargetBitmap(
-                            (int)Camera.ActualWidth,
-                            (int)Camera.ActualHeight,
-                            96, 96, PixelFormats.Pbgra32);
-                        renderTarget.Render(Camera);
-                        if (renderTarget != null)
+                        // 获取当前视频帧 
+                        var frame = renderTarget;
+                        try
                         {
-                            // 获取当前视频帧 
-                            var frame = renderTarget;
-                            try
+                            var img = ((Bitmap)frame.ImageSourceToBitmap());
+                            if (!File.Exists(AviFilePath))
                             {
-                                var img = ((Bitmap)frame.Clone().ImageSourceToBitmap());
-                                if (!File.Exists(AviFilePath))
-                                {
-                                    Console.WriteLine("地址：" + AviFilePath);
-                                    VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
-                                }
+                                Console.WriteLine("地址：" + AviFilePath);
+                                VideoWriter?.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
+                            }
 
-                                this.VideoWriter?.WriteVideoFrame(img);
-                                if ((TotalFrame++) % 100 == 0)
-                                {
-                                    WindowApi.ClearMemory();
-                                }
-                                img.Dispose();
-                            }
-                            catch (Exception e)
+                            this.VideoWriter?.WriteVideoFrame(img, DateTime.Now.TimeOfDay);
+                            if ((TotalFrame++) % 100 == 0)
                             {
-                                Console.WriteLine(e);
+                                WindowApi.ClearMemory();
                             }
-                            finally
-                            {
-                            }
+                            img.Dispose();
                         }
-
-                    });
-
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("录像异常");
+                            Console.WriteLine(e.Message);
+                        }
+                        finally
+                        {
+                        }
+                    }
+                    System.Threading.Thread.Sleep(30);
                     // 控制处理频率（约30fps）
                     //System.Threading.Thread.Sleep(30);
                 }
@@ -252,7 +337,7 @@ namespace WPFMediaKit.Manager
             try
             {
                 string ffmpegPath = "ffmpeg.exe";  // 确保ffmpeg在程序目录下 
-                string arguments = $"-f dshow -i video=\"{device.Name}\" -r 25 -vcodec libx264 -preset:v ultrafast -tune:v zerolatency \"test.mp4\"";
+                string arguments = $"-f dshow -i video=\"{device.Name}\" -r 25 -vcodec libx264 -preset:v ultrafast -tune:v zerolatency \"{AviFilePath}\"";
 
                 ffmpegProcess = new Process
                 {
@@ -263,6 +348,8 @@ namespace WPFMediaKit.Manager
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         RedirectStandardInput = true
+                        //RedirectStandardOutput = true,
+                        //RedirectStandardError = true
                     }
                 };
 
@@ -295,7 +382,12 @@ namespace WPFMediaKit.Manager
         {
             try
             {
-
+                foreach (Process process in Process.GetProcessesByName("ffmpeg"))
+                {
+                    process.Kill();
+                }
+                //Camera.Stop();
+                return AviFilePath;
                 isProcessingStream = false;
                 VideoWriter.Close();
                 return AviFilePath;

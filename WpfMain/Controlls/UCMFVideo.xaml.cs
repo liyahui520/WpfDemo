@@ -112,7 +112,14 @@ namespace WpfMain.Controlls
             cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
             cameraCaptureElement.OutputFileName = string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss"));
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
+            cameraCaptureElement.NewVideoSample += CameraCaptureElement_NewVideoSample1;
+            cameraCaptureElement.Play();
             Camra.Camera = cameraCaptureElement;
+        }
+
+        private void CameraCaptureElement_NewVideoSample1(object sender, VideoSampleArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -154,15 +161,14 @@ namespace WpfMain.Controlls
             }
         }
 
-        public async void Start()
+        public  void Start()
         {
             Camra.SetAviFilePath(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
-            await Camra.Start();
+            Camra.Start();
         }
 
         private void CameraCaptureElement_NewVideoSample(object sender, VideoSampleArgs e)
-        {
-
+        { 
         }
 
 

@@ -13,7 +13,7 @@
         <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </UserControl.Resources>
     <Grid x:Name="camp">
-        <controls:VideoCaptureElement x:Name="cameraCaptureElement" Grid.Row="1" EnableSampleGrabbing="True"  FPS="30"
+        <controls:VideoCaptureElement x:Name="cameraCaptureElement" Grid.Row="1" EnableSampleGrabbing="False"  FPS="30"  LoadedBehavior="Play" 
                                       DeeperColor="{Binding IsChecked, ElementName=chkDeeperColor}"
                                       />
     </Grid>

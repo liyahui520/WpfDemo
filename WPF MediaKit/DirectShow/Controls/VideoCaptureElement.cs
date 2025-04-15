@@ -268,6 +268,16 @@ namespace WPFMediaKit.DirectShow.Controls
             }
         }
 
+        public void Start(string path)
+        {
+            //VideoCapturePlayer.StartLX(path);
+        }
+
+        public void Stop()
+        {
+            //VideoCapturePlayer.StopLX();
+        }
+
         /// <summary>
         /// Sets the parameters to the video capture player
         /// </summary>
