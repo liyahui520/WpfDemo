@@ -297,7 +297,7 @@ namespace WpfMain.Module.PetModule
             //Video = new UCVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
             //this.BorderVideo.Child = Video;
 
-            VideoMF = new UCMFVideo();
+            VideoMF = new UCMFVideo(BorderVideo.ActualWidth, BorderVideo.ActualHeight);
             this.BorderVideo.Child = VideoMF;
 
             //VideoMF.VideoInit();
