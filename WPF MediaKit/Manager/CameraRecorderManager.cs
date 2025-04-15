@@ -285,7 +285,7 @@ namespace WPFMediaKit.Manager
                     //System.Threading.Thread.Sleep(30);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -387,38 +387,38 @@ namespace WPFMediaKit.Manager
                     process.Kill();
                 }
                 //Camera.Stop();
-                return AviFilePath;
-                isProcessingStream = false;
-                VideoWriter.Close();
-                return AviFilePath;
-                //this.RecorderStatus = RecorderStatus.End; 
+               // return AviFilePath;
+                //isProcessingStream = false;
                 //VideoWriter.Close();
-                ////是否需要录制声音
-                //if (wavRecorder != null)
-                //{
-                //    wavRecorder.End();
-                //    //获取和保存音频流到文件(桌面录制)
-                //    AviManager aviManager = new AviManager(AviFilePath, true);
-                //    aviManager.AddAudioStream(wavRecorder.WavFilePath, 0);
-                //    aviManager.Close();
-                //    //删除临时音频文件
-                //    try
-                //    {
-                //        File.Delete(wavRecorder.WavFilePath);
-                //    }
-                //    catch
-                //    {
-                //    }
-                //}
-                ffmpegProcess?.StandardInput.WriteLine("q");
-                ffmpegProcess?.WaitForExit();
-                ffmpegProcess?.Close();
-                return AviFilePath;
+                //return AviFilePath;
+                ////this.RecorderStatus = RecorderStatus.End; 
+                ////VideoWriter.Close();
+                //////是否需要录制声音
+                ////if (wavRecorder != null)
+                ////{
+                ////    wavRecorder.End();
+                ////    //获取和保存音频流到文件(桌面录制)
+                ////    AviManager aviManager = new AviManager(AviFilePath, true);
+                ////    aviManager.AddAudioStream(wavRecorder.WavFilePath, 0);
+                ////    aviManager.Close();
+                ////    //删除临时音频文件
+                ////    try
+                ////    {
+                ////        File.Delete(wavRecorder.WavFilePath);
+                ////    }
+                ////    catch
+                ////    {
+                ////    }
+                ////}
+                //ffmpegProcess?.StandardInput.WriteLine("q");
+                //ffmpegProcess?.WaitForExit();
+                //ffmpegProcess?.Close();
+                //return AviFilePath;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return AviFilePath;
+                //return AviFilePath;
             }
             finally
             {

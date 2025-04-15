@@ -41,7 +41,7 @@ namespace Entity.Entity
                     return new PetInfo();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

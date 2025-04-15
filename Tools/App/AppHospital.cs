@@ -79,7 +79,7 @@ namespace Tools.App
                     return new AppHospital();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

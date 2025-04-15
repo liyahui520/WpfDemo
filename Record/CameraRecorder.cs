@@ -214,7 +214,7 @@ namespace Record
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        private async void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             try
             {
@@ -251,7 +251,7 @@ namespace Record
                 //每100帧回收一次虚拟内存
                 if ((TotalFrame++) % 100 == 0)
                 {
-                    WindowApi.ClearMemory();
+                    await WindowApi.ClearMemory();
                 }
             }
             catch
@@ -293,13 +293,10 @@ namespace Record
                     {
                     }
                 }
-
-                return AviFilePath;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return AviFilePath;
             }
             finally
             {

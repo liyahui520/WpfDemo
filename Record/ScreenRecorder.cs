@@ -114,14 +114,14 @@ namespace Record
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        protected virtual void VideoStreamer_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        protected virtual async void VideoStreamer_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             this.VideoWriter.WriteVideoFrame((Bitmap)eventArgs.Frame.Clone());
 
             //每100帧回收一次虚拟内存
             if ((TotalFrame++) % 100 == 0)
             {
-                WindowApi.ClearMemory();
+               await WindowApi.ClearMemory();
             }
         }
 

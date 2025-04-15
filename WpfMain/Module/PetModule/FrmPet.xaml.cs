@@ -96,12 +96,17 @@ namespace WpfMain.Module.PetModule
                 string videoPath = VideoMF?.End();
                 if (tInfo.Result.Vedios == null)
                     tInfo.Result.Vedios = new List<MediaItem>();
-                var old = tInfo.Result;
-                tInfo.Result = new TestResult();
-                var sp = videoPath.Split('\\');
-                var fileName = sp[sp.Length - 1];
-                old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
-                tInfo.Result = old;
+
+
+                //var old = tInfo.Result;
+                //tInfo.Result = new TestResult();
+                //var sp = videoPath.Split('\\');
+                //var fileName = sp[sp.Length - 1];
+                //old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
+                //tInfo.Result = old;
+
+
+                tInfo.Result.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath });
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
                 StartCamp.Content = "开始录像"; 
             }

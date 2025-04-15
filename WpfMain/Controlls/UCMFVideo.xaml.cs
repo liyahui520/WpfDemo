@@ -144,6 +144,9 @@ namespace WpfMain.Controlls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             cobVideoSource_SelectionChanged(null, null);
+
+
+
         }
 
         #region 录像，拍照功能
@@ -154,89 +157,97 @@ namespace WpfMain.Controlls
         /// <returns></returns>
         public System.Drawing.Image Capture()
         {
-            System.Drawing.Image img = null;
-            // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
-            cameraCaptureElement.Measure(cameraCaptureElement.RenderSize);
-            cameraCaptureElement.Arrange(new Rect(cameraCaptureElement.RenderSize));
+            Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
+
             // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)cameraCaptureElement.ActualWidth, (int)cameraCaptureElement.ActualHeight, 96, 96, PixelFormats.Default);
-            bmp.Render(cameraCaptureElement);
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Default);
 
-            var _vh = cameraCaptureElement.NaturalVideoHeight;
-            var _vd = cameraCaptureElement.NaturalVideoWidth;
-            double _vhX = 0.00;
-            double _vdX = 0.00;
-            double cropWidth = 0.0;
-            double cropX = 0.0;
-            double cropHight = 0.0;
-            double cropH = 0.0;
-            double yB = 0.0;
+            // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
+            camp.Measure(size);
+            camp.Arrange(new Rect(size));
+            bmp.Render(camp);
+            //cameraCaptureElement.Measure(cameraCaptureElement.RenderSize);
+            //cameraCaptureElement.Arrange(new Rect(cameraCaptureElement.RenderSize));
+            //// 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
+            //RenderTargetBitmap bmp = new RenderTargetBitmap((int)cameraCaptureElement.ActualWidth, (int)cameraCaptureElement.ActualHeight, 96, 96, PixelFormats.Default);
+            //bmp.Render(cameraCaptureElement);
 
-            //if (_vd > _width)
-            //{
-            //    _vdX = ((_vd - _width) / _vd);
-            //    //cropHight = bmp.Height * (_vhX / 2.0);
-            //    //cropH = bmp.Height * (_vhX / 2.0);
-            //    //cropRect = new Int32Rect((int)cropH, 0, (int)_vd, (int)cropHight); 
-            //}
-            //else if (_vd <= _width)
-            //{
-            //    _vdX = ((_width - _vd) / _width);
-            //}
+            //var _vh = cameraCaptureElement.NaturalVideoHeight;
+            //var _vd = cameraCaptureElement.NaturalVideoWidth;
+            //double _vhX = 0.00;
+            //double _vdX = 0.00;
+            //double cropWidth = 0.0;
+            //double cropX = 0.0;
+            //double cropHight = 0.0;
+            //double cropH = 0.0;
+            //double yB = 0.0;
 
-            //if (_vh > _hight)
+            ////if (_vd > _width)
+            ////{
+            ////    _vdX = ((_vd - _width) / _vd);
+            ////    //cropHight = bmp.Height * (_vhX / 2.0);
+            ////    //cropH = bmp.Height * (_vhX / 2.0);
+            ////    //cropRect = new Int32Rect((int)cropH, 0, (int)_vd, (int)cropHight); 
+            ////}
+            ////else if (_vd <= _width)
+            ////{
+            ////    _vdX = ((_width - _vd) / _width);
+            ////}
+
+            ////if (_vh > _hight)
+            ////{
+            ////    _vhX = (_vh - _hight) / _vh;
+            ////}
+            ////else if (_vh <= _hight)
+            ////{
+            ////    _vhX = (_hight - _vh) / _hight;
+            ////}
+            //var cropRect = new Int32Rect();
+            //if (_vh > _vd)
             //{
-            //    _vhX = (_vh - _hight) / _vh;
+            //    yB = _vd * 1.0 / _vh;
+            //    // 自动计算有效区域（示例：中心区域90%）
+            //    cropRect = new Int32Rect(
+            //        (int)(bmp.Width * (1- yB)/2.0),  // 左裁剪5%
+            //        (int)(0),// 上裁剪5%
+            //        (int)(bmp.Width * yB),   // 保留宽度90%
+            //        (int)(bmp.Height)  // 保留高度90%
+            //    );
             //}
-            //else if (_vh <= _hight)
+            //else
             //{
-            //    _vhX = (_hight - _vh) / _hight;
+            //    yB = _vh * 1.0 / _vd;
+            //    var h = (cameraCaptureElement.ActualWidth * yB) > cameraCaptureElement.ActualHeight
+            //        ? ((cameraCaptureElement.ActualWidth * yB) - cameraCaptureElement.ActualHeight) / cameraCaptureElement.ActualHeight / 2.6
+            //        : ((cameraCaptureElement.ActualHeight - (cameraCaptureElement.ActualWidth * yB)) / (cameraCaptureElement.ActualWidth * yB) / 2.6);
+            //    // 自动计算有效区域（示例：中心区域90%）
+            //    cropRect = new Int32Rect(
+            //        (int)(0),  // 左裁剪5%
+            //        (int)((h) * cameraCaptureElement.ActualHeight),// 上裁剪5%
+            //        (int)(cameraCaptureElement.ActualWidth),   // 保留宽度90%
+            //        (int)(cameraCaptureElement.ActualWidth * yB)  // 保留高度90%
+            //    );
             //}
-            var cropRect = new Int32Rect();
-            if (_vh > _vd)
-            {
-                yB = _vd * 1.0 / _vh;
-                // 自动计算有效区域（示例：中心区域90%）
-                cropRect = new Int32Rect(
-                    (int)(bmp.Width * (1- yB)/2.0),  // 左裁剪5%
-                    (int)(0),// 上裁剪5%
-                    (int)(bmp.Width * yB),   // 保留宽度90%
-                    (int)(bmp.Height)  // 保留高度90%
-                );
-            }
-            else
-            {
-                yB = _vh * 1.0 / _vd;
-                var h = (cameraCaptureElement.ActualWidth * yB) > cameraCaptureElement.ActualHeight
-                    ? ((cameraCaptureElement.ActualWidth * yB) - cameraCaptureElement.ActualHeight) / cameraCaptureElement.ActualHeight / 2.6
-                    : ((cameraCaptureElement.ActualHeight - (cameraCaptureElement.ActualWidth * yB)) / (cameraCaptureElement.ActualWidth * yB) / 2.6);
-                // 自动计算有效区域（示例：中心区域90%）
-                cropRect = new Int32Rect(
-                    (int)(0),  // 左裁剪5%
-                    (int)((h) * cameraCaptureElement.ActualHeight),// 上裁剪5%
-                    (int)(cameraCaptureElement.ActualWidth),   // 保留宽度90%
-                    (int)(cameraCaptureElement.ActualWidth * yB)  // 保留高度90%
-                );
-            }
 
           
 
 
-            // 应用裁剪 
-            var croppedBmp = new CroppedBitmap(bmp, cropRect);
-            // 创建一个JPEG编码器 
-            BitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(croppedBmp));
+            //// 应用裁剪 
+            //var croppedBmp = new CroppedBitmap(bmp, cropRect);
+            //// 创建一个JPEG编码器 
+            //BitmapEncoder encoder = new JpegBitmapEncoder();
+            //encoder.Frames.Add(BitmapFrame.Create(croppedBmp));
+            // 创建一个png编码器 
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmp));
 
             // 使用内存流保存编码后的图像数据 
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
             {
                 encoder.Save(ms);
                 byte[] captureData = ms.ToArray();
-                img = captureData.String2Image();
+                return captureData.String2Image();
             }
-
-            return img;
         }
 
 

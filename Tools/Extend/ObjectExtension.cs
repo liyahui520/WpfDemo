@@ -502,7 +502,7 @@ namespace Tools.Extend
                     return (T)xml.Deserialize(fs);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return default(T);
             }
@@ -540,7 +540,7 @@ namespace Tools.Extend
             {
                 return File.ReadAllBytes(path); // 小文件直接读取[3]()
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 // 大文件回退到FileStream方式 
                 using (FileStream fs = new FileStream(path, FileMode.Open))
@@ -562,7 +562,7 @@ namespace Tools.Extend
                 System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(dll);
                 return (T)assembly.CreateInstance(typeName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return default(T);
@@ -682,7 +682,7 @@ namespace Tools.Extend
                 ImageSource imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(intPtr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 return imageSource;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return null;
@@ -704,7 +704,7 @@ namespace Tools.Extend
                 bitmap.UnlockBits(data);
                 return bitmap;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return null;
@@ -759,7 +759,7 @@ namespace Tools.Extend
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return buffer;
@@ -795,7 +795,7 @@ namespace Tools.Extend
                     return ob;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return bitmap;
