@@ -9,12 +9,12 @@ namespace Tools.App
         /// <summary>
         /// 医院名称
         /// </summary>
-        public string HospitalName { get; set; }
+        public string HospitalName { get; set; } = "硕腾测试医院";
 
         /// <summary>
-        /// 医院名称
+        /// 医师名称
         /// </summary>
-        public string UserName { get; set; }
+        public string UserName { get; set; } = "测试医师";
 
         /// <summary>
         /// 默认医生名称
@@ -24,7 +24,7 @@ namespace Tools.App
         /// <summary>
         /// 联系人
         /// </summary>
-        public string HospitalContacts { get; set; }
+        public string HospitalContacts { get; set; } = "无联系人";
 
 
         /// <summary>
@@ -35,12 +35,12 @@ namespace Tools.App
         /// <summary>
         /// 医院简介
         /// </summary>
-        public string HospitalBiref { get; set; }
+        public string HospitalBiref { get; set; } = "24小时医院";
 
         /// <summary>
         /// 医院地址
         /// </summary>
-        public string HospitalAddress { get; set; }
+        public string HospitalAddress { get; set; } = "上海市虹口区四川北路88号星荟中心T2座22楼";
 
         /// <summary>
         /// LOGO
