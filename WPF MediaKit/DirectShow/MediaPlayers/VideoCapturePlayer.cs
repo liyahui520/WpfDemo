@@ -312,7 +312,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 }
                 else
                     /* Configure the video output pin with our parameters */
-                    SetVideoCaptureParameters(graphBuilder, m_captureDevice, Guid.Empty);
+                    SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.H264);
 
                 var rendererType = VideoRendererType.VideoMixingRenderer9;
 
