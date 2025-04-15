@@ -118,6 +118,9 @@ namespace WpfMain.Controlls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             cobVideoSource_SelectionChanged(null, null);
+
+
+
         }
 
         #region 录像，拍照功能
@@ -128,16 +131,18 @@ namespace WpfMain.Controlls
         /// <returns></returns>
         public System.Drawing.Image Capture()
         {
-            System.Drawing.Image img = null;
-            // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)cameraCaptureElement.ActualWidth, (int)cameraCaptureElement.ActualHeight, 96, 96, PixelFormats.Default);
-            // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
-            cameraCaptureElement.Measure(cameraCaptureElement.RenderSize);
-            cameraCaptureElement.Arrange(new Rect(cameraCaptureElement.RenderSize));
-            bmp.Render(cameraCaptureElement);
+            Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
 
-            // 创建一个JPEG编码器 
-            BitmapEncoder encoder = new JpegBitmapEncoder();
+            // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Default);
+
+            // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
+            camp.Measure(size);
+            camp.Arrange(new Rect(size));
+            bmp.Render(camp);
+
+            // 创建一个png编码器 
+            BitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bmp));
 
             // 使用内存流保存编码后的图像数据 
@@ -145,10 +150,8 @@ namespace WpfMain.Controlls
             {
                 encoder.Save(ms);
                 byte[] captureData = ms.ToArray();
-                img = captureData.String2Image();
+                return captureData.String2Image();
             }
-
-            return img;
         }
 
         public async void Start()

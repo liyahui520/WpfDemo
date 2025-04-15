@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfMain.Controlls"
           xmlns:controls="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
-        xmlns:players="clr-namespace:WPFMediaKit.DirectShow.MediaPlayers;assembly=WPFMediaKit"
+
              mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
             >
@@ -15,6 +15,6 @@
     <Grid x:Name="camp">
         <controls:VideoCaptureElement x:Name="cameraCaptureElement" Grid.Row="1" EnableSampleGrabbing="True"  FPS="30"
                                       DeeperColor="{Binding IsChecked, ElementName=chkDeeperColor}"
-                                      Margin="4"/>
+                                      />
     </Grid>
 </UserControl>
