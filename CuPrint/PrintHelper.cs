@@ -67,37 +67,37 @@ namespace CuPrint
         }
 
         // 预编译属性复制委托（示例）
-        private static Action<FrameworkElement, FrameworkElement> _cloneDelegate;
+        //private static Action<FrameworkElement, FrameworkElement> _cloneDelegate;
          
 
         public static FrameworkElement DeepCopyFrameworkElement(FrameworkElement source)
         {
             return DeepCopy(source);
-            // 创建序列化和反序列化的设置 
-            var settings = new XamlReaderSettings();
-            // 这里可以根据需要添加更多设置 
-            // 例如，设置资源字典的解析行为 
-            settings.IgnoreUidsOnPropertyElements = true;
+            //// 创建序列化和反序列化的设置 
+            //var settings = new XamlReaderSettings();
+            //// 这里可以根据需要添加更多设置 
+            //// 例如，设置资源字典的解析行为 
+            //settings.IgnoreUidsOnPropertyElements = true;
 
-            try
-            {
-                // 将 FrameworkElement 序列化为 XAML 字符串 
-                string xaml = System.Windows.Markup.XamlWriter.Save(source);
-                // 使用设置反序列化 XAML 字符串为新的 FrameworkElement 对象 
-                using (StringReader stringReader = new StringReader(xaml))
-                {
-                    using (XmlReader xmlReader = XmlReader.Create(stringReader))
-                    {
-                        return (FrameworkElement)System.Windows.Markup.XamlReader.Load(xmlReader);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // 处理异常 
-                Console.WriteLine($"深拷贝失败: {ex.Message}");
-                return null;
-            }
+            //try
+            //{
+            //    // 将 FrameworkElement 序列化为 XAML 字符串 
+            //    string xaml = System.Windows.Markup.XamlWriter.Save(source);
+            //    // 使用设置反序列化 XAML 字符串为新的 FrameworkElement 对象 
+            //    using (StringReader stringReader = new StringReader(xaml))
+            //    {
+            //        using (XmlReader xmlReader = XmlReader.Create(stringReader))
+            //        {
+            //            return (FrameworkElement)System.Windows.Markup.XamlReader.Load(xmlReader);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    // 处理异常 
+            //    Console.WriteLine($"深拷贝失败: {ex.Message}");
+            //    return null;
+            //}
         }
 
         public static FrameworkElement DeepCopy(FrameworkElement element)

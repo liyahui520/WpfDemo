@@ -202,7 +202,7 @@ namespace Record
 			{
 				mRecBuffer = new CaptureBuffer(bufferdescription, mCapDev);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{ }
 
 			mNextCaptureOffset = 0;
@@ -294,7 +294,7 @@ namespace Record
 			{
 				mWriter = new BinaryWriter(mWaveFile);
 			}
-			catch (ArgumentNullException e) { }
+			catch (ArgumentNullException) { }
 
 			/************************************************************************** 
                Here is where the file will be created. A 

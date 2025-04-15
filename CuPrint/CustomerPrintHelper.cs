@@ -98,7 +98,7 @@ namespace CuPrint
         }
 
         // 预编译属性复制委托（示例）
-        private static Action<FrameworkElement, FrameworkElement> _cloneDelegate;
+        //private static Action<FrameworkElement, FrameworkElement> _cloneDelegate;
          
         public override DocumentPage GetPage(int pageNumber) =>
             new DocumentPage(_pages[pageNumber]);
