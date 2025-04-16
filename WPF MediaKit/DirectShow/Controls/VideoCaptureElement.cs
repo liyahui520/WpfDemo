@@ -269,14 +269,20 @@ namespace WPFMediaKit.DirectShow.Controls
         }
 
         public void Start(string path)
-        {
-            //VideoCapturePlayer.StartLX(path);
+        { 
+            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            {
+                VideoCapturePlayer.StartCapture(path);
+            });
         }
 
-        //public void Stop()
-        //{
-        //    //VideoCapturePlayer.StopLX();
-        //}
+        public void Stop()
+        {
+            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            {
+                VideoCapturePlayer.StopCapture();
+            });
+        }
 
         /// <summary>
         /// Sets the parameters to the video capture player

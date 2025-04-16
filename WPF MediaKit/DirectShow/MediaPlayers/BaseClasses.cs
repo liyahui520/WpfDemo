@@ -991,8 +991,8 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
 
             if (m_basicAudio != null)
             {
-                //Balance = Balance;
-                //Volume = Volume;
+                Balance = Balance;
+                Volume = Volume;
             }
 
             if (m_mediaControl != null)

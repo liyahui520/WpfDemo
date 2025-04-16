@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Text;
 using DirectShowLib;
+using static System.Windows.Forms.LinkLabel;
 
 namespace WPFMediaKit.DirectShow.MediaPlayers
 {
@@ -75,7 +78,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
         /// </summary>
         private ISampleGrabber m_sampleGrabber;
 
-        private string m_fileName;
+        public string m_fileName;
 
 #if DEBUG
         private DsROTEntry m_rotEntry;
@@ -222,7 +225,6 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
         public override void Play()
         {
             VerifyAccess();
-
             if (m_graph == null)
                 SetupGraph();
 
@@ -255,6 +257,249 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             }
         }
 
+        public void StartLoad()
+        {
+            /* Clean up any messes left behind */
+            //FreeResources();
+
+            try
+            { 
+                /* Create a capture graph builder to help 
+                 * with rendering a capture graph */
+                var graphBuilder = (ICaptureGraphBuilder2)new CaptureGraphBuilder2();
+
+                var mediaControl = (IMediaControl)m_graph;
+                mediaControl.Pause();//?.StopWhenReady();
+                /* Set our filter graph to the capture graph */
+                int hr = graphBuilder.SetFiltergraph(m_graph);
+                DsError.ThrowExceptionForHR(hr);
+
+                // 强制设置MJPG格式确保兼容性
+                SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
+
+                hr = graphBuilder.RenderStream(PinCategory.Preview,
+                    MediaType.Video,
+                    m_captureDevice,
+                    null,
+                    m_renderer);
+                DsError.ThrowExceptionForHR(hr);
+
+                mediaControl.Run();
+                /* Register the filter graph
+                 * with the base classes */
+                SetupFilterGraph(m_graph);
+
+                /* Sets the NaturalVideoWidth/Height */
+                SetNativePixelSizes(m_renderer);
+                Marshal.ReleaseComObject(graphBuilder);
+            }
+            catch (Exception ex)
+            {
+                /* Something got fuct up */
+                FreeResources();
+                InvokeMediaFailed(new MediaFailedEventArgs(ex.Message, ex));
+            }
+        }
+        // 添加关键方法：StartCapture和StopCapture
+        public void StartCapture(string filePath)
+        {
+            VerifyAccess();
+            try
+            { 
+                // 重新创建过滤器图
+                //m_graph = (IGraphBuilder)new FilterGraphNoThread();
+#if DEBUG
+                m_rotEntry = new DsROTEntry(m_graph);
+#endif
+
+                var graphBuilder = (ICaptureGraphBuilder2)new CaptureGraphBuilder2();
+                int hr = graphBuilder.SetFiltergraph(m_graph);
+                DsError.ThrowExceptionForHR(hr);
+
+                // 强制重新初始化捕获设备
+                //if (m_videoCaptureDevice != null)
+                //{
+                //    m_captureDevice = AddFilterByDevicePath(m_graph,
+                //        FilterCategory.VideoInputDevice,
+                //        m_videoCaptureDevice.DevicePath);
+                //}
+                //else if (!string.IsNullOrEmpty(m_videoCaptureSource))
+                //{
+                //    m_captureDevice = AddFilterByName(m_graph,
+                //        FilterCategory.VideoInputDevice,
+                //        m_videoCaptureSource);
+                //}
+
+                //// 确保捕获设备已正确添加
+                //if (m_captureDevice == null)
+                //    throw new ApplicationException("视频捕获设备初始化失败"); 
+                //m_captureDevice = AddFilterByName(m_graph,
+                //    FilterCategory.VideoInputDevice,
+                //    VideoCaptureSource);
+
+                //m_videoCaptureSourceChanged = false;
+                // 停止媒体流
+                var mediaControl = (IMediaControl)m_graph;
+                mediaControl.StopWhenReady();
+                // 强制设置MJPG格式确保兼容性
+                SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.Avi);
+
+                IBaseFilter mux;
+                IFileSinkFilter sink;
+                
+                // 创建AVI复用器和文件写入器
+                hr = graphBuilder.SetOutputFileName(MediaSubType.Avi, filePath, out mux, out sink);
+                DsError.ThrowExceptionForHR(hr);
+
+                // 查找MJPG编码器（可选，用于格式转换）
+                IBaseFilter encoder = FindEncoder(MediaSubType.Avi);
+                if (encoder != null)
+                {
+                    hr = m_graph.AddFilter(encoder, "Avi Encoder");
+                    DsError.ThrowExceptionForHR(hr);
+                }
+
+                // 渲染视频流：CaptureDevice -> Encoder -> Mux
+                hr = graphBuilder.RenderStream(
+                    PinCategory.Capture,
+                    MediaType.Video,
+                    m_captureDevice,
+                    encoder,
+                    mux);
+
+                // 手动连接引脚（如果自动失败）
+                if (hr < 0)
+                {
+                    ConnectPinsManually(m_captureDevice, "Capture", mux, "Input");
+                }
+                DsError.ThrowExceptionForHR(hr);
+                mediaControl.Run();
+                //Play();
+                // 清理COM对象
+                SafeRelease(mux);
+                SafeRelease(sink);
+                SafeRelease(graphBuilder);
+                //SafeRelease(encoder);
+            }
+            catch (Exception ex)
+            {
+                //FreeResources();
+                //Play();
+                Console.WriteLine("录像启动失败" + ex.Message);
+            }
+        }
+        private IEnumerable<IBaseFilter> GetFilters(IGraphBuilder graph)
+        {
+            IEnumFilters enumFilters;
+            graph.EnumFilters(out enumFilters);
+
+            IBaseFilter[] filters = new IBaseFilter[1];
+            IntPtr fetched = IntPtr.Zero;
+
+            while (enumFilters.Next(1, filters, fetched) == 0)
+            {
+                yield return filters[0];
+            }
+            Marshal.ReleaseComObject(enumFilters);
+        }
+        public void StopCapture()
+        {
+            VerifyAccess();
+            try
+            {
+                if (m_graph == null) return;
+
+                var mediaControl = (IMediaControl)m_graph;
+                mediaControl.Pause();
+
+                // 清理所有文件写入相关过滤器
+                //var filtersToRemove = new List<IBaseFilter>();
+                //foreach (var filter in GetFilters(m_graph))
+                //{
+                //    if (filter is IFileSinkFilter ||
+                //        filter is IBaseFilter && filter.ToString().Contains("MJPG Encoder"))
+                //    {
+                //        filtersToRemove.Add(filter);
+                //    }
+                //}
+
+                //foreach (var filter in filtersToRemove)
+                //{
+                //    m_graph.RemoveFilter(filter);
+                //    SafeRelease(filter);
+                //}
+
+                // 显式释放关键COM对象 
+
+                // 重启预览流
+                mediaControl.Run();
+            }
+            catch (Exception ex)
+            {
+                //FreeResources();
+                //throw new ApplicationException("停止录像失败", ex);
+            }
+        }
+
+        // 辅助方法：查找编码器
+        private IBaseFilter FindEncoder(Guid mediaSubType)
+        {
+            foreach (DsDevice device in DsDevice.GetDevicesOfCat(FilterCategory.VideoCompressorCategory))
+            {
+                if (device.Name.Contains("MJPG"))
+                {
+                    return AddFilterByDevicePath(m_graph, FilterCategory.VideoCompressorCategory, device.DevicePath);
+                }
+            }
+            return null;
+        }
+
+
+        // 辅助方法：安全释放COM对象
+        private void SafeRelease(object obj)
+        {
+            if (obj != null && Marshal.IsComObject(obj))
+                Marshal.ReleaseComObject(obj);
+        }
+
+
+
+        // 查找或创建编码器（示例查找MJPG编码器）
+        private IBaseFilter FindOrCreateEncoder(Guid mediaSubType)
+        {
+            var encoders = DsDevice.GetDevicesOfCat(FilterCategory.VideoCompressorCategory);
+            foreach (DsDevice encoderDev in encoders)
+            {
+                if (encoderDev.Name.Contains("MJPG") || encoderDev.Name.Contains("MJPEG"))
+                {
+                    return AddFilterByDevicePath(m_graph, FilterCategory.VideoCompressorCategory, encoderDev.DevicePath);
+                }
+            }
+            return null; // 未找到编码器
+        }
+
+        // 连接引脚（扩展ConnectPinsManually方法）
+        private void ConnectPinsManually(IBaseFilter sourceFilter, string sourcePinName, IBaseFilter destFilter, string destPinName)
+        {
+            IPin sourcePin = DsFindPin.ByName(sourceFilter, sourcePinName);
+            IPin destPin = DsFindPin.ByName(destFilter, destPinName);
+            if (sourcePin != null && destPin != null)
+            {
+                int hr = m_graph.Connect(sourcePin, destPin);
+                DsError.ThrowExceptionForHR(hr);
+            }
+            SafeReleaseComObject(sourcePin);
+            SafeReleaseComObject(destPin);
+        }
+
+        // 辅助方法：安全释放COM对象
+        private void SafeReleaseComObject(object obj)
+        {
+            if (obj != null && Marshal.IsComObject(obj))
+            {
+                Marshal.ReleaseComObject(obj);
+            }
+        }
         /// <summary>
         /// Configures the DirectShow graph to play the selected video capture
         /// device with the selected parameters
@@ -312,7 +557,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 }
                 else
                     /* Configure the video output pin with our parameters */
-                    SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.H264);
+                    SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.Avi);
 
                 var rendererType = VideoRendererType.VideoMixingRenderer9;
 
@@ -344,34 +589,33 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
 
                 IBaseFilter mux = null;
                 IFileSinkFilter sink = null;
-                if (!string.IsNullOrEmpty(this.m_fileName))
-                {
-                    hr = graphBuilder.SetOutputFileName(MediaSubType.Asf, this.m_fileName, out mux, out sink);
-                    DsError.ThrowExceptionForHR(hr);
+                //if (!string.IsNullOrEmpty(this.m_fileName))
+                //{
+                //    hr = graphBuilder.SetOutputFileName(MediaSubType.Avi, this.m_fileName, out mux, out sink);
+                //    DsError.ThrowExceptionForHR(hr);
 
-                    hr = graphBuilder.RenderStream(PinCategory.Capture, MediaType.Video, m_captureDevice, null, mux);
-                    DsError.ThrowExceptionForHR(hr);
+                //    hr = graphBuilder.RenderStream(PinCategory.Capture, MediaType.Video, m_captureDevice, null, mux);
+                //    DsError.ThrowExceptionForHR(hr);
 
-                    // use the first audio device
-                    var audioDevices = DsDevice.GetDevicesOfCat(FilterCategory.AudioInputDevice);
+                //    // use the first audio device
+                //    var audioDevices = DsDevice.GetDevicesOfCat(FilterCategory.AudioInputDevice);
 
-                    if (audioDevices.Length > 0)
-                    {
-                        var audioDevice = AddFilterByDevicePath(m_graph,
-                                                            FilterCategory.AudioInputDevice,
-                                                            audioDevices[0].DevicePath);
+                //    if (audioDevices.Length > 0)
+                //    {
+                //        var audioDevice = AddFilterByDevicePath(m_graph,
+                //                                            FilterCategory.AudioInputDevice,
+                //                                            audioDevices[0].DevicePath);
 
-                        hr = graphBuilder.RenderStream(PinCategory.Capture, MediaType.Audio, audioDevice, null, mux);
-                        DsError.ThrowExceptionForHR(hr);
-                    }
-                }
+                //        hr = graphBuilder.RenderStream(PinCategory.Capture, MediaType.Audio, audioDevice, null, mux);
+                //        DsError.ThrowExceptionForHR(hr);
+                //    }
+                //}
 
                 hr = graphBuilder.RenderStream(PinCategory.Preview,
                                                MediaType.Video,
                                                m_captureDevice,
                                                null,
                                                m_renderer);
-
                 DsError.ThrowExceptionForHR(hr);
 
                 /* Register the filter graph 

@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,6 +32,7 @@ namespace WpfMain.Controlls
         private double _width;
         private double _hight;
         private CameraRecorderManager Camra;
+        //private VideoCaptureElement cameraCaptureElement;
 
         public UCMFVideo(double width, double hight)
         {
@@ -110,12 +113,14 @@ namespace WpfMain.Controlls
         }
 
         private void cobVideoSource_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
+        { 
             SetCameraCaptureElementVisible(true);
+
+            //cameraCaptureElement = new VideoCaptureElement();
+            Camra = new CameraRecorderManager(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")), string.Format(wavFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
             cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
-            cameraCaptureElement.OutputFileName = string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss"));
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
-            cameraCaptureElement.NewVideoSample += CameraCaptureElement_NewVideoSample1; 
+            cameraCaptureElement.NewVideoSample += CameraCaptureElement_NewVideoSample1;
             cameraCaptureElement.Play();
             Camra.Camera = cameraCaptureElement; 
         }
@@ -149,7 +154,7 @@ namespace WpfMain.Controlls
             // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
             camp.Measure(size);
             camp.Arrange(new Rect(size));
-            bmp.Render(camp); 
+            bmp.Render(camp);
             // 创建一个png编码器 
             BitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bmp));
@@ -165,14 +170,9 @@ namespace WpfMain.Controlls
 
 
 
-        public void Start()
+        public async Task Start()
         {
-            Camra.SetAviFilePath(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
-            Camra.Start();
-        }
-
-        private void CameraCaptureElement_NewVideoSample(object sender, VideoSampleArgs e)
-        {
+            await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
         }
 
 
@@ -184,7 +184,11 @@ namespace WpfMain.Controlls
 
         public string End()
         {
-            return Camra.End();
+            var a = Camra.End();
+            //cameraCaptureElement.Play(); 
+            //Thread.Sleep(20);
+            //cobVideoSource_SelectionChanged(null, null);
+            return a;
         }
 
         public void Stop()

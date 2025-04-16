@@ -26,7 +26,7 @@ namespace WpfMain.Module.PetModule
     /// FrmPet.xaml 的交互逻辑
     /// </summary>
     public partial class FrmPet : UserControl, ICustom
-    { 
+    {
         public UCMFVideo VideoMF { get; set; }
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
@@ -45,7 +45,7 @@ namespace WpfMain.Module.PetModule
         {
             get => (TestInfo)GetValue(TestInfoProperty);
             set => SetValue(TestInfoProperty, value);
-        } 
+        }
         public FrmPet()
         {
             InitializeComponent();
@@ -57,7 +57,7 @@ namespace WpfMain.Module.PetModule
             tInfo.Result = new TestResult();
             tInfo.Result.Images = new List<ImageItem>();
             DataContext = this;
-            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped; 
+            HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -71,12 +71,12 @@ namespace WpfMain.Module.PetModule
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void CameraUC_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        { 
+        {
         }
 
         private bool isStart = false;
 
-        private void StartCamp_OnClick(object sender, RoutedEventArgs e)
+        private async void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
             {
@@ -86,10 +86,10 @@ namespace WpfMain.Module.PetModule
 
                     UCSetting setting = new UCSetting();
                     setting.Owner = AppStatic.MainWindow;
-                    setting.ShowDialog(); 
+                    setting.ShowDialog();
                     return;
                 }
-            } 
+            }
             if (isStart)
             {
                 isStart = false;
@@ -108,7 +108,7 @@ namespace WpfMain.Module.PetModule
 
                 tInfo.Result.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath });
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
-                StartCamp.Content = "开始录像"; 
+                StartCamp.Content = "开始录像";
             }
             else
             {
@@ -229,7 +229,7 @@ namespace WpfMain.Module.PetModule
                 AppStatic.PetInfo.PetTypes.Add(new PetType() { Name = tInfo.Type, PetVarietys = new List<PetVariety>() { new PetVariety() { Name = tInfo.Variety } } });
             }
             AppStatic.PetInfo.Save();
-            HandyControl.Controls.MessageBox.Success($"保存成功！", "系统提示"); 
+            HandyControl.Controls.MessageBox.Success($"保存成功！", "系统提示");
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace WpfMain.Module.PetModule
         {
             if (!System.IO.File.Exists(tInfo.TestPath))
             {
-                HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示"); 
+                HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示");
                 return;
             }
 

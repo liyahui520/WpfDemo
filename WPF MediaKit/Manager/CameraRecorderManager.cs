@@ -152,11 +152,12 @@ namespace WPFMediaKit.Manager
         /// <summary>
         /// 开始
         /// </summary> 
-        public virtual void Start()
+        public async Task Start(string path)
         {
             this.RecorderStatus = RecorderStatus.Start;
             isProcessingStream = true;
-            //Camera.Start(AviFilePath);
+
+            Camera.Start(path);
             //Camera.LoadedBehavior = MediaState.Play;
             ////是否需要录制声音
             //if (wavRecorder != null)
@@ -214,9 +215,11 @@ namespace WPFMediaKit.Manager
             //    }));
             //};
             //captureDevice.Start();
-
+            //Thread t = new Thread(() => ProcessVideoStream(Camera));
+            //t.IsBackground = true;
+            //t.Start();
             //ProcessVideoStream();
-            //await Task.Run(ProcessVideoStream);
+            //await ProcessVideoStream();
         }
 
         private void Camera_NewVideoSample2(object sender, VideoSampleArgs e)
@@ -235,26 +238,33 @@ namespace WPFMediaKit.Manager
         }
 
         // 视频流处理线程 
-        private void ProcessVideoStream()
+        private async Task ProcessVideoStream()
         {
             try
             {
-                //var renderTarget = new RenderTargetBitmap(
-                //    (int)Camera.ActualWidth,
-                //    (int)Camera.ActualHeight,
-                //    96, 96, PixelFormats.Pbgra32);
+                // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面
+
                 while (isProcessingStream)
                 {
-                    RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)Camera.NaturalVideoWidth, (int)Camera.NaturalVideoHeight, 96, 96, PixelFormats.Rgb128Float);
+
+                    System.Windows.Size size =
+                        new System.Windows.Size(Camera.NaturalVideoWidth, Camera.NaturalVideoHeight);
+
+                    // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
+                    RenderTargetBitmap bmp = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96,
+                        PixelFormats.Default);
+
                     // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
-                    //Camera.Measure(Camera.RenderSize);
-                    //Camera.Arrange(new Rect(Camera.RenderSize));
-                    renderTarget.Render(Camera);
-                    //renderTarget.Render(Camera);
-                    if (renderTarget != null)
+                    Camera.Measure(size);
+                    Camera.Arrange(new Rect(size));
+                    bmp.Render(Camera);
+                    // 创建一个png编码器 
+                    BitmapEncoder encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(bmp));
+                    if (bmp != null)
                     {
                         // 获取当前视频帧 
-                        var frame = renderTarget;
+                        var frame = bmp;
                         try
                         {
                             var img = ((Bitmap)frame.ImageSourceToBitmap());
@@ -263,8 +273,8 @@ namespace WPFMediaKit.Manager
                                 Console.WriteLine("地址：" + AviFilePath);
                                 VideoWriter?.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
                             }
-
-                            this.VideoWriter?.WriteVideoFrame(img, DateTime.Now.TimeOfDay);
+                            this.VideoWriter.WriteVideoFrame(img);
+                            //this.VideoWriter?.WriteVideoFrame(img, DateTime.Now.TimeOfDay);
                             if ((TotalFrame++) % 100 == 0)
                             {
                                 WindowApi.ClearMemory();
@@ -281,8 +291,6 @@ namespace WPFMediaKit.Manager
                         }
                     }
                     System.Threading.Thread.Sleep(30);
-                    // 控制处理频率（约30fps）
-                    //System.Threading.Thread.Sleep(30);
                 }
             }
             catch (Exception)
@@ -323,6 +331,7 @@ namespace WPFMediaKit.Manager
         public void StopStream()
         {
             isProcessingStream = false;
+            VideoWriter.Dispose();
         }
 
         public void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -382,15 +391,16 @@ namespace WPFMediaKit.Manager
         {
             try
             {
-                foreach (Process process in Process.GetProcessesByName("ffmpeg"))
-                {
-                    process.Kill();
-                }
+                //foreach (Process process in Process.GetProcessesByName("ffmpeg"))
+                //{
+                //    process.Kill();
+                //}
                 //Camera.Stop();
-               // return AviFilePath;
-                //isProcessingStream = false;
+                // return AviFilePath;
+                isProcessingStream = false;
+                Camera.Stop();
                 //VideoWriter.Close();
-                //return AviFilePath;
+                return AviFilePath;
                 ////this.RecorderStatus = RecorderStatus.End; 
                 ////VideoWriter.Close();
                 //////是否需要录制声音
