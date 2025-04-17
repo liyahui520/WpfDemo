@@ -38,7 +38,7 @@ namespace WpfMain.Controlls
         {
             InitializeComponent();
             SetCameraCaptureElementVisible(false);
-            Camra = new CameraRecorderManager(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")), string.Format(wavFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
+            Camra = new CameraRecorderManager();
             _width = width;
             _hight = hight;
         }
@@ -113,29 +113,19 @@ namespace WpfMain.Controlls
         }
 
         private void cobVideoSource_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        { 
+        {
             SetCameraCaptureElementVisible(true);
-
-            //cameraCaptureElement = new VideoCaptureElement();
-            Camra = new CameraRecorderManager(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")), string.Format(wavFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
+            Camra = new CameraRecorderManager();
             cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
-            cameraCaptureElement.NewVideoSample += CameraCaptureElement_NewVideoSample1;
             cameraCaptureElement.Play();
-            Camra.Camera = cameraCaptureElement; 
+            Camra.Camera = cameraCaptureElement;
         }
 
-        private void CameraCaptureElement_NewVideoSample1(object sender, VideoSampleArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             cobVideoSource_SelectionChanged(null, null);
-
-
-
         }
 
         #region 录像，拍照功能
@@ -146,6 +136,13 @@ namespace WpfMain.Controlls
         /// <returns></returns>
         public System.Drawing.Image Capture()
         {
+            if (!Camra.Camera.HasVideo)
+            {
+
+                HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法拍照！", "系统提示");
+                return null;
+            }
+
             Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
 
             // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
@@ -172,22 +169,27 @@ namespace WpfMain.Controlls
 
         public async Task Start()
         {
-            await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
-        }
+            if (Camra.Camera.HasVideo)
+                await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
+            else
+            {
 
+                HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法录像！", "系统提示");
+            }
+        }
 
         public void AutoWavRecorder(bool isOpen)
         {
-            Camra.AutoWavRecorder(string.Format(wavFileName, DateTime.Now.ToString("yyyyMMddHHmmss")), isOpen);
+            Camra.AutoWavRecorder(isOpen);
             isStart = true;
         }
 
         public string End()
         {
             var a = Camra.End();
-            //cameraCaptureElement.Play(); 
-            //Thread.Sleep(20);
-            //cobVideoSource_SelectionChanged(null, null);
+            //cameraCaptureElement.Close();
+            Camra.CamClose();
+            cobVideoSource_SelectionChanged(null, null);
             return a;
         }
 

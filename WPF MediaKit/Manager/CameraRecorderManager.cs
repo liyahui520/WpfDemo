@@ -71,51 +71,27 @@ namespace WPFMediaKit.Manager
         /// </summary>
         public RecorderStatus RecorderStatus { get; set; }
 
+        /// <summary>
+        /// 是否开启录音
+        /// </summary>
+        private bool IsOpen { get; set; } = false;
+
 
         /// <summary>
         /// 摄像头录制
         /// </summary>
-        /// <param name="aviFilePath">视频路径</param>
-        /// <param name="wavFilePath">录音路径</param>
-        /// <param name="defaultFrameRate">默认帧数</param>
-        /// <param name="isLoopingWav">是否录制声音(默认不录制)</param>
-        /// <param name="videoCodec">视频格式</param>
-        public CameraRecorderManager(string aviFilePath, string wavFilePath, int defaultFrameRate = 30, bool isLoopingWav = false, VideoCodec videoCodec = VideoCodec.MSMPEG4v3)
+        public CameraRecorderManager()
         {
-            this.AviFilePath = aviFilePath;
-            this.DEFAULT_FRAME_RATE = defaultFrameRate;
-            this.ScreenWidth = SystemInformation.VirtualScreen.Width;
-            this.ScreenHight = SystemInformation.VirtualScreen.Height;
-            this.FrameRate = DEFAULT_FRAME_RATE;
-            this.ScreenArea = Rectangle.Empty;
-            this.VideoWriter = new VideoFileWriter();
-            this.FolderBrowser = new FolderBrowserDialog();
-            this.VideoCodec = videoCodec;
-            this.BitRate = 3000000;
-            //是否需要录制声音
-            if (isLoopingWav)
-                wavRecorder = new WavRecorder(wavFilePath);
         }
 
-        public void SetAviFilePath(string aviFilePath)
+        public void AutoWavRecorder(bool open = true)
         {
-            AviFilePath = aviFilePath;
-        }
-
-        public void AutoWavRecorder(string wavFilePath, bool open = true)
-        {
-            if (open)
-            {
-                wavRecorder = new WavRecorder(wavFilePath);
-            }
-            else
-            {
-                wavRecorder = null;
-            }
+            IsOpen = open;
         }
 
         public void CamClose()
-        {
+        { 
+
             Camera.Close();
         }
 
@@ -156,279 +132,24 @@ namespace WPFMediaKit.Manager
         {
             this.RecorderStatus = RecorderStatus.Start;
             isProcessingStream = true;
-
-            Camera.Start(path);
-            //Camera.LoadedBehavior = MediaState.Play;
-            ////是否需要录制声音
-            //if (wavRecorder != null)
-            //    wavRecorder.Start();
-            //Camera_NewVideoSample();
-            //var bitmap = new Bitmap((int)Camera.Width, (int)Camera.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            //var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, bitmap.PixelFormat);
-            //try
-            //{
-            //    Camera.VideoCaptureDevice.GetCurrentVideoFrame(out IntPtr frame);
-            //    System.Runtime.InteropServices.Marshal.Copy(frame, 0, bitmapData.Scan0, (int)(Camera.Width * Camera.Height * 3));
-            //}
-            //finally
-            //{
-            //    bitmap.UnlockBits(bitmapData);
-            //}
-            //Dispatcher.CurrentDispatcher.Invoke(() => { Camera.Play(); });
-            //var captureDevice = new VideoCaptureDevice(Camera.VideoCaptureDevice.DevicePath);
-            //captureDevice.NewFrame += (sender, e) =>
-            //{
-            //    // 应用灰度滤镜 
-            //    var grayFrame = Grayscale.CommonAlgorithms.BT709.Apply((Bitmap)e.Frame.Clone());
-            //    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
-            //    {
-            //        while (isProcessingStream)
-            //        {
-            //            // 获取当前视频帧 
-            //            var frame = grayFrame;
-            //            try
-            //            {
-            //                var img = ((Bitmap)frame.Clone());
-            //                if (!File.Exists(AviFilePath))
-            //                {
-            //                    Console.WriteLine("地址：" + AviFilePath);
-            //                    VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
-            //                }
-
-            //                this.VideoWriter?.WriteVideoFrame(img);
-            //                if ((TotalFrame++) % 100 == 0)
-            //                {
-            //                    WindowApi.ClearMemory();
-            //                }
-            //                img.Dispose();
-            //            }
-            //            catch (Exception e)
-            //            {
-            //                Console.WriteLine(e);
-            //            }
-            //            finally
-            //            {
-            //            } 
-            //            // 控制处理频率（约30fps）
-            //            //System.Threading.Thread.Sleep(30);
-            //        }
-            //    }));
-            //};
-            //captureDevice.Start();
-            //Thread t = new Thread(() => ProcessVideoStream(Camera));
-            //t.IsBackground = true;
-            //t.Start();
-            //ProcessVideoStream();
-            //await ProcessVideoStream();
-        }
-
-        private void Camera_NewVideoSample2(object sender, VideoSampleArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Camera_Initialized(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Camera_NewVideoSample1(object sender, DirectShow.MediaPlayers.VideoSampleArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        // 视频流处理线程 
-        private async Task ProcessVideoStream()
-        {
-            try
-            {
-                // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面
-
-                while (isProcessingStream)
-                {
-
-                    System.Windows.Size size =
-                        new System.Windows.Size(Camera.NaturalVideoWidth, Camera.NaturalVideoHeight);
-
-                    // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
-                    RenderTargetBitmap bmp = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96,
-                        PixelFormats.Default);
-
-                    // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
-                    Camera.Measure(size);
-                    Camera.Arrange(new Rect(size));
-                    bmp.Render(Camera);
-                    // 创建一个png编码器 
-                    BitmapEncoder encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(bmp));
-                    if (bmp != null)
-                    {
-                        // 获取当前视频帧 
-                        var frame = bmp;
-                        try
-                        {
-                            var img = ((Bitmap)frame.ImageSourceToBitmap());
-                            if (!File.Exists(AviFilePath))
-                            {
-                                Console.WriteLine("地址：" + AviFilePath);
-                                VideoWriter?.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
-                            }
-                            this.VideoWriter.WriteVideoFrame(img);
-                            //this.VideoWriter?.WriteVideoFrame(img, DateTime.Now.TimeOfDay);
-                            if ((TotalFrame++) % 100 == 0)
-                            {
-                                WindowApi.ClearMemory();
-                            }
-                            img.Dispose();
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("录像异常");
-                            Console.WriteLine(e.Message);
-                        }
-                        finally
-                        {
-                        }
-                    }
-                    System.Threading.Thread.Sleep(30);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        // 获取当前视频帧数据 
-        private BitmapSource GetCurrentVideoFrame()
-        {
-            try
-            {
-
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                {
-                    var renderTarget = new RenderTargetBitmap(
-                        (int)Camera.ActualWidth,
-                        (int)Camera.ActualHeight,
-                        96, 96, PixelFormats.Pbgra32);
-                    renderTarget.Render(Camera);
-                    return renderTarget;
-                });
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-
-            }
-            finally
-            {
-
-            }
-
-            return null;
-        }
-
-        // 停止视频流处理 
-        public void StopStream()
-        {
-            isProcessingStream = false;
-            VideoWriter.Dispose();
-        }
-
-        public void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            // 确保停止所有处理 
-            isProcessingStream = false;
-            Camera.Close();
-        }
-
-        private void Camera_NewVideoSample()
-        {
-            try
-            {
-                string ffmpegPath = "ffmpeg.exe";  // 确保ffmpeg在程序目录下 
-                string arguments = $"-f dshow -i video=\"{device.Name}\" -r 25 -vcodec libx264 -preset:v ultrafast -tune:v zerolatency \"{AviFilePath}\"";
-
-                ffmpegProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = ffmpegPath,
-                        Arguments = arguments,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardInput = true
-                        //RedirectStandardOutput = true,
-                        //RedirectStandardError = true
-                    }
-                };
-
-                ffmpegProcess.Start();
-                //if (this.RecorderStatus != RecorderStatus.Start) return;
-                //var img = ((Bitmap)e.VideoFrame.Clone()); 
-
-                //if (!File.Exists(AviFilePath))
-                //{ 
-                //    VideoWriter.Open(AviFilePath, img.Width, img.Height, DEFAULT_FRAME_RATE, VideoCodec);
-                //}
-                //this.VideoWriter?.WriteVideoFrame(img);
-                ////aviWriter.AddFrame(img);
-                ////每100帧回收一次虚拟内存
-                //if ((TotalFrame++) % 100 == 0)
-                //{
-                //    WindowApi.ClearMemory();
-                //}
-            }
-            catch (Exception ex)
-            {
-                // ignored
-                Console.WriteLine(ex.Message);
-            }
-        }
+            AviFilePath = path;
+            Camera.Start(AviFilePath, IsOpen); 
+        } 
+         
         /// <summary>
         /// 结束
         /// </summary>
         public virtual string End()
         {
             try
-            {
-                //foreach (Process process in Process.GetProcessesByName("ffmpeg"))
-                //{
-                //    process.Kill();
-                //}
-                //Camera.Stop();
-                // return AviFilePath;
+            { 
                 isProcessingStream = false;
-                Camera.Stop();
-                //VideoWriter.Close();
-                return AviFilePath;
-                ////this.RecorderStatus = RecorderStatus.End; 
-                ////VideoWriter.Close();
-                //////是否需要录制声音
-                ////if (wavRecorder != null)
-                ////{
-                ////    wavRecorder.End();
-                ////    //获取和保存音频流到文件(桌面录制)
-                ////    AviManager aviManager = new AviManager(AviFilePath, true);
-                ////    aviManager.AddAudioStream(wavRecorder.WavFilePath, 0);
-                ////    aviManager.Close();
-                ////    //删除临时音频文件
-                ////    try
-                ////    {
-                ////        File.Delete(wavRecorder.WavFilePath);
-                ////    }
-                ////    catch
-                ////    {
-                ////    }
-                ////}
-                //ffmpegProcess?.StandardInput.WriteLine("q");
-                //ffmpegProcess?.WaitForExit();
-                //ffmpegProcess?.Close();
-                //return AviFilePath;
+                Camera.Stop(); 
+                return AviFilePath; 
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                //return AviFilePath;
+                Console.WriteLine(e); 
             }
             finally
             {

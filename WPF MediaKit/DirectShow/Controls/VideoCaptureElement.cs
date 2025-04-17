@@ -268,11 +268,11 @@ namespace WPFMediaKit.DirectShow.Controls
             }
         }
 
-        public void Start(string path)
+        public void Start(string path,bool isWav)
         { 
             VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
             {
-                VideoCapturePlayer.StartCapture(path);
+                VideoCapturePlayer.StartCapture(path,isWav);
             });
         }
 
@@ -282,6 +282,15 @@ namespace WPFMediaKit.DirectShow.Controls
             {
                 VideoCapturePlayer.StopCapture();
             });
+        }
+
+        public void Close()
+        {
+            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            {
+                VideoCapturePlayer.Close();
+            });
+
         }
 
         /// <summary>

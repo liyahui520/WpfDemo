@@ -301,7 +301,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             }
         }
         // 添加关键方法：StartCapture和StopCapture
-        public void StartCapture(string filePath)
+        public void StartCapture(string filePath,bool isWav=false)
         {
             VerifyAccess();
             try
@@ -340,9 +340,9 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 //m_videoCaptureSourceChanged = false;
                 // 停止媒体流
                 var mediaControl = (IMediaControl)m_graph;
-                mediaControl.StopWhenReady();
+                mediaControl.StopWhenReady(); 
                 // 强制设置MJPG格式确保兼容性
-                SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.Avi);
+                SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
 
                 IBaseFilter mux;
                 IFileSinkFilter sink;
@@ -350,6 +350,21 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 // 创建AVI复用器和文件写入器
                 hr = graphBuilder.SetOutputFileName(MediaSubType.Avi, filePath, out mux, out sink);
                 DsError.ThrowExceptionForHR(hr);
+
+                if (isWav)
+                {
+                    var audioDevices = DsDevice.GetDevicesOfCat(FilterCategory.AudioInputDevice);
+
+                    if (audioDevices.Length > 0)
+                    {
+                        var audioDevice = AddFilterByDevicePath(m_graph,
+                            FilterCategory.AudioInputDevice,
+                            audioDevices[0].DevicePath);
+
+                        hr = graphBuilder.RenderStream(PinCategory.Capture, MediaType.Audio, audioDevice, null, mux);
+                        DsError.ThrowExceptionForHR(hr);
+                    }
+                }
 
                 // 查找MJPG编码器（可选，用于格式转换）
                 IBaseFilter encoder = FindEncoder(MediaSubType.Avi);
@@ -557,7 +572,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 }
                 else
                     /* Configure the video output pin with our parameters */
-                    SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.Avi);
+                    SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
 
                 var rendererType = VideoRendererType.VideoMixingRenderer9;
 
@@ -852,6 +867,8 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
 
                 InvokeMediaClosed(new EventArgs());
             }
+
+            m_videoCaptureDeviceChanged = true;
         }
     }
 }
