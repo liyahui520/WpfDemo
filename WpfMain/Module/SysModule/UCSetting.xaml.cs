@@ -38,7 +38,7 @@ namespace WpfMain.Module.SysModule
         {
             #region 视频设置初始化
             VideoPath.Text = AppStatic.VideoConfig.VideoPath;
-            List<VideoType> videoTypes = new List<VideoType>() { new VideoType() { Name = "AVI" } };
+            List<VideoType> videoTypes = new List<VideoType>() { new VideoType() { Name = "AVI" }, new VideoType() { Name = "MP4" } };
             videoType.ItemsSource = videoTypes;//, new VideoType() { Name = "MP4" }, new VideoType() { Name = "WMV" } 
             videoType.SelectedIndex = 0;
             if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoType))

@@ -105,8 +105,10 @@ namespace WpfMain.Module.PetModule
                 //old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
                 //tInfo.Result = old;
 
-
-                tInfo.Result.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath });
+                var old = tInfo.Result;
+                tInfo.Result = new TestResult();
+                old.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath });
+                tInfo.Result = old;
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
                 StartCamp.Content = "开始录像";
             }
