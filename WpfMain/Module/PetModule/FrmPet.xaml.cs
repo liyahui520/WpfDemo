@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using AForge.Video.DirectShow;
 using AForge.Video.FFMPEG;
 using CuPrint;
@@ -58,6 +60,7 @@ namespace WpfMain.Module.PetModule
             tInfo.Result.Images = new List<ImageItem>();
             DataContext = this;
             HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
+            SetupTimer();
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -109,6 +112,8 @@ namespace WpfMain.Module.PetModule
                 tInfo.Result = new TestResult();
                 old.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath });
                 tInfo.Result = old;
+                timer.Stop();
+                timeT.Visibility = Visibility.Hidden;
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
                 StartCamp.Content = "开始录像";
             }
@@ -117,10 +122,38 @@ namespace WpfMain.Module.PetModule
                 isStart = true;
                 //Video?.SetAviFilePath(); 
                 VideoMF?.Start();
+                startTime = DateTime.Now;
+                timer.Start();
+                timeT.Visibility = Visibility.Visible;
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = false };
                 StartCamp.Content = "停止录像";
             }
         }
+
+        private System.Timers.Timer timer;
+        private DateTime startTime;
+        private void SetupTimer()
+        {
+            timer = new System.Timers.Timer(1000); // 设置间隔为1000毫秒（1秒）
+            timer.Elapsed += OnTimerElapsed; // 注册事件处理程序
+            timer.AutoReset = true; // 设置是否重复计时
+            timer.Enabled = false; // 启动计时器
+        }
+
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            UpdateTimerText(); // 更新UI组件，需要使用Dispatcher来确保线程安全
+        }
+
+
+        private void UpdateTimerText()
+        {
+            TimeSpan elapsedTime = DateTime.Now - startTime; // 计算经过的时间
+            string timeText = elapsedTime.ToString(@"hh\:mm\:ss"); // 格式化时间字符串
+            this.Dispatcher.Invoke(() => LXDate1.Text = timeText);
+            //LXDate1.Text = timeText; // 直接更新UI组件，无需使用Dispatcher。
+        }
+
 
         private void StopCamp_OnClick(object sender, RoutedEventArgs e)
         {

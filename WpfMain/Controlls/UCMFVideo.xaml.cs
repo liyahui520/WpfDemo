@@ -15,6 +15,7 @@ using WPFMediaKit.DirectShow.Controls;
 using WPFMediaKit.DirectShow.MediaPlayers;
 using WPFMediaKit.Manager;
 using MediaState = WPFMediaKit.DirectShow.MediaPlayers.MediaState;
+using System.Windows.Threading;
 
 namespace WpfMain.Controlls
 {
@@ -33,7 +34,6 @@ namespace WpfMain.Controlls
         private double _hight;
         private CameraRecorderManager Camra;
         //private VideoCaptureElement cameraCaptureElement;
-
         public UCMFVideo(double width, double hight)
         {
             InitializeComponent();
@@ -164,8 +164,6 @@ namespace WpfMain.Controlls
                 return captureData.String2Image();
             }
         }
-
-
 
         public async Task Start()
         {
