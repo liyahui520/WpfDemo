@@ -14,6 +14,7 @@ using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
 using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
+using DevExpress.XtraRichEdit.API.Native;
 
 namespace WpfMain.Controlls
 {
@@ -39,7 +40,7 @@ namespace WpfMain.Controlls
         {
             Thread thread = new Thread(Init);
             thread.IsBackground = true;
-            thread.Start(); 
+            thread.Start();
 
         }
 
@@ -251,20 +252,24 @@ namespace WpfMain.Controlls
                         image.Size = new SizeF(imgWidth, imgHeight);
                         pos = image.Range.End;
 
-                        // 调整段落行距 
-                        DevExpress.XtraRichEdit.API.Native.Paragraph paragraph = richEdit.Document.GetParagraph(pos);
-                        paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Single;
-                        //paragraph.SpacingBefore = 100; // 段前5磅 
-                        //paragraph.SpacingAfter = 100;  // 段后5磅 
-                        //paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Exactly;
-                        //paragraph.LineSpacing = 3.0f;   // 行距12磅 
-                        //paragraph.RightIndent = 100;
+                        rh = richEdit.Document.InsertText(pos, "\u00A0\u00A0");
+                        pos = rh.End;
+                        // 获取包含图片的段落 
+                        Paragraph paragraph = richEdit.Document.GetParagraph(pos);
+
+                        // 设置段落间距 
+                        paragraph.SpacingAfter = 20;    // 段后间距 
+                        paragraph.SpacingBefore = 20;  // 段前间距 
+                        paragraph.LeftIndent = 20;     // 左缩进 
+                        paragraph.RightIndent = 20;    // 右缩进  
+                        paragraph.Alignment = ParagraphAlignment.Justify;
+                        paragraph.ContextualSpacing = true; // 上下段落间距相等
+                        paragraph.LineSpacingMultiplier = 1.5f; // 行间距倍数 
+
+                        paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Multiple;
+                        pos = paragraph.Range.End;
+
                     });
-                    // 2. 获取当前段落并设置间距  
-                    //paragraph.SpacingBefore = 100; // 段前5磅 
-                    //paragraph.SpacingAfter = 100;  // 段后5磅 
-                    //paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Exactly;
-                    //paragraph.LineSpacing = 620;   // 行距12磅 
                 }
 
                 richEdit.Refresh(); //.ActiveView.ReLayout();
@@ -310,11 +315,11 @@ namespace WpfMain.Controlls
                 {
                     var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{tInfo.TestName.ToString()}.docx");
                     richEditControl1.SaveDocument(exportPath, DocumentFormat.OpenXml);
-                    HandyControl.Controls.MessageBox.Success($"导出成功！", "系统提示"); 
+                    HandyControl.Controls.MessageBox.Success($"导出成功！", "系统提示");
                 }
                 catch (Exception ex)
                 {
-                    HandyControl.Controls.MessageBox.Error($"导出失败：{ex.Message}","系统提示");
+                    HandyControl.Controls.MessageBox.Error($"导出失败：{ex.Message}", "系统提示");
                 }
             }
         }
