@@ -117,6 +117,8 @@ namespace WpfMain.Controlls
             SetCameraCaptureElementVisible(true);
             Camra = new CameraRecorderManager();
             cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
+            if (cameraCaptureElement.VideoCaptureDevice == null)
+                return;
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
             cameraCaptureElement.Play();
             Camra.Camera = cameraCaptureElement;

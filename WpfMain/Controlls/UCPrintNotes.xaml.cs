@@ -128,10 +128,9 @@ namespace WpfMain.Controlls
             object news;
             Type t;
 
-            if (BindData == null)
+            if (BindData == null || BindData.BindData==null)
                 return;
-            if (BindData.BindData != null)
-            {
+
                 t = BindData.BindData.GetType();
                 PropertyInfo[] pinfos = t.GetProperties();
                 if (pinfos == null)
@@ -194,8 +193,6 @@ namespace WpfMain.Controlls
                         });
                     }
                 }
-
-            }
             return;
         }
 

@@ -106,8 +106,11 @@ namespace WPFMediaKit.Manager
             DsDevice devs;
             try
             {
-                device =
-                    MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
+
+
+                device = MultimediaUtil.VideoInputDevices.First();
+                if(!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoDecive))
+                    device = MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
                 if (device == null)
                 {
                     HandyControl.Controls.MessageBox.Error("未获取到摄像头信息", "系统提示");
