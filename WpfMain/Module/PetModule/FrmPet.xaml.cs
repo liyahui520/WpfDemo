@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -161,7 +162,7 @@ namespace WpfMain.Module.PetModule
         }
 
         //拍照
-        private void EndCamp_OnClick(object sender, RoutedEventArgs e)
+        private async void EndCamp_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
             {
@@ -176,7 +177,7 @@ namespace WpfMain.Module.PetModule
                 }
             }
             EndCamp.IsEnabled = false;
-            System.Drawing.Image img = VideoMF?.Capture();
+            System.Drawing.Image img =await VideoMF?.Capture();
             if (img != null)
             {
                 //string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;

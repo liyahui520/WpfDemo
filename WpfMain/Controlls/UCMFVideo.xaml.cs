@@ -16,6 +16,8 @@ using WPFMediaKit.DirectShow.MediaPlayers;
 using WPFMediaKit.Manager;
 using MediaState = WPFMediaKit.DirectShow.MediaPlayers.MediaState;
 using System.Windows.Threading;
+using System.Windows.Input;
+using Newtonsoft.Json;
 
 namespace WpfMain.Controlls
 {
@@ -122,8 +124,31 @@ namespace WpfMain.Controlls
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
             cameraCaptureElement.Play();
             Camra.Camera = cameraCaptureElement;
+            Camra.Camera.ManipulationCompleted += Camera_ManipulationCompleted;
+            Camra.Camera.ManipulationDelta += Camera_ManipulationDelta; 
+            Camra.Camera.ManipulationInertiaStarting += Camera_ManipulationInertiaStarting;
+            Camra.Camera.MediaFailed += Camera_MediaFailed;
         }
 
+        private void Camera_MediaFailed(object sender, MediaFailedEventArgs e)
+        {
+            LogUtil.Error($"Camera_MediaFailed--"+e.Message); 
+        }
+
+        private void Camera_ManipulationInertiaStarting(object sender, ManipulationInertiaStartingEventArgs e)
+        {
+            LogUtil.Error($"Camera_ManipulationInertiaStarting--" + JsonConvert.SerializeObject(e.Device));
+        }
+
+        private void Camera_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
+        {
+            LogUtil.Error($"Camera_ManipulationDelta--" + JsonConvert.SerializeObject(e.Device));
+        }
+
+        private void Camera_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
+        {
+            LogUtil.Error($"Camera_ManipulationCompleted--" + JsonConvert.SerializeObject(e.Device));
+        }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -136,34 +161,45 @@ namespace WpfMain.Controlls
         /// 拍照
         /// </summary>
         /// <returns></returns>
-        public System.Drawing.Image Capture()
+        public async Task<System.Drawing.Image> Capture()
         {
-            if (!Camra.Camera.HasVideo)
+            try
             {
+                if (!Camra.Camera.HasVideo)
+                {
 
-                HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法拍照！", "系统提示");
+                    HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法拍照！", "系统提示");
+                    return null;
+                }
+
+                Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
+
+                // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
+                RenderTargetBitmap bmp = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Default);
+
+                // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
+                camp.Measure(size);
+                camp.Arrange(new Rect(size));
+                bmp.Render(camp);
+                // 创建一个png编码器 
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bmp));
+
+                // 使用内存流保存编码后的图像数据 
+                using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                {
+                    encoder.Save(ms);
+                    byte[] captureData = ms.ToArray();
+                    return captureData.String2Image();
+                }
+            }catch (Exception ex)
+            {
+                LogUtil.Error(ex.Message);
                 return null;
             }
-
-            Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
-
-            // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Default);
-
-            // 为避免抓不全的情况，需要在Render之前调用Measure、Arrange 
-            camp.Measure(size);
-            camp.Arrange(new Rect(size));
-            bmp.Render(camp);
-            // 创建一个png编码器 
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bmp));
-
-            // 使用内存流保存编码后的图像数据 
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            finally
             {
-                encoder.Save(ms);
-                byte[] captureData = ms.ToArray();
-                return captureData.String2Image();
+                cobVideoSource_SelectionChanged(null, null);
             }
         }
 
@@ -188,7 +224,12 @@ namespace WpfMain.Controlls
         {
             var a = Camra.End();
             //cameraCaptureElement.Close();
-            Camra.CamClose();
+            Camra.CamClose(); 
+            //Camra.Camera.VideoCaptureDevice?.Dispose(); 
+            Camra.Camera.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
+            {
+                cameraCaptureElement.Close();
+            }));
             cobVideoSource_SelectionChanged(null, null);
             return a;
         }

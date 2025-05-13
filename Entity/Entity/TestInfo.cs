@@ -293,6 +293,7 @@ namespace Entity.Entity
             }
             set
             {
+                if (value == null) return;
                 imageSource = value;
                 MemoryStream ms = new MemoryStream();
                 BmpBitmapEncoder encoder = new BmpBitmapEncoder();
