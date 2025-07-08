@@ -55,6 +55,7 @@ namespace WpfMain
             var video = new FrmPet();
             FrmModule pet = new FrmModule(video);
             pet.title.Text = "新检查";
+            pet.Title = "新检查";
             pet.Owner = this;
             pet.Show();
 
@@ -65,6 +66,7 @@ namespace WpfMain
         {
             FrmModule frm = new FrmModule(new FrmHistory());
             frm.title.Text = "历史记录";
+            frm.Title = "历史记录";
             frm.Owner = this;
             frm.ShowDialog();
         }

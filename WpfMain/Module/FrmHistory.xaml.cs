@@ -9,13 +9,14 @@ using Newtonsoft.Json;
 using Tools.App;
 using WpfMain.Controlls;
 using WpfMain.Logic;
+using System.Windows.Forms;
 
 namespace WpfMain.Module
 {
     /// <summary>
     /// FrmHistory.xaml 的交互逻辑
     /// </summary>
-    public partial class FrmHistory : UserControl
+    public partial class FrmHistory : System.Windows.Controls.UserControl
     {
 
         public static readonly DependencyProperty DataListProperty = DependencyProperty.Register(
@@ -97,6 +98,7 @@ namespace WpfMain.Module
             }
 
             FrmModule f = new FrmModule(new UCPrintNotes(entity));
+            f.Title = "打印模板";
             f.ShowDialog();
 
         }

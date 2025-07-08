@@ -327,6 +327,7 @@ namespace WpfMain.Module.PetModule
             }
 
             FrmModule f = new FrmModule(new UCPrintNotes(tInfo));
+            f.Title = "打印报告";
             f.ShowDialog();
             return;
             //FrmModule frm = new FrmModule(new UCPrint(tInfo));
