@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml;
@@ -287,6 +288,7 @@ namespace Entity.Entity
                     MemoryStream stream = new MemoryStream();
                     BitBuffer.Byte2Bitmap().Save(stream, System.Drawing.Imaging.ImageFormat.Png);
                     imageSource = (ImageSource)new ImageSourceConverter().ConvertFrom(stream);
+                    stream.Dispose();
                 }
 
                 return imageSource;
@@ -301,6 +303,7 @@ namespace Entity.Entity
                 encoder.Save(ms);
                 bitmap = new Bitmap(ms);
                 ms.Close();
+                ms.Dispose();
                 SetProperty(ref imageSource, value, nameof(ImageSource));
             }
         }

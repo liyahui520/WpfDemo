@@ -9,6 +9,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using AForge.Video.DirectShow;
 using AForge.Video.FFMPEG;
@@ -226,6 +227,27 @@ namespace WpfMain.Module.PetModule
 
         public void Closed()
         {
+            //关闭摄像头
+            VideoMF?.Close();
+            //处理图像资源
+            if (tInfo?.Result?.Images != null)
+            {
+                foreach (var item in tInfo.Result.Images)
+                {
+                    if (item.ImageSource is BitmapSource bitmapSource)
+                    {
+                        // 释放BitmapSource资源
+                        bitmapSource.Freeze();
+                    }
+                }
+            }
+            tInfo = null;
+            // 清理大对象堆（仅在必要时使用）
+            if (GC.CollectionCount(2) < 1) // 检查大对象堆回收次数
+            {
+                GC.Collect(2, GCCollectionMode.Forced); // 强制回收大对象堆
+                GC.WaitForPendingFinalizers();
+            }
             //Video?.Close();
             //VideoMF.Stop();
         }

@@ -669,24 +669,51 @@ namespace Tools.Extend
         }
 
         #region Bitmap与ImageSource互转
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern bool DeleteObject(IntPtr hObject);
         /// <summary>
         /// Bitmap 转为ImageSource
         /// </summary>
         /// <param name="bitmap">Bitmap 对象</param>
         /// <returns>ImageSource 位图对象</returns>
+
         public static ImageSource BitmapToImageSource(this System.Drawing.Bitmap bitmap)
         {
+            if (bitmap == null)
+                return null;
+
+            IntPtr hBitmap = IntPtr.Zero;
             try
             {
-                IntPtr intPtr = bitmap.GetHbitmap();
-                ImageSource imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(intPtr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                hBitmap = bitmap.GetHbitmap(); // 创建HBITMAP句柄
+
+                // 创建BitmapSource并设置缓存选项
+                var imageSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                    hBitmap,
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+
+                // 禁止保留对HBITMAP的引用，允许立即释放
+                imageSource.Freeze(); // 冻结后可跨线程使用，减少内存开销
+
                 return imageSource;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"转换Bitmap时出错: {ex.Message}");
+                return null;
             }
-            return null;
+            finally
+            {
+                // 确保释放HBITMAP句柄（关键修复！）
+                if (hBitmap != IntPtr.Zero)
+                {
+                    DeleteObject(hBitmap);
+                }
+            }
         }
+
 
         /// <summary>
         /// ImageSource 转为Bitmap

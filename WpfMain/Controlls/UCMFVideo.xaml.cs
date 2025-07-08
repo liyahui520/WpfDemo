@@ -122,7 +122,7 @@ namespace WpfMain.Controlls
             if (cameraCaptureElement.VideoCaptureDevice == null)
                 return;
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
-            cameraCaptureElement.Play();
+            cameraCaptureElement.Play(); 
             Camra.Camera = cameraCaptureElement;
             Camra.Camera.ManipulationCompleted += Camera_ManipulationCompleted;
             Camra.Camera.ManipulationDelta += Camera_ManipulationDelta; 
@@ -170,8 +170,8 @@ namespace WpfMain.Controlls
 
                     HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法拍照！", "系统提示");
                     return null;
-                }
-
+                } 
+                LogGpuAccelerationStatus();
                 Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
 
                 // 创建一个RenderTargetBitmap对象，用于捕获当前VideoCaptureElement的画面 
@@ -198,13 +198,45 @@ namespace WpfMain.Controlls
                 return null;
             }
             finally
-            {
+            { 
                 cobVideoSource_SelectionChanged(null, null);
+            }
+        }
+
+        private void LogGpuAccelerationStatus()
+        {
+            try
+            {
+                // 获取当前渲染模式
+                var renderingTier = (RenderCapability.Tier >> 16) & 0xFF;
+                string accelerationLevel;
+                switch (renderingTier)
+                {
+                    case 0:
+                        accelerationLevel = "软件渲染（无GPU加速）";
+                        break;
+                    case 1:
+                        accelerationLevel = "部分GPU加速（基本图形加速）";
+                        break;
+                    case 2:
+                        accelerationLevel = "完全GPU加速（推荐）";
+                        break;
+                    default:
+                        accelerationLevel = "未知";
+                        break;
+                }
+
+                LogUtil.Info($"当前GPU加速级别: {renderingTier} - {accelerationLevel}");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"无法检测GPU加速状态: {ex.Message}");
             }
         }
 
         public async Task Start()
         {
+            LogGpuAccelerationStatus();
             if (Camra.Camera.HasVideo)
                 await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
             else
@@ -230,6 +262,7 @@ namespace WpfMain.Controlls
             {
                 cameraCaptureElement.Close();
             }));
+            Camra.Pause();
             cobVideoSource_SelectionChanged(null, null);
             return a;
         }
@@ -239,6 +272,12 @@ namespace WpfMain.Controlls
             Camra.Pause();
         }
 
+        public void Close()
+        {
+            Camra.CamClose();
+            cameraCaptureElement.Close();
+            cobVideoSource_SelectionChanged(null, null);
+        }
         #endregion
 
     }

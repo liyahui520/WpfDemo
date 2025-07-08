@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Entity.Entity;
 using HandyControl.Controls;
 using Newtonsoft.Json.Linq;
@@ -108,6 +109,8 @@ namespace WpfMain.Controlls
             {
                 SelectedImageItem = (ImageItem)((System.Windows.FrameworkElement)e.Source).DataContext;
                 var old = ParentData.Result;
+                // 释放BitmapSource资源
+                SelectedImageItem.ImageSource.Freeze();
                 ParentData.Result = new TestResult();
                 old.Images.Remove(SelectedImageItem);
                 ParentData.Result = old;
@@ -120,7 +123,7 @@ namespace WpfMain.Controlls
             if (ParentData != null)
             {
                 SelectedVideoItem = (MediaItem)((System.Windows.FrameworkElement)e.Source).DataContext;
-                var old = ParentData.Result;
+                var old = ParentData.Result; 
                 ParentData.Result = new TestResult();
                 old.Vedios.Remove(SelectedVideoItem);
                 ParentData.Result = old;
