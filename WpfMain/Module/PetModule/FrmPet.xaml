@@ -20,7 +20,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border>
-        <Grid Margin="5">
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="350"/>
                 <ColumnDefinition />
