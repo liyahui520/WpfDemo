@@ -66,7 +66,8 @@ namespace WpfMain
                 pet.Show();
             }
             pet.WindowState = WindowState.Maximized;
-            WindowState = WindowState.Minimized;
+            pet.Focus();
+            //WindowState = WindowState.Minimized;
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

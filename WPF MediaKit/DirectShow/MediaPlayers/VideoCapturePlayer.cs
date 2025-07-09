@@ -449,7 +449,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 // 重启预览流
                 mediaControl.Run();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //FreeResources();
                 //throw new ApplicationException("停止录像失败", ex);

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using DevExpress.Xpf.RichEdit;
+using DevExpress.XtraRichEdit;
+using DevExpress.XtraRichEdit.API.Native;
+using Entity.Entity;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,14 +11,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using DevExpress.Xpf.RichEdit;
-using DevExpress.XtraRichEdit;
-using DevExpress.XtraRichEdit.API.Native;
-using Entity.Entity;
 using Tools.App;
 using Tools.Extend;
 using SearchOptions = DevExpress.XtraRichEdit.API.Native.SearchOptions;
-using DevExpress.XtraRichEdit.API.Native;
 
 namespace WpfMain.Controlls
 {

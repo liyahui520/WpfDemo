@@ -276,7 +276,7 @@ namespace WPFMediaKit.DirectShow.Controls
             });
         }
 
-        public void Stop()
+        public new void Stop()
         {
             VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
             {
@@ -284,7 +284,7 @@ namespace WPFMediaKit.DirectShow.Controls
             });
         }
 
-        public void Close()
+        public new void Close()
         {
             VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
             {
