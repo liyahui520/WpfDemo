@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:WpfMain.Controlls"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d"  >
-    <Border BorderThickness="2" CornerRadius="20" Margin="10" Cursor="Hand">
+    <Border BorderThickness="2" CornerRadius="20" Margin="10" Cursor="Hand" >
         <Border.BorderBrush>
             <SolidColorBrush Color="#666666" Opacity="0.2"/>
         </Border.BorderBrush>

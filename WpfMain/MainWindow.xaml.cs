@@ -65,8 +65,9 @@ namespace WpfMain
                 //pet.Owner = this;
                 pet.Show();
             }
+            e.Handled = true;
             pet.WindowState = WindowState.Maximized;
-            pet.Focus();
+            pet.Activate();
             //WindowState = WindowState.Minimized;
         }
 
