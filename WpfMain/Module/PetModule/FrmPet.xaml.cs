@@ -16,6 +16,7 @@ using AForge.Video.FFMPEG;
 using CuPrint;
 using DirectShowLib;
 using Entity.Entity;
+using HandyControl.Expression.Media;
 using Record;
 using Tools.App;
 using Tools.Extend;
@@ -32,6 +33,11 @@ namespace WpfMain.Module.PetModule
     public partial class FrmPet : UserControl, ICustom
     {
         public UCMFVideo VideoMF { get; set; }
+
+        /// <summary>
+        /// 是否保存
+        /// </summary>
+        private static bool IsSave = false;
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
             nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
@@ -56,7 +62,7 @@ namespace WpfMain.Module.PetModule
             VideoModel = new PropertyVideoModel();
             VideoModel.ExposureModel = new Exposure();
             VideoModel.Images = new List<VideoImage>();// { new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" }, new VideoImage() { Path = "https://tpc.googlesyndication.com/simgad/2324724962607117599", Name = "1" } };
-
+            IsSave = false;
             tInfo = new TestInfo();
             tInfo.Result = new TestResult();
             tInfo.Result.Images = new List<ImageItem>();
@@ -178,7 +184,7 @@ namespace WpfMain.Module.PetModule
                 }
             }
             EndCamp.IsEnabled = false;
-            System.Drawing.Image img =await VideoMF?.Capture();
+            System.Drawing.Image img = await VideoMF?.Capture();
             if (img != null)
             {
                 //string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;
@@ -241,6 +247,8 @@ namespace WpfMain.Module.PetModule
                     }
                 }
             }
+            //删除指定目录下所有文件 
+            ObjectExtension.DeleteDirectoryContents(AppVideoConfig.TempPath);
             tInfo = null;
             // 清理大对象堆（仅在必要时使用）
             if (GC.CollectionCount(2) < 1) // 检查大对象堆回收次数
@@ -287,6 +295,7 @@ namespace WpfMain.Module.PetModule
                 AppStatic.PetInfo.PetTypes.Add(new PetType() { Name = tInfo.Type, PetVarietys = new List<PetVariety>() { new PetVariety() { Name = tInfo.Variety } } });
             }
             AppStatic.PetInfo.Save();
+            IsSave = true;
             HandyControl.Controls.MessageBox.Success($"保存成功！", "系统提示");
         }
 

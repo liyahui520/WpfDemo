@@ -911,37 +911,94 @@ namespace Tools.Extend
 
             return filePaths;
         }
-    }
 
-    public static class CloneExpressionBuilder<T>
-    {
-        private static readonly Func<T, T> _cloneFunc;
 
-        static CloneExpressionBuilder()
+
+        /// <summary>
+        /// 删除指定目录下的所有文件和子目录
+        /// </summary>
+        /// <param name="directoryPath">要清理的目录路径</param>
+        /// <param name="deleteSubdirectories">是否删除子目录，默认为true</param>
+        /// <returns>操作是否成功</returns>
+        public static bool DeleteDirectoryContents(string directoryPath, bool deleteSubdirectories = true)
         {
-            var sourceParam = Expression.Parameter(typeof(T), "source");
-            var clone = Expression.Variable(typeof(T), "clone");
+            try
+            {
+                // 检查目录是否存在
+                if (!Directory.Exists(directoryPath))
+                {
+                    MessageBox.Show("指定的目录不存在！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
 
-            var body = new List<Expression>
+                // 获取目录中的所有文件并删除
+                string[] files = Directory.GetFiles(directoryPath);
+                foreach (string file in files)
+                {
+                    File.SetAttributes(file, FileAttributes.Normal); // 移除只读等特殊属性
+                    File.Delete(file);
+                }
+
+                // 如果需要删除子目录，则递归删除
+                if (deleteSubdirectories)
+                {
+                    string[] subDirectories = Directory.GetDirectories(directoryPath);
+                    foreach (string subDirectory in subDirectories)
+                    {
+                        Directory.Delete(subDirectory, true); // 递归删除子目录及其内容
+                    }
+                }
+                 
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            { 
+                return false;
+            }
+            catch (DirectoryNotFoundException)
+            { 
+                return false;
+            }
+            catch (IOException ex)
+            { 
+                return false;
+            }
+            catch (Exception ex)
+            { 
+                return false;
+            }
+        }
+    }
+}
+
+public static class CloneExpressionBuilder<T>
+{
+    private static readonly Func<T, T> _cloneFunc;
+
+    static CloneExpressionBuilder()
+    {
+        var sourceParam = Expression.Parameter(typeof(T), "source");
+        var clone = Expression.Variable(typeof(T), "clone");
+
+        var body = new List<Expression>
             {
                 Expression.Assign(clone, Expression.New(typeof(T)))
             };
 
-            foreach (var field in typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                if (Attribute.IsDefined(field, typeof(XmlIgnoreAttribute))) continue;
+        foreach (var field in typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        {
+            if (Attribute.IsDefined(field, typeof(XmlIgnoreAttribute))) continue;
 
-                var sourceField = Expression.Field(sourceParam, field);
-                var cloneField = Expression.Field(clone, field);
-                body.Add(Expression.Assign(cloneField, sourceField));
-            }
-
-            body.Add(clone);
-
-            var block = Expression.Block(new[] { clone }, body);
-            _cloneFunc = Expression.Lambda<Func<T, T>>(block, sourceParam).Compile();
+            var sourceField = Expression.Field(sourceParam, field);
+            var cloneField = Expression.Field(clone, field);
+            body.Add(Expression.Assign(cloneField, sourceField));
         }
 
-        public static T Clone(T source) => _cloneFunc(source);
+        body.Add(clone);
+
+        var block = Expression.Block(new[] { clone }, body);
+        _cloneFunc = Expression.Lambda<Func<T, T>>(block, sourceParam).Compile();
     }
+
+    public static T Clone(T source) => _cloneFunc(source);
 }
