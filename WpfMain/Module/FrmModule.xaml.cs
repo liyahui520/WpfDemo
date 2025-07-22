@@ -12,6 +12,7 @@ namespace WpfMain.Module
     /// </summary>
     public partial class FrmModule: Window
     {
+        public bool isCloseed { get; set; }
         public FrmModule(UserControl control)
         {
             InitializeComponent();
@@ -21,6 +22,7 @@ namespace WpfMain.Module
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
+            isCloseed = true;
             if (this.Control.Content is ICustom)
                 ((ICustom)this.Control.Content)?.Closed();
         }
@@ -42,7 +44,7 @@ namespace WpfMain.Module
 
         private void MinButton_Click(object sender, RoutedEventArgs e)
         {
-            AppStatic.MainWindow.WindowState = WindowState.Minimized;
+            this.WindowState = WindowState.Minimized;
         }
          
 

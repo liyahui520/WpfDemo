@@ -50,16 +50,25 @@ namespace WpfMain
             Application.Current.Shutdown();
         }
 
+
+
+        private FrmModule pet;
+
         private void PetModule_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var video = new FrmPet();
-            FrmModule pet = new FrmModule(video);
-            pet.title.Text = "新检查";
-            pet.Title = "新检查";
-            pet.Owner = this;
-            pet.Show();
-
-            //new UCMFVideo().Show();
+            if (pet == null || pet.isCloseed)
+            {
+                var video = new FrmPet();
+                pet = new FrmModule(video);
+                pet.title.Text = "新检查";
+                pet.Title = "新检查";
+                //pet.Owner = this;
+                pet.Show();
+            }
+            e.Handled = true;
+            pet.WindowState = WindowState.Maximized;
+            pet.Activate();
+            //WindowState = WindowState.Minimized;
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
