@@ -263,7 +263,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             //FreeResources();
 
             try
-            { 
+            {
                 /* Create a capture graph builder to help 
                  * with rendering a capture graph */
                 var graphBuilder = (ICaptureGraphBuilder2)new CaptureGraphBuilder2();
@@ -300,12 +300,15 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 InvokeMediaFailed(new MediaFailedEventArgs(ex.Message, ex));
             }
         }
+
         // 添加关键方法：StartCapture和StopCapture
-        public void StartCapture(string filePath,bool isWav=false)
+        public void StartCapture(string filePath, bool isWav = false)
         {
             VerifyAccess();
             try
-            { 
+            {
+                //StartRecording(filePath);
+                //StartRecording(filePath);
                 // 重新创建过滤器图
                 //m_graph = (IGraphBuilder)new FilterGraphNoThread();
 #if DEBUG
@@ -340,13 +343,41 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 //m_videoCaptureSourceChanged = false;
                 // 停止媒体流
                 var mediaControl = (IMediaControl)m_graph;
-                mediaControl.StopWhenReady(); 
-                // 强制设置MJPG格式确保兼容性
-                SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
+                mediaControl.StopWhenReady();
+                //if (UseYuv && !EnableSampleGrabbing)
+                //{
+                //    /* Configure the video output pin with our parameters and if it fails
+                //     * then just use the default media subtype*/
+                //    if (!SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.YUY2))
+                //        SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
+                //}
+                //else
+                //    /* Configure the video output pin with our parameters */
+                //    SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
+                //// 强制设置MJPG格式确保兼容性
+                ////SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
+                //var rendererType = VideoRendererType.VideoMixingRenderer9;
 
+                ///* Creates a video renderer and register the allocator with the base class */
+                //m_renderer = CreateVideoRenderer(rendererType, m_graph, 1);
+
+                //if (rendererType == VideoRendererType.VideoMixingRenderer9)
+                //{
+                //    var mixer = m_renderer as IVMRMixerControl9;
+
+                //    if (mixer != null && !EnableSampleGrabbing && UseYuv)
+                //    {
+                //        VMR9MixerPrefs dwPrefs;
+                //        mixer.GetMixingPrefs(out dwPrefs);
+                //        dwPrefs &= ~VMR9MixerPrefs.RenderTargetMask;
+                //        dwPrefs |= VMR9MixerPrefs.RenderTargetYUV;
+                //        /* Prefer YUV */
+                //        mixer.SetMixingPrefs(dwPrefs);
+                //    }
+                //}
                 IBaseFilter mux;
                 IFileSinkFilter sink;
-                
+
                 // 创建AVI复用器和文件写入器
                 hr = graphBuilder.SetOutputFileName(MediaSubType.Avi, filePath, out mux, out sink);
                 DsError.ThrowExceptionForHR(hr);
@@ -381,7 +412,6 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                     m_captureDevice,
                     encoder,
                     mux);
-
                 // 手动连接引脚（如果自动失败）
                 if (hr < 0)
                 {
@@ -394,7 +424,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 SafeRelease(mux);
                 SafeRelease(sink);
                 SafeRelease(graphBuilder);
-                //SafeRelease(encoder);
+
             }
             catch (Exception ex)
             {
@@ -403,6 +433,246 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 Console.WriteLine("录像启动失败" + ex.Message);
             }
         }
+        private FilterGraph graph;
+        private IBaseFilter videoSource;
+        private IBaseFilter h264Encoder;
+        private IBaseFilter mp4Mux;
+        private IFileSinkFilter fileWriter;
+
+        // Windows SDK 编码器的 CLSID
+        private static readonly Guid CLSID_H264Encoder = MediaSubType.H264;
+        private static readonly Guid CLSID_AACEncoder = new Guid("{C1F400A0-3F08-11D3-9F0B-006008039E37}");
+        private static readonly Guid CLSID_MPEG4SinkWriter = MediaSubType.Mpeg2Video;
+
+
+        public void StartRecording(string filePath)
+        {
+            var graphBuilder = (ICaptureGraphBuilder2)new CaptureGraphBuilder2();
+            graphBuilder.SetFiltergraph((IGraphBuilder)graph);
+
+            // 添加视频源
+            AddVideoSource();
+
+            // 添加 H.264 编码器（使用 Windows SDK）
+            h264Encoder = CreateSystemEncoder(CLSID_H264Encoder);
+            m_graph.AddFilter(h264Encoder, "H.264 Encoder");
+            ConfigureH264Encoder(h264Encoder);
+
+            // 添加 MP4 Mux（使用 Windows SDK）
+            mp4Mux = CreateSystemFilter(CLSID_MPEG4SinkWriter);
+            m_graph.AddFilter(mp4Mux, "MP4 Mux");
+
+            // 添加文件写入器
+            fileWriter = CreateFileWriter(filePath);
+            m_graph.AddFilter((IBaseFilter)fileWriter, "File Writer");
+
+            // 连接过滤器
+            graphBuilder.RenderStream(null, null, videoSource, h264Encoder, mp4Mux);
+            graphBuilder.RenderStream(null, null, mp4Mux, null, (IBaseFilter)fileWriter);
+
+            // 开始录制
+            var mediaControl = (IMediaControl)graph;
+            mediaControl.Run();
+        }
+
+        private IBaseFilter CreateSystemEncoder(Guid clsid)
+        {
+            try
+            {
+                return (IBaseFilter)Activator.CreateInstance(Type.GetTypeFromCLSID(clsid));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"创建编码器失败: {ex.Message}");
+                throw;
+            }
+        }
+
+        private IBaseFilter CreateSystemFilter(Guid clsid)
+        {
+            try
+            {
+                return (IBaseFilter)Activator.CreateInstance(Type.GetTypeFromCLSID(clsid));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"创建过滤器失败: {ex.Message}");
+                throw;
+            }
+        }
+
+        private IFileSinkFilter CreateFileWriter(string filePath)
+        {
+            var fileSink = (IBaseFilter)new FileWriter();
+            var fileSinkFilter = (IFileSinkFilter)fileSink;
+            fileSinkFilter.SetFileName(filePath, null);
+            return fileSinkFilter;
+        }
+
+        private void AddVideoSource()
+        {
+            // 实现视频源添加逻辑
+            // 例如: videoSource = CreateVideoSourceDevice();
+        }
+        //private IBaseFilter CreateMp4MuxFilter()
+        //{
+        //    try
+        //    {
+        //        // 尝试使用首选的 MP4 Mux
+        //        Guid clsidMp4Mux = MediaSubType.Mpeg2Video;
+        //        return (IBaseFilter)Activator.CreateInstance(Type.GetTypeFromCLSID(clsidMp4Mux));
+        //    }
+        //    catch (COMException)
+        //    {
+        //        // 尝试替代的 MP4 Mux
+        //        try
+        //        {
+        //            Guid clsidAlternativeMp4Mux = MediaSubType.Mpeg2Video;
+        //            return (IBaseFilter)Activator.CreateInstance(Type.GetTypeFromCLSID(clsidAlternativeMp4Mux));
+        //        }
+        //        catch (COMException ex)
+        //        {
+        //            Console.WriteLine("无法创建任何 MP4 Mux 过滤器: " + ex.Message);
+        //            throw;
+        //        }
+        //    }
+        //}
+
+        private void ConfigureH264Encoder(IBaseFilter encoder)
+        {
+            // 配置H.264编码器参数
+            try
+            {
+                // 获取编码器属性页接口
+                ISpecifyPropertyPages propertyPages = (ISpecifyPropertyPages)encoder;
+
+                // 设置编码器参数（示例：中等质量）
+                // 实际应用中可能需要更复杂的参数配置
+                // 这里简化处理，使用默认参数
+            }
+            catch { /* 忽略配置错误 */ }
+        }
+
+        private IBaseFilter CreateMp4MuxFilter()
+        {
+            try
+            {
+                // 尝试使用 Windows SDK 中的 MPEG-4 Sink Writer
+                Guid clsidMpeg4SinkWriter = new Guid("{72EF14B1-F8E5-44BC-BC7F-5A39E2BE7F56}");
+                return CreateFilterByClsid(clsidMpeg4SinkWriter, "MPEG-4 Sink Writer");
+            }
+            catch (COMException)
+            {
+                // 备选方案：使用 LAV Filters 的 MP4 Mux
+                Guid clsidLavMp4Mux = new Guid("{B98D13E7-55DB-4385-A86C-DEB4B6A97429}");
+                return CreateFilterByClsid(clsidLavMp4Mux, "LAV MP4 Mux");
+            }
+        }
+
+        private IBaseFilter CreateH264Encoder()
+        {
+            try
+            {
+                // 使用 Windows SDK 中的 H.264 编码器
+                Guid clsidH264Encoder = new Guid("{66B56515-5476-4B6F-B75E-3D9B51045A82}");
+                return CreateFilterByClsid(clsidH264Encoder, "H.264 Encoder");
+            }
+            catch (COMException)
+            {
+                // 备选方案：使用 x264vfw
+                Guid clsidX264Encoder = new Guid("{XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"); // 替换为实际的 x264vfw CLSID
+                return CreateFilterByClsid(clsidX264Encoder, "x264vfw Encoder");
+            }
+        }
+
+        private IBaseFilter CreateAacEncoder()
+        {
+            try
+            {
+                // 使用 Windows Media Audio 编码器 (AAC)
+                Guid clsidWmaEncoder = new Guid("{C1F400A0-3F08-11D3-9F0B-006008039E37}");
+                return CreateFilterByClsid(clsidWmaEncoder, "Windows Media Audio Encoder");
+            }
+            catch (COMException)
+            {
+                // 备选方案：使用 FDK AAC 编码器 (需单独安装)
+                Guid clsidFdkAacEncoder = new Guid("{XXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}");
+                return CreateFilterByClsid(clsidFdkAacEncoder, "FDK AAC Encoder");
+            }
+        }
+
+        private IBaseFilter CreateFilterByClsid(Guid clsid, string filterName)
+        {
+            try
+            {
+                Console.WriteLine($"尝试创建过滤器: {filterName} (CLSID: {clsid})");
+                var filter = (IBaseFilter)Activator.CreateInstance(Type.GetTypeFromCLSID(clsid));
+                Console.WriteLine($"成功创建过滤器: {filterName}");
+                return filter;
+            }
+            catch (COMException ex)
+            {
+                Console.WriteLine($"创建过滤器失败: {filterName} - {ex.Message} (HRESULT: {ex.ErrorCode:X})");
+                throw;
+            }
+        }
+
+        private IFileSinkFilter CreateFileSink(string filePath)
+        {
+            // 创建文件写入器
+            IBaseFilter fileSinkFilter = (IBaseFilter)new FileWriter();
+            IFileSinkFilter fileSink = (IFileSinkFilter)fileSinkFilter;
+            fileSink.SetFileName(filePath, null);
+            return fileSink;
+        }
+
+        private bool ConnectFilters(IGraphBuilder graph, IBaseFilter src, IBaseFilter dest)
+        {
+            // 连接两个过滤器
+            IPin outPin = GetUnconnectedPin(src, PinDirection.Output);
+            IPin inPin = GetUnconnectedPin(dest, PinDirection.Input);
+
+            if (outPin == null || inPin == null)
+                return false;
+
+            int hr = graph.Connect(outPin, inPin);
+            SafeRelease(outPin);
+            SafeRelease(inPin);
+            return hr >= 0;
+        }
+
+        private IPin GetUnconnectedPin(IBaseFilter filter, PinDirection pinDir)
+        {
+            // 获取过滤器上未连接的引脚
+            IEnumPins pinEnum;
+            filter.EnumPins(out pinEnum);
+
+            IPin[] pins = new IPin[1];
+            IntPtr fetched = IntPtr.Zero;
+
+            while (pinEnum.Next(1, pins, fetched) == 0)
+            {
+                IPin pin = pins[0];
+                PinDirection direction;
+                pin.QueryDirection(out direction);
+
+                if (direction == pinDir)
+                {
+                    IPin connected;
+                    if (pin.ConnectedTo(out connected) < 0)
+                    {
+                        SafeRelease(connected);
+                        return pin;
+                    }
+                    SafeRelease(connected);
+                }
+                SafeRelease(pin);
+            }
+
+            SafeRelease(pinEnum);
+            return null;
+        }
+
         private IEnumerable<IBaseFilter> GetFilters(IGraphBuilder graph)
         {
             IEnumFilters enumFilters;
@@ -568,7 +838,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                     /* Configure the video output pin with our parameters and if it fails
                      * then just use the default media subtype*/
                     if (!SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.YUY2))
-                        SetVideoCaptureParameters(graphBuilder, m_captureDevice, Guid.Empty);
+                        SetVideoCaptureParameters(graphBuilder, m_captureDevice, MediaSubType.MJPG);
                 }
                 else
                     /* Configure the video output pin with our parameters */
@@ -703,8 +973,9 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
 
             /* Setup the VIDEOINFOHEADER with the parameters we want */
             videoInfo.AvgTimePerFrame = DSHOW_ONE_SECOND_UNIT / FPS;
-            videoInfo.BmiHeader.Width = DesiredWidth;
-            videoInfo.BmiHeader.Height = DesiredHeight;
+            videoInfo.BmiHeader.Width = 640;// DesiredWidth;
+            videoInfo.BmiHeader.Height = 480;// DesiredHeight;
+
 
             if (mediaSubType != Guid.Empty)
             {
@@ -801,7 +1072,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
 
         int ISampleGrabberCB.BufferCB(double sampleTime, IntPtr pBuffer, int bufferLen)
         {
-            throw new NotImplementedException();
+            return 0;
         }
 
         #endregion

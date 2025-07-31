@@ -219,8 +219,8 @@ namespace WPFMediaKit.MediaFoundation
             IMFVideoPresenter presenter = null;
             try
             {
-                var path = System.IO.Path.GetDirectoryName(new Uri(typeof(EvrPresenter).Assembly.CodeBase).LocalPath);
-                var dlltoload = System.IO.Path.Combine(path, IntPtr.Size == 8 ? @"EvrPresenter64.dll" : @"EvrPresenter32.dll");
+                var path = System.IO.Path.GetDirectoryName(new Uri(typeof(EvrPresenter).Assembly.Location).LocalPath);
+                var dlltoload = System.IO.Path.Combine(path, IntPtr.Size == 8 ? @"runtimes\win-x64\native\EvrPresenter64.dll" : @"runtimes\win-x86\native\EvrPresenter32.dll");
                 presenter = COMUtil.CreateFromDll<IMFVideoPresenter>(dlltoload, EVR_PRESENTER_CLSID);
 
                 int count;

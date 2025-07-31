@@ -18,6 +18,9 @@ using MediaState = WPFMediaKit.DirectShow.MediaPlayers.MediaState;
 using System.Windows.Threading;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using System.Windows.Media.Media3D;
+using System.Diagnostics;
+using AForge.Video.FFMPEG;
 
 namespace WpfMain.Controlls
 {
@@ -35,6 +38,8 @@ namespace WpfMain.Controlls
         private double _width;
         private double _hight;
         private CameraRecorderManager Camra;
+        private Process ffmpegProcess;
+        private string ffmpegPath = "ffmpeg.exe"; // 需要预先安装FFmpeg
         //private VideoCaptureElement cameraCaptureElement;
         public UCMFVideo(double width, double hight)
         {
@@ -121,18 +126,29 @@ namespace WpfMain.Controlls
             cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
             if (cameraCaptureElement.VideoCaptureDevice == null)
                 return;
+
             cameraCaptureElement.LoadedBehavior = MediaState.Play;
-            cameraCaptureElement.Play(); 
+
+            cameraCaptureElement.NewVideoSample += Camera_NewVideoSample;
             Camra.Camera = cameraCaptureElement;
             Camra.Camera.ManipulationCompleted += Camera_ManipulationCompleted;
-            Camra.Camera.ManipulationDelta += Camera_ManipulationDelta; 
+            Camra.Camera.ManipulationDelta += Camera_ManipulationDelta;
             Camra.Camera.ManipulationInertiaStarting += Camera_ManipulationInertiaStarting;
             Camra.Camera.MediaFailed += Camera_MediaFailed;
+            Camra.Camera.NewVideoSample += Camera_NewVideoSample;
+            Camra.Camera.Play(); 
         }
+
+        private void Camera_NewVideoSample(object sender, VideoSampleArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+
 
         private void Camera_MediaFailed(object sender, MediaFailedEventArgs e)
         {
-            LogUtil.Error($"Camera_MediaFailed--"+e.Message); 
+            LogUtil.Error($"Camera_MediaFailed--" + e.Message);
         }
 
         private void Camera_ManipulationInertiaStarting(object sender, ManipulationInertiaStartingEventArgs e)
@@ -170,7 +186,7 @@ namespace WpfMain.Controlls
 
                     HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法拍照！", "系统提示");
                     return null;
-                } 
+                }
                 LogGpuAccelerationStatus();
                 Size size = new Size(cameraCaptureElement.NaturalVideoWidth, cameraCaptureElement.NaturalVideoHeight);
 
@@ -192,13 +208,14 @@ namespace WpfMain.Controlls
                     byte[] captureData = ms.ToArray();
                     return captureData.String2Image();
                 }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 LogUtil.Error(ex.Message);
                 return null;
             }
             finally
-            { 
+            {
                 cobVideoSource_SelectionChanged(null, null);
             }
         }
@@ -237,6 +254,7 @@ namespace WpfMain.Controlls
         public async Task Start()
         {
             LogGpuAccelerationStatus();
+            //StartFFmpegRecording();
             if (Camra.Camera.HasVideo)
                 await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
             else
@@ -253,10 +271,10 @@ namespace WpfMain.Controlls
         }
 
         public string End()
-        {
+        { 
             var a = Camra.End();
             //cameraCaptureElement.Close();
-            Camra.CamClose(); 
+            Camra.CamClose();
             //Camra.Camera.VideoCaptureDevice?.Dispose(); 
             Camra.Camera.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
             {
@@ -278,7 +296,60 @@ namespace WpfMain.Controlls
             cameraCaptureElement.Close();
             cobVideoSource_SelectionChanged(null, null);
         }
-        #endregion
+        #endregion 
 
+        private void StartFFmpegRecording()
+        { 
+            // 创建输出文件路径
+            string videoFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
+            string fileName = $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
+            var outputFilePath = Path.Combine(videoFolder, fileName);
+            var videoWriter = new VideoFileWriter();
+
+            // 设置视频编码器参数 
+            videoWriter.Open(outputFilePath,
+                             860,
+                             400,
+                             30, // 帧率
+                             VideoCodec.MPEG4,
+                             1000000); // 比特率
+
+            // 订阅视频帧事件，用于捕获每一帧
+            cameraCaptureElement.NewVideoSample += Camera_NewVideoSample;
+        }
+
+        private void FFmpegProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                // 记录FFmpeg输出（可用于调试）
+                Debug.WriteLine($"FFmpeg: {e.Data}");
+            }
+        }
+
+        private void StopRecording()
+        {
+            try
+            {
+                if (ffmpegProcess != null && !ffmpegProcess.HasExited)
+                {
+                    // 优雅地停止FFmpeg
+                    ffmpegProcess.StandardInput.WriteLine("q"); // 发送'q'命令停止录制
+                    ffmpegProcess.WaitForExit(2000); // 等待2秒
+
+                    if (!ffmpegProcess.HasExited)
+                    {
+                        ffmpegProcess.Kill(); // 强制终止
+                    }
+                }
+
+                MessageBox.Show("录制已停止");
+                (FindName("StartButton") as System.Windows.Controls.Button).Content = "开始录制";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"停止录制时出错: {ex.Message}");
+            }
+        }
     }
 }

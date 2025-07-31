@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Record;
 using Record.AviFile;
 using AForge.Video.FFMPEG;
 using AForge.Video.VFW;
 using DirectShowLib;
-using Record.Extension;
 using Tools.App;
-using Tools.Extend;
 using WPFMediaKit.DirectShow.Controls;
-using AForge.Video.DirectShow;
-using WPFMediaKit.DirectShow.MediaPlayers;
-using System.Threading;
-using System.Windows.Media.Media3D;
+using System.Windows;
 
 namespace WPFMediaKit.Manager
 {
@@ -115,8 +105,7 @@ namespace WPFMediaKit.Manager
                 {
                     HandyControl.Controls.MessageBox.Error("未获取到摄像头信息", "系统提示");
                     return null;
-                }
-
+                } 
                 devs = device;
             }
             catch
@@ -135,7 +124,7 @@ namespace WPFMediaKit.Manager
         {
             this.RecorderStatus = RecorderStatus.Start;
             isProcessingStream = true;
-            AviFilePath = path;
+            AviFilePath = path; 
             Camera.Start(AviFilePath, IsOpen); 
         } 
          

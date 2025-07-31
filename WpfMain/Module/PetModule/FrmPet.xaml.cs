@@ -232,7 +232,7 @@ namespace WpfMain.Module.PetModule
         }
 
         public void Closed()
-        {
+        { 
             //关闭摄像头
             VideoMF?.Close();
             //处理图像资源

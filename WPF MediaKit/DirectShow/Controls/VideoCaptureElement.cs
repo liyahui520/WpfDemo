@@ -269,10 +269,11 @@ namespace WPFMediaKit.DirectShow.Controls
         }
 
         public void Start(string path,bool isWav)
-        { 
+        {
             VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
             {
                 VideoCapturePlayer.StartCapture(path,isWav);
+                VideoCapturePlayer.Play();
             });
         }
 
