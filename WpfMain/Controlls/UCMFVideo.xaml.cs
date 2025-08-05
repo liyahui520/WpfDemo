@@ -137,8 +137,7 @@ namespace WpfMain.Controlls
         }
 
         private void Camera_NewVideoSample(object sender, VideoSampleArgs e)
-        {
-            throw new NotImplementedException();
+        { 
         }
 
 
