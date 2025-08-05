@@ -3,9 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Record;
-using Record.AviFile;
+using System.Windows.Forms; 
 using DirectShowLib;
 using Tools.App;
 using WPFMediaKit.DirectShow.Controls;
@@ -31,21 +29,11 @@ namespace WPFMediaKit.Manager
         /// </summary>
         private string AviFilePath { get; set; }
         #endregion
-
-        /// <summary>
-        /// 录制声音
-        /// </summary>
-        private WavRecorder wavRecorder { get; set; }
-
+         
         /// <summary>
         /// 总帧数
         /// </summary>
-        private int TotalFrame { get; set; }
-
-        /// <summary>
-        /// 录制状态
-        /// </summary>
-        public RecorderStatus RecorderStatus { get; set; }
+        private int TotalFrame { get; set; } 
 
         /// <summary>
         /// 是否开启录音
@@ -107,8 +95,7 @@ namespace WPFMediaKit.Manager
         /// 开始
         /// </summary> 
         public void Start(string path)
-        {
-            this.RecorderStatus = RecorderStatus.Start; 
+        { 
             AviFilePath = path; 
             Camera.Start(AviFilePath, IsOpen); 
         } 
@@ -138,8 +125,7 @@ namespace WPFMediaKit.Manager
         /// 暂停
         /// </summary>
         public void Pause()
-        {
-            this.RecorderStatus = RecorderStatus.Pause;
+        { 
         }
 
     }

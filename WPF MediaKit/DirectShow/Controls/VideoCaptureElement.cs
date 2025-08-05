@@ -289,10 +289,10 @@ namespace WPFMediaKit.DirectShow.Controls
 
         public new void Close()
         {
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
             {
                 VideoCapturePlayer.Close();
-            });
+            }));
 
         }
 
@@ -342,6 +342,7 @@ namespace WPFMediaKit.DirectShow.Controls
             // 重新初始化以应用输出文件设置
             VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
             {
+                VideoCapturePlayer.ReleaseResources();
                 VideoCapturePlayer.VideoCaptureDevice = initCapture();
                 VideoCapturePlayer.SetupGraph();
                 VideoCapturePlayer.Play();

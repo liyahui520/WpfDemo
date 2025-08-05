@@ -11,14 +11,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using AForge.Video.DirectShow;
-using AForge.Video.FFMPEG;
+using System.Windows.Threading; 
 using CuPrint;
 using DirectShowLib;
 using Entity.Entity;
-using HandyControl.Expression.Media;
-using Record;
+using HandyControl.Expression.Media; 
 using Tools.App;
 using Tools.Extend;
 using WpfMain.Controlls;
@@ -79,7 +76,7 @@ namespace WpfMain.Module.PetModule
                 new Resolution() { Text = "1280*720", IsDefault=false,  Width = 1280, Height = 720 },
                 new Resolution() { Text = "1920*1080",IsDefault=false,   Width = 1920, Height = 1080 }
             });
-            resolutionList.ItemsSource = a;
+            //resolutionList.ItemsSource = a;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -391,9 +388,9 @@ namespace WpfMain.Module.PetModule
 
         public void fenb_OnSelected(object sender, RoutedEventArgs e)
         {
-            if (resolutionList.SelectedItem == null) return;
-            AppStatic.Resolution = ((Resolution)resolutionList.SelectedItem);
-            VideoMF?.CamReLoad();
+            //if (resolutionList.SelectedItem == null) return;
+            //AppStatic.Resolution = ((Resolution)resolutionList.SelectedItem);
+            //VideoMF?.CamReLoad();
         }
     }
 }

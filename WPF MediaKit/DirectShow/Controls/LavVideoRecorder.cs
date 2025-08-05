@@ -72,10 +72,10 @@ namespace WPFMediaKit.DirectShow.Controls
                 if (IsBaseInitialized())
                 {
                     initTimer.Stop();
-                    Dispatcher.BeginInvoke(() =>
+                    Dispatcher.BeginInvoke((Action)(() =>
                     {
                         CompleteInitialization();
-                    });
+                    }));
                 }
             };
 

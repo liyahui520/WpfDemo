@@ -162,7 +162,6 @@
     <Compile Include="AviFile\RecorderStatus.cs" />
     <Compile Include="AviFile\RecordSound.cs" />
     <Compile Include="AviFile\VideoStream.cs" />
-    <Compile Include="CameraRecorder.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Extension\WindowApi.cs" />
     <Compile Include="Global.cs" />

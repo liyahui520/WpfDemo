@@ -19,8 +19,7 @@ using System.Windows.Threading;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using System.Windows.Media.Media3D;
-using System.Diagnostics;
-using AForge.Video.FFMPEG;
+using System.Diagnostics; 
 
 namespace WpfMain.Controlls
 {
@@ -304,27 +303,7 @@ namespace WpfMain.Controlls
         public void CamReLoad()
         {
             cameraCaptureElement.ReLoad();
-        }
-
-        private void StartFFmpegRecording()
-        {
-            // 创建输出文件路径
-            string videoFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
-            string fileName = $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
-            var outputFilePath = Path.Combine(videoFolder, fileName);
-            var videoWriter = new VideoFileWriter();
-
-            // 设置视频编码器参数 
-            videoWriter.Open(outputFilePath,
-                             860,
-                             400,
-                             30, // 帧率
-                             VideoCodec.MPEG4,
-                             1000000); // 比特率
-
-            // 订阅视频帧事件，用于捕获每一帧
-            cameraCaptureElement.NewVideoSample += Camera_NewVideoSample;
-        }
+        } 
 
         private void FFmpegProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
