@@ -659,7 +659,7 @@ namespace Tools.Extend
         public static Bitmap Byte2Bitmap(this byte[] bytes)
         {
             byte[] bytelist = bytes;
-            Bitmap bitmap;
+            Bitmap bitmap = null;
             using (MemoryStream ms1 = new MemoryStream(bytelist))
             {
                 bitmap = (Bitmap)System.Drawing.Image.FromStream(ms1);
@@ -959,11 +959,11 @@ namespace Tools.Extend
             { 
                 return false;
             }
-            catch (IOException ex)
+            catch (IOException)
             { 
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             { 
                 return false;
             }
@@ -973,7 +973,7 @@ namespace Tools.Extend
 
 public static class CloneExpressionBuilder<T>
 {
-    private static readonly Func<T, T> _cloneFunc;
+    private static readonly Func<T, T> _cloneFunc = null;
 
     static CloneExpressionBuilder()
     {

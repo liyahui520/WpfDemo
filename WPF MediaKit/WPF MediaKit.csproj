@@ -75,7 +75,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectShow\Controls\AdvancedVideoRecorder.cs" />
     <Compile Include="DirectShow\Controls\D3DRenderer.cs" />
     <Compile Include="DirectShow\Controls\DvdPlayerElement.cs" />
     <Compile Include="DirectShow\Controls\LavVideoRecorder.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="ILog.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="Manager\CameraRecorderManager.cs" />
-    <Compile Include="Manager\MediaResourceManager.cs" />
     <Compile Include="MediaFoundation\COMUtils.cs" />
     <Compile Include="MediaFoundation\EvrPresenter.cs" />
     <Compile Include="MediaFoundation\Interop.cs" />

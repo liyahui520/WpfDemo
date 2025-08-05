@@ -26,14 +26,12 @@ namespace Record
         #region Fields
         private int DEFAULT_FRAME_RATE = 10;
         protected int ScreenWidth;
-        protected int ScreenHight;
-        private int BitRate;
-        private int FrameRate;
+        protected int ScreenHight; 
+        private  int FrameRate=10;
         private Rectangle ScreenArea;
         protected VideoFileWriter VideoWriter;
-        private ScreenCaptureStream VideoStreamer;
-        private FolderBrowserDialog FolderBrowser;
-        private AVIWriter aviWriter;
+        private ScreenCaptureStream VideoStreamer = null;
+        private FolderBrowserDialog FolderBrowser; 
         private VideoCodec VideoCodec;
         /// <summary>
         /// 操作摄像头
@@ -80,8 +78,7 @@ namespace Record
             this.ScreenArea = Rectangle.Empty;
             this.VideoWriter = new VideoFileWriter();
             this.FolderBrowser = new FolderBrowserDialog();
-            this.VideoCodec = videoCodec;
-            this.BitRate = 3000000;
+            this.VideoCodec = videoCodec; 
             //是否需要录制声音
             if (isLoopingWav)
                 wavRecorder = new WavRecorder(wavFilePath);

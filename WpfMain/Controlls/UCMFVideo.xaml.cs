@@ -33,14 +33,11 @@ namespace WpfMain.Controlls
         private bool sliderMediaChange;
         public bool isStart = false;
 
-        private static string videoFileName = Path.Combine(AppVideoConfig.TempPath, "{0}." + AppStatic.VideoConfig.VideoType);
-        private static string wavFileName = Path.Combine(AppVideoConfig.TempPath, "{0}.wav");
+        private static string videoFileName = Path.Combine(AppVideoConfig.TempPath, "{0}." + AppStatic.VideoConfig.VideoType); // 视频文件名格式化字符串
         private double _width;
         private double _hight;
         private CameraRecorderManager Camra;
-        private Process ffmpegProcess;
-        private string ffmpegPath = "ffmpeg.exe"; // 需要预先安装FFmpeg
-        //private VideoCaptureElement cameraCaptureElement;
+        private Process ffmpegProcess; 
         public UCMFVideo(double width, double hight)
         {
             InitializeComponent();

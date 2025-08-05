@@ -15,18 +15,9 @@ namespace WPFMediaKit.Manager
 {
     public class CameraRecorderManager
     {
-        #region Fields
-        private int DEFAULT_FRAME_RATE = 10;
+        #region Fields 
         protected int ScreenWidth;
-        protected int ScreenHight;
-        private int BitRate;
-        private int FrameRate;
-        private Rectangle ScreenArea;
-        private FolderBrowserDialog FolderBrowser;
-
-        private bool isProcessingStream = false;
-
-        private Process ffmpegProcess;
+        protected int ScreenHight;  
 
         private DsDevice device;
 
@@ -115,10 +106,9 @@ namespace WPFMediaKit.Manager
         /// <summary>
         /// 开始
         /// </summary> 
-        public async Task Start(string path)
+        public void Start(string path)
         {
-            this.RecorderStatus = RecorderStatus.Start;
-            isProcessingStream = true;
+            this.RecorderStatus = RecorderStatus.Start; 
             AviFilePath = path; 
             Camera.Start(AviFilePath, IsOpen); 
         } 
@@ -129,8 +119,7 @@ namespace WPFMediaKit.Manager
         public virtual string End()
         {
             try
-            { 
-                isProcessingStream = false;
+            {  
                 Camera.Stop(); 
                 return AviFilePath; 
             }
