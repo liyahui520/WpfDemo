@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Documents;
 using Entity.Entity;
 
 namespace Tools.App
@@ -12,5 +14,10 @@ namespace Tools.App
         public static PetInfo PetInfo { get; set; }
          
         public static Window MainWindow { get; set; }
+
+        /// <summary>
+        /// 分辨率列表
+        /// </summary>
+        public static Resolution Resolution { get; set; }
     }
 }

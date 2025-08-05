@@ -65,12 +65,14 @@
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
-                                            <CheckBox Grid.Column="0" Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
+                                            <!--<VirtualizingStackPanel Grid.Row="0"  VerticalAlignment="Center" Orientation="Horizontal" Margin="5,10,0,0">
+                                                <ComboBox Grid.Row="1" x:Name="resolutionList"  FontSize="12"   hc:InfoElement.TitleWidth="50" Width="220" SelectionChanged="fenb_OnSelected"  hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="分辨率" SelectedIndex="0" DisplayMemberPath="Text"  Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,5" />
+
+                                            </VirtualizingStackPanel>-->
                                             <VirtualizingStackPanel Grid.Row="1"  VerticalAlignment="Center" Orientation="Horizontal"  Margin="5,10,0,0">
-                                                <!--<TextBlock HorizontalAlignment="Left" Text="视频保存地址：" Style="{StaticResource TextBlockDefaultSecLight}"/>-->
-                                                <!--<TextBlock HorizontalAlignment="Left" Text="D://video" Style="{StaticResource TextBlockDefaultSecLight}"/>-->
-                                                <!--<TextBlock HorizontalAlignment="Left" Text="修改" Margin="10,0,0,0" Style="{StaticResource TextBlockDefaultSuccess}"/>-->
+                                                <CheckBox Grid.Column="1" Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
                                             </VirtualizingStackPanel>
+
                                         </Grid>
                                         <!--<Slider Margin="0,10,0,0"  hc:TipElement.Visibility="Visible" hc:TipElement.Placement="Top"  IsSnapToTickEnabled="True" Maximum="100" Minimum="0" Value="20" TickFrequency="10"  TickPlacement="Both"/>-->
                                         <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5,5,0,0">

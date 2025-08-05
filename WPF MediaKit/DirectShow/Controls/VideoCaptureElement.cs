@@ -270,7 +270,7 @@ namespace WPFMediaKit.DirectShow.Controls
             }
         }
 
-        public void Start(string path,bool isWav)
+        public void Start(string path, bool isWav)
         {
             //VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
             //{
@@ -353,7 +353,7 @@ namespace WPFMediaKit.DirectShow.Controls
         {
             DsDevice devs;
             try
-            { 
+            {
                 device = MultimediaUtil.VideoInputDevices.First();
                 if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoDecive))
                     device = MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
@@ -376,12 +376,22 @@ namespace WPFMediaKit.DirectShow.Controls
             string name = OutputFileName;
             OutputFileName = string.Empty;
             VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
-            {  
+            {
                 VideoCapturePlayer.VideoCaptureDevice = initCapture();
                 VideoCapturePlayer.SetupGraph();
                 VideoCapturePlayer.Play();
             }));
             return name;
+        }
+
+        public void ReLoad()
+        {
+                VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
+                        {
+                            VideoCapturePlayer.VideoCaptureDevice = initCapture();
+                            VideoCapturePlayer.SetupGraph();
+                            VideoCapturePlayer.Play();
+                        }));
         }
 
     }

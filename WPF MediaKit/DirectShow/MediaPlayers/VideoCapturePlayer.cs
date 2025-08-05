@@ -1159,6 +1159,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using DirectShowLib;
+using Tools.App;
 
 namespace WPFMediaKit.DirectShow.MediaPlayers
 {
@@ -1599,22 +1600,29 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             /* Make the VIDEOINFOHEADER 'readable' */
             var videoInfo = new VideoInfoHeader();
             Marshal.PtrToStructure(media.formatPtr, videoInfo);
-
+            
             /* Setup the VIDEOINFOHEADER with the parameters we want */
             videoInfo.AvgTimePerFrame = DSHOW_ONE_SECOND_UNIT / FPS;
             videoInfo.BmiHeader.Width = DesiredWidth;
             videoInfo.BmiHeader.Height = DesiredHeight;
+            if (!AppStatic.Resolution.IsDefault)
+            {
+                videoInfo.BmiHeader.Width = AppStatic.Resolution.Width;
+                videoInfo.BmiHeader.Height = AppStatic.Resolution.Height;
+            }
             // 压缩配置：使用H.264编码（需系统安装对应编码器）
             if (mediaSubType == Guid.Empty && !string.IsNullOrEmpty(m_fileName))
             {
                 // 尝试设置H.264编码（替换默认格式）
                 mediaSubType = new Guid("34363248-0000-0010-8000-00AA00389B71"); // MEDIASUBTYPE_H264
             }
-
-            // 调整分辨率（缩小尺寸降低文件大小）
-            videoInfo.BmiHeader.Width = (int)(DesiredWidth * 0.75); // 75%原始分辨率
-            videoInfo.BmiHeader.Height = (int)(DesiredHeight * 0.75);
-            videoInfo.AvgTimePerFrame = DSHOW_ONE_SECOND_UNIT / (FPS / 2); // 降低帧率
+            if (!string.IsNullOrEmpty(m_fileName))
+            {
+                // 调整分辨率（缩小尺寸降低文件大小）
+                videoInfo.BmiHeader.Width = AppStatic.Resolution.IsDefault?(int)(DesiredWidth * 0.85) :(int)(AppStatic.Resolution.Width*0.85); // 75%原始分辨率
+                videoInfo.BmiHeader.Height = AppStatic.Resolution.IsDefault ? (int)(DesiredHeight * 0.85) : (int)(AppStatic.Resolution.Height * 0.85);
+                videoInfo.AvgTimePerFrame = (long)(DSHOW_ONE_SECOND_UNIT / (FPS / 1.5)); // 降低帧率
+            }
             if (mediaSubType != Guid.Empty)
             {
                 int fourCC = 0;

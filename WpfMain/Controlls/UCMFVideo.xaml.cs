@@ -302,6 +302,11 @@ namespace WpfMain.Controlls
         }
         #endregion 
 
+        public void CamReLoad()
+        {
+            cameraCaptureElement.ReLoad();
+        }
+
         private void StartFFmpegRecording()
         {
             // 创建输出文件路径
