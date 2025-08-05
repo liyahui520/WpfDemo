@@ -63,6 +63,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             BDAReceivers = new FilterCollection(FilterCategory.AM_KS_BDA_RECEIVER_COMPONENT, true);
             AllFilters = new FilterCollection(FilterCategory.ActiveMovieCategory, true);
         }
+
     }
 
     /// <summary>
@@ -247,6 +248,34 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
             moniker.GetDisplayName(null, null, out s);
             return (s);
         }
+
+        // 在 Filters.cs 的 Filter 类中添加
+        internal IBaseFilter CreateFilter()
+        {
+            IMoniker moniker = GetMonikerFromStorage(MonikerString);
+            if (moniker == null)
+                return null;
+
+            object filterObj;
+            Guid filterGuid = typeof(IBaseFilter).GUID;
+            moniker.BindToObject(null, null, ref filterGuid, out filterObj);
+            return filterObj as IBaseFilter;
+        }
+
+        internal IMoniker GetMoniker()
+        {
+            return GetMonikerFromStorage(MonikerString);
+        }
+
+        private IMoniker GetMonikerFromStorage(string monikerString)
+        {
+            IMoniker[] monikers = new IMoniker[1];
+            int hr = CreateClassMonikerFromStorage(monikerString, monikers);
+            return hr == 0 ? monikers[0] : null;
+        }
+
+        [DllImport("ole32.dll")]
+        private static extern int CreateClassMonikerFromStorage(string monikerString, IMoniker[] monikers);
 
         /// <summary> Retrieve the human-readable name of the filter </summary>
         protected string getName(IMoniker moniker)

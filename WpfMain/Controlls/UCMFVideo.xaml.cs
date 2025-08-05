@@ -136,7 +136,7 @@ namespace WpfMain.Controlls
             Camra.Camera.ManipulationInertiaStarting += Camera_ManipulationInertiaStarting;
             Camra.Camera.MediaFailed += Camera_MediaFailed;
             Camra.Camera.NewVideoSample += Camera_NewVideoSample;
-            Camra.Camera.Play(); 
+            Camra.Camera.Play();
         }
 
         private void Camera_NewVideoSample(object sender, VideoSampleArgs e)
@@ -253,15 +253,19 @@ namespace WpfMain.Controlls
 
         public async Task Start()
         {
-            LogGpuAccelerationStatus();
-            //StartFFmpegRecording();
-            if (Camra.Camera.HasVideo)
-                await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
-            else
-            {
+            //LogGpuAccelerationStatus();
+            //var mediaType = new AMMediaType();
+            cameraCaptureElement.StartRecording(
+               string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss"))
+                );
+            ////StartFFmpegRecording();
+            //if (Camra.Camera.HasVideo)
+            //    await Camra.Start(string.Format(videoFileName, DateTime.Now.ToString("yyyyMMddHHmmss")));
+            //else
+            //{
 
-                HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法录像！", "系统提示");
-            }
+            //    HandyControl.Controls.MessageBox.Success($"摄像头未连接成功，无法录像！", "系统提示");
+            //}
         }
 
         public void AutoWavRecorder(bool isOpen)
@@ -271,17 +275,20 @@ namespace WpfMain.Controlls
         }
 
         public string End()
-        { 
-            var a = Camra.End();
-            //cameraCaptureElement.Close();
-            Camra.CamClose();
-            //Camra.Camera.VideoCaptureDevice?.Dispose(); 
-            Camra.Camera.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
-            {
-                cameraCaptureElement.Close();
-            }));
-            Camra.Pause();
-            cobVideoSource_SelectionChanged(null, null);
+        {
+            // 停止录制
+            var a = "";
+           a= cameraCaptureElement.StopRecording();
+            //var a = Camra.End();
+            ////cameraCaptureElement.Close();
+            //Camra.CamClose();
+            ////Camra.Camera.VideoCaptureDevice?.Dispose(); 
+            //Camra.Camera.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
+            //{
+            //    cameraCaptureElement.Close();
+            //}));
+            //Camra.Pause();
+            //cobVideoSource_SelectionChanged(null, null);
             return a;
         }
 
@@ -299,7 +306,7 @@ namespace WpfMain.Controlls
         #endregion 
 
         private void StartFFmpegRecording()
-        { 
+        {
             // 创建输出文件路径
             string videoFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
             string fileName = $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";

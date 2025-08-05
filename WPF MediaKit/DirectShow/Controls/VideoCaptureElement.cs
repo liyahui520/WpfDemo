@@ -6,6 +6,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WPFMediaKit.DirectShow.MediaPlayers;
 using DirectShowLib;
+using System.Linq;
+using Tools.App;
 
 namespace WPFMediaKit.DirectShow.Controls
 {
@@ -270,19 +272,19 @@ namespace WPFMediaKit.DirectShow.Controls
 
         public void Start(string path,bool isWav)
         {
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
-            {
-                VideoCapturePlayer.StartCapture(path,isWav);
-                VideoCapturePlayer.Play();
-            });
+            //VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            //{
+            //    VideoCapturePlayer.StartCapture(path,isWav);
+            //    VideoCapturePlayer.Play();
+            //});
         }
 
         public new void Stop()
         {
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
-            {
-                VideoCapturePlayer.StopCapture();
-            });
+            //VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            //{
+            //    VideoCapturePlayer.StopCapture();
+            //});
         }
 
         public new void Close()
@@ -331,6 +333,55 @@ namespace WPFMediaKit.DirectShow.Controls
         protected override MediaPlayerBase OnRequestMediaPlayer()
         {
             return new VideoCapturePlayer();
+        }
+
+        // 在VideoCaptureElement.cs中
+        public void StartRecording(string outputPath)
+        {
+            OutputFileName = outputPath;
+            // 重新初始化以应用输出文件设置
+            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                VideoCapturePlayer.VideoCaptureDevice = initCapture();
+                VideoCapturePlayer.SetupGraph();
+                VideoCapturePlayer.Play();
+            }));
+        }
+
+        private DsDevice device;
+        public DsDevice initCapture()
+        {
+            DsDevice devs;
+            try
+            { 
+                device = MultimediaUtil.VideoInputDevices.First();
+                if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoDecive))
+                    device = MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
+                if (device == null)
+                {
+                    HandyControl.Controls.MessageBox.Error("未获取到摄像头信息", "系统提示");
+                    return null;
+                }
+                devs = device;
+            }
+            catch
+            {
+                HandyControl.Controls.MessageBox.Error("摄像头不存在!", "系统提示");
+                return null;
+            }
+            return devs;
+        }
+        public string StopRecording()
+        {
+            string name = OutputFileName;
+            OutputFileName = string.Empty;
+            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
+            {  
+                VideoCapturePlayer.VideoCaptureDevice = initCapture();
+                VideoCapturePlayer.SetupGraph();
+                VideoCapturePlayer.Play();
+            }));
+            return name;
         }
 
     }

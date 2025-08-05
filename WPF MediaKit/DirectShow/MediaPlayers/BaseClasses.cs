@@ -225,7 +225,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
         /// filter graph.  This provides, Play, Pause, Stop, etc
         /// functionality.
         /// </summary>
-        private IMediaControl m_mediaControl;
+        public IMediaControl m_mediaControl;
 
         /// <summary>
         /// The DirectShow interface for getting events

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Record;
 using Record.AviFile;
-using AForge.Video.FFMPEG;
-using AForge.Video.VFW;
 using DirectShowLib;
 using Tools.App;
 using WPFMediaKit.DirectShow.Controls;
@@ -24,10 +22,7 @@ namespace WPFMediaKit.Manager
         private int BitRate;
         private int FrameRate;
         private Rectangle ScreenArea;
-        protected VideoFileWriter VideoWriter;
         private FolderBrowserDialog FolderBrowser;
-        private AVIWriter aviWriter;
-        private VideoCodec VideoCodec;
 
         private bool isProcessingStream = false;
 

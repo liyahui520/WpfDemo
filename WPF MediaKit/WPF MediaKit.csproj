@@ -41,23 +41,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge.Imaging">
-      <HintPath>..\Libs\AForge.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\AForge.Video.DirectShow.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.FFMPEG">
-      <HintPath>..\Libs\AForge.Video.FFMPEG.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.VFW">
-      <HintPath>..\Libs\AForge.Video.VFW.dll</HintPath>
-    </Reference>
     <Reference Include="DirectShowLib-2005, Version=2.1.0.26626, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\DirectShowLib-2005.dll</HintPath>
@@ -92,12 +75,15 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectShow\Controls\AdvancedVideoRecorder.cs" />
     <Compile Include="DirectShow\Controls\D3DRenderer.cs" />
     <Compile Include="DirectShow\Controls\DvdPlayerElement.cs" />
+    <Compile Include="DirectShow\Controls\LavVideoRecorder.cs" />
     <Compile Include="DirectShow\Controls\MediaDetectorElement.cs" />
     <Compile Include="DirectShow\Controls\MediaElementBase.cs" />
     <Compile Include="DirectShow\Controls\MediaSeekingElement.cs" />
     <Compile Include="DirectShow\Controls\MediaUriElement.cs" />
+    <Compile Include="DirectShow\Controls\Mp4VideoCapturePlayer.cs" />
     <Compile Include="DirectShow\Controls\MultimediaUtil.cs" />
     <Compile Include="DirectShow\Controls\ValueConverters.cs" />
     <Compile Include="DirectShow\Controls\VideoCaptureElement.cs" />
@@ -107,11 +93,14 @@
     <Compile Include="DirectShow\MediaPlayers\DvdPlayer.cs" />
     <Compile Include="DirectShow\MediaPlayers\FilterFromFile.cs" />
     <Compile Include="DirectShow\MediaPlayers\Filters.cs" />
+    <Compile Include="DirectShow\MediaPlayers\LavSplitterConnector.cs" />
     <Compile Include="DirectShow\MediaPlayers\MediaDetector.cs" />
     <Compile Include="DirectShow\MediaPlayers\MediaSeekingPlayer.cs" />
+    <Compile Include="DirectShow\MediaPlayers\MediaSubTypeEx.cs" />
     <Compile Include="DirectShow\MediaPlayers\MediaUriPlayer.cs" />
     <Compile Include="DirectShow\MediaPlayers\PropertyPageHelper.cs" />
     <Compile Include="DirectShow\MediaPlayers\VideoCapturePlayer.cs" />
+    <Compile Include="DirectShow\MediaPlayers\VideoRecorder.cs" />
     <Compile Include="DirectShow\MediaPlayers\Vmr9Allocator.cs" />
     <Compile Include="DirectX\Direct3D.cs" />
     <Compile Include="Effects\DeeperColor.cs" />
