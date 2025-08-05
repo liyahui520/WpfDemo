@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>default</LangVersion>
+    <LangVersion>7.2</LangVersion>
     <Prefer32Bit>false</Prefer32Bit>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -75,7 +75,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectShow\Controls\AdvancedVideoRecorder.cs" />
     <Compile Include="DirectShow\Controls\D3DRenderer.cs" />
     <Compile Include="DirectShow\Controls\DvdPlayerElement.cs" />
     <Compile Include="DirectShow\Controls\LavVideoRecorder.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="ILog.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="Manager\CameraRecorderManager.cs" />
-    <Compile Include="Manager\MediaResourceManager.cs" />
     <Compile Include="MediaFoundation\COMUtils.cs" />
     <Compile Include="MediaFoundation\EvrPresenter.cs" />
     <Compile Include="MediaFoundation\Interop.cs" />
@@ -143,10 +141,6 @@
     <Content Include="Effects\DeeperColor.fx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Record\Record.csproj">
-      <Project>{503C2C71-8334-4930-B711-69E286E10B24}</Project>
-      <Name>Record</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tools\Tools.csproj">
       <Project>{53cf764a-ba45-4827-852a-185b4c341b48}</Project>
       <Name>Tools</Name>

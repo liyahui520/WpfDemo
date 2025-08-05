@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Windows.Documents;
 using Tools.Extend;
 
 namespace Tools.App
@@ -59,7 +61,7 @@ namespace Tools.App
         /// 图片类型
         /// </summary>
         public string ImageType { get; set; } = "png";
-
+         
         public static AppVideoConfig GetConfig()
         {
             if (File.Exists(ConfigFullPath))
@@ -74,5 +76,28 @@ namespace Tools.App
 
 
 
+    }
+
+    public class Resolution
+    {
+        /// <summary>
+        /// 分辨率名称
+        /// </summary>
+        public string Text { get; set; }
+
+        /// <summary>
+        /// 默认分辨率
+        /// </summary>
+        public bool IsDefault { get; set; }
+
+        /// <summary>
+        /// 分辨率宽度
+        /// </summary>
+        public int Width { get; set; }
+
+        /// <summary>
+        /// 分辨率高度
+        /// </summary>
+        public int Height { get; set; }
     }
 }

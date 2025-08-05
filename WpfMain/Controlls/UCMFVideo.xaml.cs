@@ -19,8 +19,7 @@ using System.Windows.Threading;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using System.Windows.Media.Media3D;
-using System.Diagnostics;
-using AForge.Video.FFMPEG;
+using System.Diagnostics; 
 
 namespace WpfMain.Controlls
 {
@@ -33,14 +32,11 @@ namespace WpfMain.Controlls
         private bool sliderMediaChange;
         public bool isStart = false;
 
-        private static string videoFileName = Path.Combine(AppVideoConfig.TempPath, "{0}." + AppStatic.VideoConfig.VideoType);
-        private static string wavFileName = Path.Combine(AppVideoConfig.TempPath, "{0}.wav");
+        private static string videoFileName = Path.Combine(AppVideoConfig.TempPath, "{0}." + AppStatic.VideoConfig.VideoType); // 视频文件名格式化字符串
         private double _width;
         private double _hight;
         private CameraRecorderManager Camra;
-        private Process ffmpegProcess;
-        private string ffmpegPath = "ffmpeg.exe"; // 需要预先安装FFmpeg
-        //private VideoCaptureElement cameraCaptureElement;
+        private Process ffmpegProcess; 
         public UCMFVideo(double width, double hight)
         {
             InitializeComponent();
@@ -140,8 +136,7 @@ namespace WpfMain.Controlls
         }
 
         private void Camera_NewVideoSample(object sender, VideoSampleArgs e)
-        {
-            throw new NotImplementedException();
+        { 
         }
 
 
@@ -305,25 +300,10 @@ namespace WpfMain.Controlls
         }
         #endregion 
 
-        private void StartFFmpegRecording()
+        public void CamReLoad()
         {
-            // 创建输出文件路径
-            string videoFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
-            string fileName = $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
-            var outputFilePath = Path.Combine(videoFolder, fileName);
-            var videoWriter = new VideoFileWriter();
-
-            // 设置视频编码器参数 
-            videoWriter.Open(outputFilePath,
-                             860,
-                             400,
-                             30, // 帧率
-                             VideoCodec.MPEG4,
-                             1000000); // 比特率
-
-            // 订阅视频帧事件，用于捕获每一帧
-            cameraCaptureElement.NewVideoSample += Camera_NewVideoSample;
-        }
+            cameraCaptureElement.ReLoad();
+        } 
 
         private void FFmpegProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {

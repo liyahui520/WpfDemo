@@ -31,9 +31,7 @@ namespace WPFMediaKit.DirectShow.Controls
 
         // 系统视频转换滤镜（用于格式兼容）
         private static readonly Guid CLSID_VideoConverter = new Guid("04FE9017-F873-11d0-A18C-00A0C9118956");
-
-        // DirectShow时间单位（1秒 = 10,000,000单位）
-        private const long DSHOW_ONE_SECOND_UNIT = 10000000;
+         
         #endregion
 
         #region 成员变量
@@ -74,10 +72,10 @@ namespace WPFMediaKit.DirectShow.Controls
                 if (IsBaseInitialized())
                 {
                     initTimer.Stop();
-                    Dispatcher.BeginInvoke(() =>
+                    Dispatcher.BeginInvoke((Action)(() =>
                     {
                         CompleteInitialization();
-                    });
+                    }));
                 }
             };
 
@@ -741,31 +739,6 @@ namespace WPFMediaKit.DirectShow.Controls
                 }; 
             
             return _recorder;
-        }
-
-        /// <summary>
-        /// 开始录制
-        /// </summary>
-        public void StartRecording(string outputPath)
-        {
-            if (_recorder == null)
-                throw new InvalidOperationException("录制组件未初始化");
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
-             {
-                 _recorder.StartRecording(outputPath);
-             });
-
-        }
-
-        /// <summary>
-        /// 停止录制
-        /// </summary>
-        public void StopRecording()
-        {
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
-            {
-                _recorder?.StopRecording();
-            });
-        }
+        } 
     }
 }

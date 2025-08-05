@@ -1,5 +1,4 @@
-﻿using AForge.Video.DirectShow;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
@@ -11,6 +10,7 @@ using Tools.Extend;
 using System.Linq;
 using HandyControl.Tools.Extension;
 using System.Windows.Controls.Primitives;
+using WPFMediaKit.DirectShow.Controls;
 
 
 namespace WpfMain.Module.SysModule
@@ -92,10 +92,10 @@ namespace WpfMain.Module.SysModule
 
             var deviceList = new List<VideoType>();
             // 设定初始视频设备
-            FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            var videoDevices = MultimediaUtil.VideoInputDevices.ToList();
             for (int i = 0; i < videoDevices.Count; i++)
             {
-                deviceList.Add(new VideoType() { Name = videoDevices[i].Name, VideoString = videoDevices[i].MonikerString });
+                deviceList.Add(new VideoType() { Name = videoDevices[i].Name, VideoString = videoDevices[i].DevicePath });
             }
             device.ItemsSource = deviceList;
             if (deviceList != null && deviceList.Count != 0)

@@ -39,10 +39,10 @@ namespace WPFMediaKit.DirectShow.Controls
                 if (IsBaseInitialized())
                 {
                     initTimer.Stop();
-                    Dispatcher.BeginInvoke(() =>
+                    Dispatcher.BeginInvoke((Action)(() =>
                     {
                         CompleteInitialization();
-                    });
+                    }));
                     
                 }
             };
@@ -268,13 +268,6 @@ namespace WPFMediaKit.DirectShow.Controls
             };
             return _mp4Recorder;
         }
-
-        public void StartRecording(string path) {
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
-            {
-                _mp4Recorder?.StartRecording(path);
-            });
-        }
-        public void StopRecording() => _mp4Recorder?.StopRecording();
+         
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,14 +11,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-using AForge.Video.DirectShow;
-using AForge.Video.FFMPEG;
+using System.Windows.Threading; 
 using CuPrint;
 using DirectShowLib;
 using Entity.Entity;
-using HandyControl.Expression.Media;
-using Record;
+using HandyControl.Expression.Media; 
 using Tools.App;
 using Tools.Extend;
 using WpfMain.Controlls;
@@ -69,6 +67,16 @@ namespace WpfMain.Module.PetModule
             DataContext = this;
             HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
             SetupTimer();
+            var a = new List<Resolution>();
+            a.AddRange(new List<Resolution>()
+            {
+                new Resolution() { Text = "默认",    IsDefault=true, Width = 0, Height = 0 },
+                new Resolution() { Text = "800*600",IsDefault=false,  Width = 800, Height = 600 },
+                new Resolution() { Text = "1024*768", IsDefault=false,  Width = 1024, Height = 768 },
+                new Resolution() { Text = "1280*720", IsDefault=false,  Width = 1280, Height = 720 },
+                new Resolution() { Text = "1920*1080",IsDefault=false,   Width = 1920, Height = 1080 }
+            });
+            //resolutionList.ItemsSource = a;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -376,6 +384,13 @@ namespace WpfMain.Module.PetModule
             //VideoMF.VideoInit();
             //if (this.ActualHeight < 780)
             //    Ctl.MaxHeight = 600;
+        }
+
+        public void fenb_OnSelected(object sender, RoutedEventArgs e)
+        {
+            //if (resolutionList.SelectedItem == null) return;
+            //AppStatic.Resolution = ((Resolution)resolutionList.SelectedItem);
+            //VideoMF?.CamReLoad();
         }
     }
 }

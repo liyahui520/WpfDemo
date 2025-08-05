@@ -260,23 +260,7 @@ namespace WPFMediaKit.DirectShow.MediaPlayers
                 }
             }
             return null;
-        }
-        /// <summary>
-        /// 停止录制
-        /// </summary>
-        public void StopRecording()
-        {
-            if (!_isRecording) return;
-
-            // 停止图形并释放资源
-            VideoCapturePlayer.Stop();
-            _fileSink?.SetFileName(null, null);
-            Marshal.ReleaseComObject(_fileSink);
-            _isRecording = false;
-
-            // 重启预览
-            VideoCapturePlayer.Play();
-        }
+        } 
 
         // 释放资源
         protected override void OnUnloadedOverride()

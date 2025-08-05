@@ -16,6 +16,7 @@ namespace WpfMain
             InitializeComponent();
             this.MaxHeight = SystemParameters.PrimaryScreenHeight;//防止最大化时系统任务栏被遮盖
             AppStatic.MainWindow = this;
+            AppStatic.Resolution = new Resolution() { Text = "默认", IsDefault = true };
         }
         /// <summary>
         /// 窗口移动

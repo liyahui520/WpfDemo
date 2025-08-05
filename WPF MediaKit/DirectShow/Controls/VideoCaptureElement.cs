@@ -270,7 +270,7 @@ namespace WPFMediaKit.DirectShow.Controls
             }
         }
 
-        public void Start(string path,bool isWav)
+        public void Start(string path, bool isWav)
         {
             //VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
             //{
@@ -289,10 +289,10 @@ namespace WPFMediaKit.DirectShow.Controls
 
         public new void Close()
         {
-            VideoCapturePlayer.Dispatcher.BeginInvoke(() =>
+            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
             {
                 VideoCapturePlayer.Close();
-            });
+            }));
 
         }
 
@@ -342,6 +342,7 @@ namespace WPFMediaKit.DirectShow.Controls
             // 重新初始化以应用输出文件设置
             VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
             {
+                VideoCapturePlayer.ReleaseResources();
                 VideoCapturePlayer.VideoCaptureDevice = initCapture();
                 VideoCapturePlayer.SetupGraph();
                 VideoCapturePlayer.Play();
@@ -353,7 +354,7 @@ namespace WPFMediaKit.DirectShow.Controls
         {
             DsDevice devs;
             try
-            { 
+            {
                 device = MultimediaUtil.VideoInputDevices.First();
                 if (!string.IsNullOrEmpty(AppStatic.VideoConfig.VideoDecive))
                     device = MultimediaUtil.VideoInputDevices.FirstOrDefault(s => s.DevicePath == AppStatic.VideoConfig.VideoDecive);
@@ -376,12 +377,22 @@ namespace WPFMediaKit.DirectShow.Controls
             string name = OutputFileName;
             OutputFileName = string.Empty;
             VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
-            {  
+            {
                 VideoCapturePlayer.VideoCaptureDevice = initCapture();
                 VideoCapturePlayer.SetupGraph();
                 VideoCapturePlayer.Play();
             }));
             return name;
+        }
+
+        public void ReLoad()
+        {
+                VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
+                        {
+                            VideoCapturePlayer.VideoCaptureDevice = initCapture();
+                            VideoCapturePlayer.SetupGraph();
+                            VideoCapturePlayer.Play();
+                        }));
         }
 
     }
