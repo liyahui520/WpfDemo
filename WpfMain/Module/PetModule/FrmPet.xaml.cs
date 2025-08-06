@@ -15,7 +15,8 @@ using System.Windows.Threading;
 using CuPrint;
 using DirectShowLib;
 using Entity.Entity;
-using HandyControl.Expression.Media; 
+using HandyControl.Expression.Media;
+using Microsoft.Win32;
 using Tools.App;
 using Tools.Extend;
 using WpfMain.Controlls;
@@ -36,6 +37,7 @@ namespace WpfMain.Module.PetModule
         /// 是否保存
         /// </summary>
         private static bool IsSave = false;
+         
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
             nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
@@ -95,7 +97,7 @@ namespace WpfMain.Module.PetModule
 
         private bool isStart = false;
 
-        private async void StartCamp_OnClick(object sender, RoutedEventArgs e)
+        private void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
             {
@@ -329,8 +331,28 @@ namespace WpfMain.Module.PetModule
 
         private void UCFiles_OnVideoClick(object sender, MediaItem e)
         {
-            UCLocalVideo pet = new UCLocalVideo(e.Source);
-            pet.ShowDialog();
+            UCLocalVideo video = new UCLocalVideo();
+            video.InitVodio(e.Source);
+            video.ShowDialog();
+        }
+
+        private void Videop_OnVideoClick(object sender, RoutedEventArgs e)
+        {
+            var openDialog = new OpenFileDialog
+            {
+                Filter = "视频文件 (*.mp4;*.avi;*.wmv;*.mov;*.mkv)|*.mp4;*.avi;*.wmv;*.mov;*.mkv|所有文件 (*.*)|*.*"
+            };
+            if (openDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    UCLocalVideo pet = new UCLocalVideo();
+                    pet.ShowDialog();
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         /// <summary>

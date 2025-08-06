@@ -1,249 +1,500 @@
 ﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using HandyControl.Controls;
 using Microsoft.Win32;
+using Vlc.DotNet.Core;
 
 namespace WpfMain.Controlls
 {
     /// <summary>
     /// UCLocalVideo.xaml 的交互逻辑
-    /// </summary>
-    public enum LoopMode { None, Single }
+    /// </summary> 
     public partial class UCLocalVideo
     {
-        private bool isPlaying = false;
-        private LoopMode loopMode = LoopMode.None;
-        private double volume = 0.5;
-        private TimeSpan totalTime = TimeSpan.Zero;
-        private bool isDraggingProgress = false;
-        private System.Windows.Threading.DispatcherTimer timer;
+        // VLC 库路径 (请根据你的实际路径修改)
+        private string _vlcLibDirectory;
 
+        // 当前播放的文件路径
+        private string _currentFilePath;
 
-        public UCLocalVideo(string path)
+        // 进度条拖动状态
+        private bool _isDraggingProgress;
+        private bool _isDisposed; // 用于标记是否已释放资源
+        private bool _isMediaEnded; // 标记媒体是否已播放结束
+        private bool _wasPlayingBeforeDrag; // 记录拖拽前的播放状态
+        private readonly object _lockObj = new object(); // 用于线程同步
+        private long _totalMediaDuration; // 视频总时长（毫秒）
+
+        public UCLocalVideo()
         {
             InitializeComponent();
-            InitializeTimer();
-            mediaElement.Source = new Uri(path);
-            mediaElement.Play();
-            isPlaying = true;
-            UpdatePlayPauseIcon();
-            BtnCenterPlay.Visibility = Visibility.Collapsed;
-            timer.Start();
-        }
-        private void InitializeTimer()
-        {
-            timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(500);
-            timer.Tick += Timer_Tick;
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            if (mediaElement.Source != null && !isDraggingProgress)
+            Dispatcher.Invoke(() =>
             {
-                UpdateProgress();
+                InitializeVlc();
+            });
+            _isDisposed = false;
+            _isMediaEnded = false;
+        }
+        /// <summary>
+        /// 初始化 VLC 控件
+        /// </summary>
+        private void InitializeVlc()
+        {
+            try
+            {
+                // 设置 VLC 库目录
+                // 注意：需要根据你的系统和 VLC 安装路径修改
+                _vlcLibDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "libvlc");
+                // 检查 VLC 库是否存在
+                if (!Directory.Exists(_vlcLibDirectory))
+                {
+                    throw new DirectoryNotFoundException($"VLC 库目录不存在: {_vlcLibDirectory}\n请确保已将 VLC 库文件放置在正确位置。");
+                }
+
+                // 初始化 VLC 控件
+                vlcControl.SourceProvider.CreatePlayer(new DirectoryInfo(_vlcLibDirectory));
+                // 获取媒体播放器实例
+                var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+
+                // 新版本中音量控制在Audio属性下
+                if (mediaPlayer.Audio != null)
+                {
+                    mediaPlayer.Audio.Volume = 100; // 设置初始音量
+                }
+                // 注册事件
+                mediaPlayer.EndReached += MediaPlayer_EndReached;
+                mediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
+                mediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
+                mediaPlayer.Playing += MediaPlayer_Playing;
+                mediaPlayer.Paused += MediaPlayer_Paused;
+                mediaPlayer.Stopped += MediaPlayer_Stopped;
+                UpdateButtonStates(false);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"初始化 VLC 失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void UpdateProgress()
+        #region 进度条事件处理（修复无法触发问题）
+
+        /// <summary>
+        /// 鼠标按下（开始拖拽）
+        /// </summary>
+        private void sldProgress_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var currentTime = mediaElement.NaturalDuration.TimeSpan;
-            if (totalTime.TotalSeconds > 0)
+            if (string.IsNullOrEmpty(_currentFilePath) || _totalMediaDuration <= 0)
+                return;
+
+            // 记录拖拽前的播放状态
+            var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+            if (mediaPlayer != null)
             {
-                sliderProgress.Value = currentTime.TotalSeconds / totalTime.TotalSeconds * 100;
+                _wasPlayingBeforeDrag = mediaPlayer.IsPlaying();
+                if (_wasPlayingBeforeDrag)
+                {
+                    mediaPlayer.Pause(); // 拖拽时暂停播放
+                }
             }
-            TxtTime.Text = $"{FormatTime(currentTime)} / {FormatTime(totalTime)}";
+
+            _isDraggingProgress = true;
+            // 计算初始拖拽位置
+            UpdateProgressFromMousePosition(e);
         }
 
-        private string FormatTime(TimeSpan time)
+        /// <summary>
+        /// 鼠标移动（拖拽过程中）
+        /// </summary>
+        private void sldProgress_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            return time.Hours > 0 ? time.ToString("hh\\:mm\\:ss") : time.ToString("mm\\:ss");
-        }
-
-        // 窗口加载：初始化音量图标
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            mediaElement.Volume = volume;
-            SliderVolume.Value = volume;
-            UpdateMuteIcon(); // 初始化音量图标
-        }
-
-        // 打开视频
-        private void BtnOpen_Click(object sender, RoutedEventArgs e)
-        {
-            var openDialog = new OpenFileDialog
+            if (_isDraggingProgress && _totalMediaDuration > 0)
             {
-                Filter = "视频文件 (*.mp4;*.avi;*.wmv;*.mov;*.mkv)|*.mp4;*.avi;*.wmv;*.mov;*.mkv|所有文件 (*.*)|*.*"
-            };
-            if (openDialog.ShowDialog() == true)
+                UpdateProgressFromMousePosition(e);
+            }
+        }
+
+        /// <summary>
+        /// 鼠标释放（结束拖拽）
+        /// </summary>
+        private void sldProgress_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!_isDraggingProgress || string.IsNullOrEmpty(_currentFilePath) || _totalMediaDuration <= 0)
+            {
+                _isDraggingProgress = false;
+                return;
+            }
+
+            try
+            {
+                // 计算最终位置并更新视频
+                UpdateProgressFromMousePosition(e);
+
+                var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+                if (mediaPlayer != null)
+                {
+                    // 设置视频位置（0-1之间的比例）
+                    var position = (float)(sldProgress.Value / 100);
+                    position = Math.Max(0, Math.Min(1, position)); // 限制在有效范围内
+                    mediaPlayer.Position = position;
+
+                    // 恢复拖拽前的播放状态
+                    if (_wasPlayingBeforeDrag && !mediaPlayer.IsPlaying())
+                    {
+                        mediaPlayer.Play();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"进度调整错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                _isDraggingProgress = false;
+            }
+        }
+
+        public async void InitVodio(string path)
+        {
+            try
+            {
+                // 先停止当前播放
+                await SafeStopAsync();
+
+                _currentFilePath = path;
+                lock (_lockObj)
+                {
+                    _isMediaEnded = false;
+                }
+
+                var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+                if (mediaPlayer != null)
+                {
+                    mediaPlayer.SetMedia(new FileInfo(_currentFilePath));
+                    mediaPlayer.Play();
+                    UpdateButtonStates(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打开文件失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 根据鼠标位置更新进度条和时间显示
+        /// </summary>
+        private void UpdateProgressFromMousePosition(MouseEventArgs e)
+        {
+            var slider = sldProgress;
+            // 获取进度条在屏幕上的位置和宽度
+            var sliderRect = slider.TransformToAncestor(this).TransformBounds(new Rect(0, 0, slider.ActualWidth, slider.ActualHeight));
+            var mouseX = e.GetPosition(this).X;
+
+            // 计算鼠标在进度条上的相对位置（0-100）
+            var value = (mouseX - sliderRect.Left) / sliderRect.Width * 100;
+            value = Math.Max(0, Math.Min(100, value)); // 限制在0-100之间
+
+            // 更新进度条和时间显示
+            slider.Value = value;
+            var currentMs = (long)(value / 100 * _totalMediaDuration);
+            txtCurrentTime.Text = TimeSpan.FromMilliseconds(currentMs).ToString(@"mm\:ss");
+        }
+
+        #endregion
+
+        #region 关键修复：安全的Stop()方法实现
+
+        /// <summary>
+        /// 安全停止播放（带超时控制）
+        /// </summary>
+        private async Task SafeStopAsync()
+        {
+            if (_isDisposed) return;
+
+            var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+            if (mediaPlayer == null) return;
+
+            try
+            {
+                // 使用锁确保线程安全
+                lock (_lockObj)
+                {
+                    _isMediaEnded = false;
+                }
+
+                // 使用Task.Run避免UI线程阻塞
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        // 创建超时控制
+                        var cancellationTokenSource = new CancellationTokenSource(2000); // 2秒超时
+                        var stopTask = Task.Factory.StartNew(() =>
+                        {
+                            if (!_isDisposed && mediaPlayer.IsPlaying())
+                            {
+                                mediaPlayer.Stop();
+                            }
+                        }, cancellationTokenSource.Token);
+
+                        // 等待任务完成或超时
+                        if (!stopTask.Wait(2000))
+                        {
+                            throw new TimeoutException("停止操作超时");
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // 超时异常处理
+                        Console.WriteLine("停止操作已超时");
+                    }
+                });
+
+                // 更新UI
+                Dispatcher.Invoke(() =>
+                { 
+                    UpdateButtonStates(false);
+                    sldProgress.Value = 0;
+                    txtCurrentTime.Text = "00:00";
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show($"停止播放时出错：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
+            }
+        }
+
+        #endregion
+
+        #region 事件处理 
+        private void MediaPlayer_EndReached(object sender, EventArgs e)
+        {
+            if (_isDisposed) return;
+
+            Dispatcher.BeginInvoke(new Action(async () =>
             {
                 try
                 {
-                    mediaElement.Source = new Uri(openDialog.FileName);
-                    mediaElement.Play();
-                    isPlaying = true;
-                    UpdatePlayPauseIcon();
-                    BtnCenterPlay.Visibility = Visibility.Collapsed;
-                    timer.Start();
+                    lock (_lockObj)
+                    {
+                        _isMediaEnded = true;
+                    }
+                    await SafeStopAsync(); // 使用安全停止方法
+                    btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
                 }
                 catch (Exception ex)
-                { 
+                {
+                    MessageBox.Show($"播放结束处理错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }));
+        }
+
+        private void MediaPlayer_PositionChanged(object sender, VlcMediaPlayerPositionChangedEventArgs e)
+        {
+            if (_isDisposed || _isDraggingProgress || _isMediaEnded) return;
+
+            try
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (_isDisposed) return;
+
+                    sldProgress.Value = e.NewPosition * 100;
+
+                    var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+                    if (mediaPlayer != null)
+                    {
+                        var currentTime = TimeSpan.FromMilliseconds(mediaPlayer.Time);
+                        txtCurrentTime.Text = currentTime.ToString(@"mm\:ss");
+                    }
+                }), System.Windows.Threading.DispatcherPriority.Render);
+            }
+            catch { }
+        }
+
+        private void MediaPlayer_LengthChanged(object sender, VlcMediaPlayerLengthChangedEventArgs e)
+        {
+            if (_isDisposed) return;
+            // 保存视频总时长（毫秒）
+            _totalMediaDuration = e.NewLength;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var totalTime = TimeSpan.FromMilliseconds(e.NewLength);
+                txtTotalTime.Text = totalTime.ToString(@"mm\:ss");
+            }));
+        }
+
+        private void BtnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+
+            var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+            if (mediaPlayer == null) return;
+
+            try
+            {
+                if (mediaPlayer.IsPlaying())
+                {
+                    // 暂停操作
+                    mediaPlayer.Pause();
+                    btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
+                }
+                else
+                {
+                    // 播放操作
+                    if (_isMediaEnded)
+                    {
+                        mediaPlayer.Position = 0;
+                        lock (_lockObj)
+                        {
+                            _isMediaEnded = false;
+                        }
+                    }
+                    mediaPlayer.Play();
+                    btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"播放控制错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            // 调用安全停止方法
+            await SafeStopAsync();
+        }
+
+        private async void BtnOpen_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "视频文件|*.mp4;*.avi;*.mkv;*.mov;*.flv;*.wmv|所有文件|*.*",
+                Title = "选择视频文件"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // 先停止当前播放
+                    await SafeStopAsync();
+
+                    _currentFilePath = openFileDialog.FileName;
+                    lock (_lockObj)
+                    {
+                        _isMediaEnded = false;
+                    }
+
+                    var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+                    if (mediaPlayer != null)
+                    {
+                        mediaPlayer.SetMedia(new FileInfo(_currentFilePath));
+                        mediaPlayer.Play(); 
+                        UpdateButtonStates(true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"打开文件失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-        // 播放/暂停切换
-        private void BtnPlayPause_Click(object sender, RoutedEventArgs e) => TogglePlayPause();
-        private void BtnCenterPlay_Click(object sender, RoutedEventArgs e) => TogglePlayPause();
-
-        private void TogglePlayPause()
+        private void VideoArea_MouseClick(object sender, MouseButtonEventArgs e)
         {
-            if (mediaElement.Source == null) return;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            BtnPlay_Click(sender, e);
+        } 
 
-            if (isPlaying)
-            {
-                mediaElement.Pause();
-                BtnCenterPlay.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                mediaElement.Play();
-                BtnCenterPlay.Visibility = Visibility.Collapsed;
-                timer.Start();
-            }
-            isPlaying = !isPlaying;
-            UpdatePlayPauseIcon();
-        }
-
-        // 更新播放/暂停图标（关键：从资源字典获取Geometry）
-        private void UpdatePlayPauseIcon()
+        private void sldVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var geometry = isPlaying
-                ? (Geometry)FindResource("VideoStopGeometry")
-                : (Geometry)FindResource("VideoStartGeometry");
-            BtnPlayPause.SetValue(IconElement.GeometryProperty, geometry);
-        }
+            if (_isDisposed) return;
 
-        // 视频加载完成：获取总时长
-        private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
-        {
-            if (mediaElement.NaturalDuration.HasTimeSpan)
+            var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+            if (mediaPlayer?.Audio != null)
             {
-                totalTime = mediaElement.NaturalDuration.TimeSpan;
-                UpdateProgress();
+                mediaPlayer.Audio.Volume = (int)e.NewValue;
             }
         }
 
-        // 视频结束：处理循环
-        private void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (loopMode == LoopMode.Single)
+            _isDisposed = true;
+            _isMediaEnded = true;
+
+            try
             {
-                mediaElement.Position = TimeSpan.Zero;
-                mediaElement.Play();
-                isPlaying = true;
-                UpdatePlayPauseIcon();
-                BtnCenterPlay.Visibility = Visibility.Collapsed;
+                var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
+                if (mediaPlayer != null)
+                {
+                    // 注销所有事件
+                    mediaPlayer.EndReached -= MediaPlayer_EndReached;
+                    mediaPlayer.PositionChanged -= MediaPlayer_PositionChanged;
+                    mediaPlayer.LengthChanged -= MediaPlayer_LengthChanged;
+                    mediaPlayer.Playing -= MediaPlayer_Playing;
+                    mediaPlayer.Paused -= MediaPlayer_Paused;
+                    mediaPlayer.Stopped -= MediaPlayer_Stopped;
+
+                    // 安全停止
+                    if (mediaPlayer.IsPlaying())
+                    {
+                        var stopTask = Task.Run(() => mediaPlayer.Stop());
+                        Task.WaitAny(stopTask, Task.Delay(1000)); // 等待1秒超时
+                    }
+                    mediaPlayer.Dispose();
+                }
             }
-            else
+            catch { }
+        }
+
+        #endregion
+
+        #region 辅助方法
+
+        private void MediaPlayer_Playing(object sender, EventArgs e)
+        {
+            if (_isDisposed) return;
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                isPlaying = false;
-                UpdatePlayPauseIcon();
-                BtnCenterPlay.Visibility = Visibility.Visible;
-                timer.Stop();
-            }
+                btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" }; 
+            }));
         }
 
-        // 循环模式切换
-        private void BtnLoop_Click(object sender, RoutedEventArgs e)
+        private void MediaPlayer_Paused(object sender, EventArgs e)
         {
-            loopMode = loopMode == LoopMode.None ? LoopMode.Single : LoopMode.None;
-            UpdateLoopIcon();
-        }
-
-        // 更新循环图标（默认RepeatGeometry，单曲循环用自定义LoopSingleGeometry）
-        private void UpdateLoopIcon()
-        {
-            var geometry = loopMode == LoopMode.Single
-                ? (Geometry)FindResource("LoopSingleGeometry")
-                : (Geometry)FindResource("RepeatGeometry");
-            //BtnLoop.SetValue(IconElement.GeometryProperty, geometry);
-        }
-
-        // 倍速调节
-        private void CmbSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (mediaElement.Source == null) return;
-
-            if (CmbSpeed.SelectedIndex == 0) mediaElement.SpeedRatio = 1.0;
-            else if (CmbSpeed.SelectedIndex == 1) mediaElement.SpeedRatio = 1.5;
-            else if (CmbSpeed.SelectedIndex == 2) mediaElement.SpeedRatio = 2.0;
-        }
-
-        // 进度条拖动
-        private void SliderProgress_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
-        {
-            isDraggingProgress = true;
-            timer.Stop();
-        }
-
-        private void SliderProgress_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-        {
-            if (mediaElement.Source == null || totalTime.TotalSeconds <= 0) return;
-
-            isDraggingProgress = false;
-            double positionSeconds = (sliderProgress.Value / 100) * totalTime.TotalSeconds;
-            mediaElement.Position = TimeSpan.FromSeconds(positionSeconds);
-            UpdateProgress();
-            timer.Start();
-        }
-
-        // 音量调节（更新图标）
-        private void SliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!IsLoaded) return;
-
-            volume = SliderVolume.Value;
-            mediaElement.Volume = volume;
-            UpdateMuteIcon();
-        }
-
-        // 更新静音图标（VolumeGeometry / VolumeMuteGeometry）
-        private void UpdateMuteIcon()
-        {
-            //var geometry = volume == 0
-            //    ? (Geometry)FindResource("VolumeMuteGeometry")
-            //    : (Geometry)FindResource("VolumeGeometry");
-            //BtnMute.SetValue(IconElement.GeometryProperty, geometry);
-        }
-
-        // 静音切换
-        private void BtnMute_Click(object sender, RoutedEventArgs e)
-        {
-            SliderVolume.Value = volume == 0 ? 0.5 : 0; // 0.5为默认音量，可优化为记录历史值
-        }
-
-        // 全屏切换
-        private void BtnFullScreen_Click(object sender, RoutedEventArgs e)
-        {
-            if (WindowState == WindowState.Normal)
+            if (_isDisposed) return;
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                WindowState = WindowState.Maximized;
-                ResizeMode = ResizeMode.NoResize;
-            }
-            else
-            {
-                WindowState = WindowState.Normal;
-                ResizeMode = ResizeMode.CanResizeWithGrip;
-            }
+                btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
+            }));
         }
 
-        // 置顶切换
-        private void BtnTopMost_Checked(object sender, RoutedEventArgs e) => Topmost = true;
-        private void BtnTopMost_Unchecked(object sender, RoutedEventArgs e) => Topmost = false;
+        private void MediaPlayer_Stopped(object sender, EventArgs e)
+        {
+            if (_isDisposed) return;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
+            }));
+        }
+
+        private void UpdateButtonStates(bool isPlaying)
+        {
+            btnPlay.IsEnabled = true;
+            btnStop.IsEnabled = isPlaying;
+        }
+
+        #endregion
     }
 }

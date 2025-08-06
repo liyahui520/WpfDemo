@@ -106,7 +106,7 @@ namespace WpfMain.Logic
 
         }
 
-        private static List<AppTemp> _appTemps;
+        private static List<AppTemp> _appTemps=null;
 
         public static List<AppTemp> AppTemps
         {
