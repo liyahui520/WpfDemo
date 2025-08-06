@@ -251,7 +251,9 @@ namespace WpfMain.Controlls
                         rh = richEdit.Document.InsertText(pos, "\u00A0\u00A0");
                         pos = rh.End;
                         // 获取包含图片的段落 
+#pragma warning disable CS0618 // 类型或成员已过时
                         Paragraph paragraph = richEdit.Document.GetParagraph(pos);
+#pragma warning restore CS0618 // 类型或成员已过时
 
                         // 设置段落间距 
                         paragraph.SpacingAfter = 20;    // 段后间距 

@@ -79,7 +79,7 @@ namespace WpfMain.Module
 
         private InteropValues.POINT _pointFloating;
 
-        private bool _saveScreenshot;
+        private bool _saveScreenshot = false;
 
         #endregion
 
