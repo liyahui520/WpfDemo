@@ -331,8 +331,7 @@ namespace WpfMain.Module.PetModule
 
         private void UCFiles_OnVideoClick(object sender, MediaItem e)
         {
-            UCLocalVideo video = new UCLocalVideo();
-            video.InitVodio(e.Source);
+            UCLocalVideo video = new UCLocalVideo(e.Source); 
             video.ShowDialog();
         }
 
@@ -346,7 +345,7 @@ namespace WpfMain.Module.PetModule
             {
                 try
                 {
-                    UCLocalVideo pet = new UCLocalVideo();
+                    UCLocalVideo pet = new UCLocalVideo(openDialog.FileName);
                     pet.ShowDialog();
                 }
                 catch (Exception)
