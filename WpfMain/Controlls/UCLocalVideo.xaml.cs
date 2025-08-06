@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using Vlc.DotNet.Core;
 
@@ -29,35 +30,50 @@ namespace WpfMain.Controlls
         private bool _wasPlayingBeforeDrag; // 记录拖拽前的播放状态
         private readonly object _lockObj = new object(); // 用于线程同步
         private long _totalMediaDuration; // 视频总时长（毫秒）
+        private string path = string.Empty;
 
-        public UCLocalVideo()
+        public UCLocalVideo(string path)
         {
             InitializeComponent();
-            Dispatcher.Invoke(() =>
-            {
-                InitializeVlc();
-            });
+            this.path = path;
+            Thread thread = new Thread(new ThreadStart(InitializeVlc));
+            thread.IsBackground = true;
+            thread.Start();
             _isDisposed = false;
             _isMediaEnded = false;
         }
         /// <summary>
         /// 初始化 VLC 控件
         /// </summary>
-        private void InitializeVlc()
+        private async void InitializeVlc()
         {
             try
             {
-                // 设置 VLC 库目录
-                // 注意：需要根据你的系统和 VLC 安装路径修改
-                _vlcLibDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "libvlc");
+                // 设置 VLC 库目录 
+
+                // 更新加载状态
+                UpdateInitStatus("正在检测系统环境...");
+
+                // 异步确定VLC库路径
+                string _vlcLibDirectory = await Task.Run(() =>
+                {
+                    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "libvlc");
+                });
+                UpdateInitStatus("正在加载VLC组件...");
+                UpdateInitProgress("验证库文件完整性...");
                 // 检查 VLC 库是否存在
                 if (!Directory.Exists(_vlcLibDirectory))
                 {
                     throw new DirectoryNotFoundException($"VLC 库目录不存在: {_vlcLibDirectory}\n请确保已将 VLC 库文件放置在正确位置。");
                 }
-
+                UpdateInitProgress("初始化播放器核心...");
                 // 初始化 VLC 控件
+                // 关键：在UI线程执行CreatePlayer（VLC要求）
+                //await Dispatcher.InvokeAsync(() =>
+                //{
                 vlcControl.SourceProvider.CreatePlayer(new DirectoryInfo(_vlcLibDirectory));
+                //}, DispatcherPriority.Normal);
+                UpdateInitProgress("配置播放器参数...");
                 // 获取媒体播放器实例
                 var mediaPlayer = vlcControl.SourceProvider.MediaPlayer;
 
@@ -73,14 +89,55 @@ namespace WpfMain.Controlls
                 mediaPlayer.Playing += MediaPlayer_Playing;
                 mediaPlayer.Paused += MediaPlayer_Paused;
                 mediaPlayer.Stopped += MediaPlayer_Stopped;
-                UpdateButtonStates(false);
+
+                UpdateInitStatus("初始化完成");
+                UpdateInitProgress("正在进入播放器...");
+                // 延迟一小段时间，让用户看到完成状态
+                await Task.Delay(500);
+                // 切换到主界面
+                Dispatcher.Invoke(() =>
+                {
+                    loadingScreen.Visibility = Visibility.Collapsed;
+                    mainContent.Visibility = Visibility.Visible;
+                    UpdateButtonStates(false);
+                });
+                InitVodio(path);
             }
             catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"初始化 VLC 失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            {// 显示错误信息，允许用户重试
+                Dispatcher.Invoke(() =>
+                {
+                    txtInitStatus.Text = "初始化失败";
+                    txtInitProgress.Text = ex.Message;
+
+                    // 添加重试按钮
+                    var retryButton = new Button
+                    {
+                        Content = "重试",
+                        Style = (Style)FindResource("ControlButtonStyle"),
+                        Margin = new Thickness(0, 20, 0, 0)
+                    };
+                    retryButton.Click += (s, e) => InitializeVlc();
+
+                    ((StackPanel)loadingScreen.Children[0]).Children.Add(retryButton);
+                });
             }
         }
+        /// <summary>
+        /// 更新初始化状态文本
+        /// </summary>
+        private void UpdateInitStatus(string message)
+        {
+            Dispatcher.Invoke(() => txtInitStatus.Text = message);
+        }
 
+        /// <summary>
+        /// 更新初始化进度文本
+        /// </summary>
+        private void UpdateInitProgress(string message)
+        {
+            Dispatcher.Invoke(() => txtInitProgress.Text = message);
+        }
         #region 进度条事件处理（修复无法触发问题）
 
         /// <summary>
@@ -163,6 +220,7 @@ namespace WpfMain.Controlls
         {
             try
             {
+                this.path = path;
                 // 先停止当前播放
                 await SafeStopAsync();
 
@@ -258,7 +316,7 @@ namespace WpfMain.Controlls
 
                 // 更新UI
                 Dispatcher.Invoke(() =>
-                { 
+                {
                     UpdateButtonStates(false);
                     sldProgress.Value = 0;
                     txtCurrentTime.Text = "00:00";
@@ -290,6 +348,8 @@ namespace WpfMain.Controlls
                     }
                     await SafeStopAsync(); // 使用安全停止方法
                     btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
+
+                    InitVodio(path);
                 }
                 catch (Exception ex)
                 {
@@ -400,7 +460,7 @@ namespace WpfMain.Controlls
                     if (mediaPlayer != null)
                     {
                         mediaPlayer.SetMedia(new FileInfo(_currentFilePath));
-                        mediaPlayer.Play(); 
+                        mediaPlayer.Play();
                         UpdateButtonStates(true);
                     }
                 }
@@ -415,7 +475,7 @@ namespace WpfMain.Controlls
         {
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             BtnPlay_Click(sender, e);
-        } 
+        }
 
         private void sldVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -458,6 +518,40 @@ namespace WpfMain.Controlls
             catch { }
         }
 
+        /// <summary>
+        /// 窗口移动
+        /// </summary>
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
+                DragMove();
+        }
+
+        /// <summary>
+        /// 最小化按钮
+        /// </summary>
+        private void MinButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
+        /// 最大化按钮
+        /// </summary>
+        private void MaxButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        /// <summary>
+        /// 关闭按钮
+        /// </summary>
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
         #endregion
 
         #region 辅助方法
@@ -467,7 +561,7 @@ namespace WpfMain.Controlls
             if (_isDisposed) return;
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" }; 
+                btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
             }));
         }
 
