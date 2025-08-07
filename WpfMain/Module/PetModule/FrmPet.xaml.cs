@@ -97,7 +97,7 @@ namespace WpfMain.Module.PetModule
 
         private bool isStart = false;
 
-        private void StartCamp_OnClick(object sender, RoutedEventArgs e)
+        private async void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
             {
@@ -114,7 +114,7 @@ namespace WpfMain.Module.PetModule
             if (isStart)
             {
                 isStart = false;
-                string videoPath = VideoMF?.End();
+                string videoPath =await VideoMF?.End();
                 if (tInfo.Result.Vedios == null)
                     tInfo.Result.Vedios = new List<MediaItem>();
 

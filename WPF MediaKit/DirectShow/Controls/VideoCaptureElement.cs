@@ -8,6 +8,8 @@ using WPFMediaKit.DirectShow.MediaPlayers;
 using DirectShowLib;
 using System.Linq;
 using Tools.App;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace WPFMediaKit.DirectShow.Controls
 {

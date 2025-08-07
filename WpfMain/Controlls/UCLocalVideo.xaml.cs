@@ -349,7 +349,9 @@ namespace WpfMain.Controlls
                     await SafeStopAsync(); // 使用安全停止方法
                     btnPlay.Content = new TextBlock { FontFamily = new FontFamily("Segoe MDL2 Assets"), Text = "" };
 
-                    InitVodio(path);
+                    //InitVodio(path);
+
+                    //BtnPlay_Click(null, null);
                 }
                 catch (Exception ex)
                 {
@@ -512,7 +514,8 @@ namespace WpfMain.Controlls
                         var stopTask = Task.Run(() => mediaPlayer.Stop());
                         Task.WaitAny(stopTask, Task.Delay(1000)); // 等待1秒超时
                     }
-                    mediaPlayer.Dispose();
+                    Task.Run(() => mediaPlayer.Dispose());
+                    
                 }
             }
             catch { }
@@ -548,6 +551,7 @@ namespace WpfMain.Controlls
         /// </summary>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            Window_Closing(null, null);
             this.Close();
         }
 

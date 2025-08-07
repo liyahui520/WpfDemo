@@ -19,7 +19,7 @@ using System.Windows.Threading;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using System.Windows.Media.Media3D;
-using System.Diagnostics; 
+using System.Diagnostics;
 
 namespace WpfMain.Controlls
 {
@@ -36,7 +36,7 @@ namespace WpfMain.Controlls
         private double _width;
         private double _hight;
         private CameraRecorderManager Camra;
-        private Process ffmpegProcess; 
+        private Process ffmpegProcess;
         public UCMFVideo(double width, double hight)
         {
             InitializeComponent();
@@ -136,7 +136,7 @@ namespace WpfMain.Controlls
         }
 
         private void Camera_NewVideoSample(object sender, VideoSampleArgs e)
-        { 
+        {
         }
 
 
@@ -269,11 +269,11 @@ namespace WpfMain.Controlls
             isStart = true;
         }
 
-        public string End()
+        public async Task<string> End()
         {
             // 停止录制
             var a = "";
-           a= cameraCaptureElement.StopRecording();
+            a = cameraCaptureElement.StopRecording();
             //var a = Camra.End();
             ////cameraCaptureElement.Close();
             //Camra.CamClose();
@@ -284,7 +284,74 @@ namespace WpfMain.Controlls
             //}));
             //Camra.Pause();
             //cobVideoSource_SelectionChanged(null, null);
+            var _cancellationTokenSource = new CancellationTokenSource();
+            if (IsFileInUse(a))
+            {
+                // 异步等待文件释放
+                bool fileReleased = await WaitForFileReleaseAsync(a, _cancellationTokenSource.Token);
+                if (fileReleased)
+                    return a;
+            }
+
             return a;
+        }
+
+        /// <summary>
+        /// 检查文件是否被占用
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <returns>如果被占用返回true，否则返回false</returns>
+        private bool IsFileInUse(string filePath)
+        {
+            try
+            {
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    return false;
+                }
+            }
+            catch (IOException)
+            {
+                // 文件被占用时会抛出IOException
+                return true;
+            }
+            catch (Exception)
+            {
+                // 其他错误也视为文件不可用
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// 异步等待文件释放
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns>如果文件被释放返回true，否则返回false</returns>
+        private async Task<bool> WaitForFileReleaseAsync(string filePath, CancellationToken cancellationToken)
+        {
+            const int checkIntervalMs = 2000; // 检查间隔，2秒
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                if (!IsFileInUse(filePath))
+                {
+                    return true;
+                }
+
+                // 等待指定时间或直到取消请求
+                try
+                {
+                    await Task.Delay(checkIntervalMs, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    // 取消请求，退出循环
+                    break;
+                }
+            }
+
+            return false;
         }
 
         public void Stop()
@@ -303,7 +370,7 @@ namespace WpfMain.Controlls
         public void CamReLoad()
         {
             cameraCaptureElement.ReLoad();
-        } 
+        }
 
         private void FFmpegProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
