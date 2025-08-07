@@ -64,7 +64,9 @@ namespace WpfMain.Logic
                 tInfo.Result?.Vedios?.ForEach(x =>
                 {
                     File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name), Path.Combine(dname, x.Name),true);
-                    File.Copy(x.ThumbnailSource, Path.Combine(tname, Path.GetFileName(x.ThumbnailSource)),true); 
+                    x.Source = Path.Combine(dname, x.Name);
+                    File.Copy(x.ThumbnailSource, Path.Combine(tname, Path.GetFileName(x.ThumbnailSource)),true);
+                    x.ThumbnailSource = Path.Combine(tname, Path.GetFileName(x.ThumbnailSource));
                 });
             }
 

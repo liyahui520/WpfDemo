@@ -240,7 +240,7 @@ namespace WpfMain.Controlls
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"打开文件失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show($"打开文件失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
