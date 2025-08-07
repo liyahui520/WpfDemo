@@ -20,6 +20,7 @@ using System.Windows.Input;
 using Newtonsoft.Json;
 using System.Windows.Media.Media3D;
 using System.Diagnostics;
+using WPFMediaKit;
 
 namespace WpfMain.Controlls
 {
@@ -117,22 +118,30 @@ namespace WpfMain.Controlls
 
         private void cobVideoSource_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            SetCameraCaptureElementVisible(true);
-            Camra = new CameraRecorderManager();
-            cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
-            if (cameraCaptureElement.VideoCaptureDevice == null)
-                return;
+            try
+            {
 
-            cameraCaptureElement.LoadedBehavior = MediaState.Play;
+                SetCameraCaptureElementVisible(true);
+                Camra = new CameraRecorderManager();
+                cameraCaptureElement.VideoCaptureDevice = Camra.initCapture();
+                if (cameraCaptureElement.VideoCaptureDevice == null)
+                    return;
 
-            cameraCaptureElement.NewVideoSample += Camera_NewVideoSample;
-            Camra.Camera = cameraCaptureElement;
-            Camra.Camera.ManipulationCompleted += Camera_ManipulationCompleted;
-            Camra.Camera.ManipulationDelta += Camera_ManipulationDelta;
-            Camra.Camera.ManipulationInertiaStarting += Camera_ManipulationInertiaStarting;
-            Camra.Camera.MediaFailed += Camera_MediaFailed;
-            Camra.Camera.NewVideoSample += Camera_NewVideoSample;
-            Camra.Camera.Play();
+                cameraCaptureElement.LoadedBehavior = MediaState.Play;
+
+                cameraCaptureElement.NewVideoSample += Camera_NewVideoSample;
+                Camra.Camera = cameraCaptureElement;
+                Camra.Camera.ManipulationCompleted += Camera_ManipulationCompleted;
+                Camra.Camera.ManipulationDelta += Camera_ManipulationDelta;
+                Camra.Camera.ManipulationInertiaStarting += Camera_ManipulationInertiaStarting;
+                Camra.Camera.MediaFailed += Camera_MediaFailed;
+                Camra.Camera.NewVideoSample += Camera_NewVideoSample;
+                Camra.Camera.Play();
+            }
+            catch(WPFMediaKitException ex)
+            {
+                throw new Exception("摄像头初始化失败，请检查摄像头是否连接或驱动是否安装正确。", ex);
+            }
         }
 
         private void Camera_NewVideoSample(object sender, VideoSampleArgs e)
@@ -273,7 +282,7 @@ namespace WpfMain.Controlls
         {
             // 停止录制
             var a = "";
-            a = cameraCaptureElement.StopRecording();
+            a =await cameraCaptureElement.StopRecording();
             //var a = Camra.End();
             ////cameraCaptureElement.Close();
             //Camra.CamClose();
@@ -284,6 +293,7 @@ namespace WpfMain.Controlls
             //}));
             //Camra.Pause();
             //cobVideoSource_SelectionChanged(null, null);
+            await Task.Delay(1000); // 等待1秒，确保文件写入完成
             var _cancellationTokenSource = new CancellationTokenSource();
             if (IsFileInUse(a))
             {
@@ -291,8 +301,7 @@ namespace WpfMain.Controlls
                 bool fileReleased = await WaitForFileReleaseAsync(a, _cancellationTokenSource.Token);
                 if (fileReleased)
                     return a;
-            }
-
+            } 
             return a;
         }
 

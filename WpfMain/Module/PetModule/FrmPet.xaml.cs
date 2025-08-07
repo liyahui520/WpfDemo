@@ -123,16 +123,14 @@ namespace WpfMain.Module.PetModule
                     timeT.Visibility = Visibility.Hidden;
                     System.Drawing.Image img = await VideoMF?.Capture();
                     string videoPath = await VideoMF?.End();
-                    if (tInfo.Result.Vedios == null)
+                    if (tInfo?.Result?.Vedios == null)
+                    {
+                        if(tInfo == null)
+                        {
+                            tInfo.Result = new TestResult();
+                        }
                         tInfo.Result.Vedios = new List<MediaItem>();
-
-
-                    //var old = tInfo.Result;
-                    //tInfo.Result = new TestResult();
-                    //var sp = videoPath.Split('\\');
-                    //var fileName = sp[sp.Length - 1];
-                    //old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
-                    //tInfo.Result = old;
+                    } 
                     var path = Path.Combine(AppVideoConfig.TempThumbnailPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
                     img.Save(path);
                     var old = tInfo.Result;
@@ -142,10 +140,12 @@ namespace WpfMain.Module.PetModule
                     VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
                     StartCamp.Content = "开始录像";
                     StartCamp.IsEnabled = true;
+                    img.Dispose();
                 }
                 catch (Exception)
                 { 
                     StartCamp.IsEnabled = true;
+                    
                 }
                 finally
                 {

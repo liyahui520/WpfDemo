@@ -10,6 +10,7 @@ using System.Linq;
 using Tools.App;
 using System.Threading.Tasks;
 using System.Threading;
+using System.IO;
 
 namespace WPFMediaKit.DirectShow.Controls
 {
@@ -344,7 +345,6 @@ namespace WPFMediaKit.DirectShow.Controls
             // 重新初始化以应用输出文件设置
             VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
             {
-                VideoCapturePlayer.ReleaseResources();
                 VideoCapturePlayer.VideoCaptureDevice = initCapture();
                 VideoCapturePlayer.SetupGraph();
                 VideoCapturePlayer.Play();
@@ -374,27 +374,32 @@ namespace WPFMediaKit.DirectShow.Controls
             }
             return devs;
         }
-        public string StopRecording()
+        public async Task<string> StopRecording()
         {
             string name = OutputFileName;
-            OutputFileName = string.Empty;
-            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
+            try
             {
-                VideoCapturePlayer.VideoCaptureDevice = initCapture();
-                VideoCapturePlayer.SetupGraph();
-                VideoCapturePlayer.Play();
-            }));
+                OutputFileName = string.Empty;
+                await ReLoad();
+                return name;
+            }
+            catch (IOException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
             return name;
         }
 
-        public void ReLoad()
+        public async Task ReLoad()
         {
-                VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
-                        {
-                            VideoCapturePlayer.VideoCaptureDevice = initCapture();
-                            VideoCapturePlayer.SetupGraph();
-                            VideoCapturePlayer.Play();
-                        }));
+            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(async () =>
+            {
+                VideoCapturePlayer.VideoCaptureDevice = initCapture();
+                VideoCapturePlayer.Play();
+            }));
         }
 
     }
