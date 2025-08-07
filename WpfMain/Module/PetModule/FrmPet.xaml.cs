@@ -283,9 +283,9 @@ namespace WpfMain.Module.PetModule
         /// <param name="e"></param>
         private void Button_SaveTest(object sender, RoutedEventArgs e)
         {
-            if (tInfo?.Result?.Images?.Count == 0)
-                if (HandyControl.Controls.MessageBox.Ask($"摄像头未获取到", "系统提示") == MessageBoxResult.OK)
-                    return;
+            //if (tInfo?.Result?.Images?.Count == 0)
+            //    if (HandyControl.Controls.MessageBox.Ask($"摄像头未获取到", "系统提示") == MessageBoxResult.OK)
+            //        return;
 
             if (VideoMF.isStart)
             {
