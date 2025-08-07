@@ -106,6 +106,7 @@
     <Compile Include="ILog.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="Manager\CameraRecorderManager.cs" />
+    <Compile Include="Manager\VideoThumbnailExtractor.cs" />
     <Compile Include="MediaFoundation\COMUtils.cs" />
     <Compile Include="MediaFoundation\EvrPresenter.cs" />
     <Compile Include="MediaFoundation\Interop.cs" />

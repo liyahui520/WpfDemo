@@ -82,7 +82,8 @@
 
                             <StackPanel HorizontalAlignment="Right">
                                 <Border CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}">
-                                    <MediaElement Width="120" Height="100" Source="{Binding Source}" Stretch="Uniform"/>
+                                    <Image Width="120" Height="100" Source="{Binding ImageSource}" Stretch="Uniform"/>
+                                    <!--<MediaElement Width="120" Height="100" Source="{Binding Source}" Stretch="Uniform"/>-->
                                     <Border.ContextMenu>
                                         <ContextMenu Width="120">
                                             <MenuItem Header="删除" x:Name="deleImg" Click="MenuItem_OnClick" ItemsSource="{Binding}">

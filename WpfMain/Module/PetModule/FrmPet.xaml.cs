@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading; 
+using System.Windows.Threading;
 using CuPrint;
 using DirectShowLib;
 using Entity.Entity;
@@ -22,6 +22,7 @@ using Tools.Extend;
 using WpfMain.Controlls;
 using WpfMain.Logic;
 using WpfMain.Module.SysModule;
+using WPFMediaKit.Manager;
 using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WpfMain.Module.PetModule
@@ -37,7 +38,7 @@ namespace WpfMain.Module.PetModule
         /// 是否保存
         /// </summary>
         private static bool IsSave = false;
-         
+
 
         public static readonly DependencyProperty VideoEntityProperty = DependencyProperty.Register(
             nameof(VideoModel), typeof(PropertyVideoModel), typeof(FrmPet), new PropertyMetadata(default(PropertyVideoModel)));
@@ -114,7 +115,8 @@ namespace WpfMain.Module.PetModule
             if (isStart)
             {
                 isStart = false;
-                string videoPath =await VideoMF?.End();
+                System.Drawing.Image img = await VideoMF?.Capture();
+                string videoPath = await VideoMF?.End();
                 if (tInfo.Result.Vedios == null)
                     tInfo.Result.Vedios = new List<MediaItem>();
 
@@ -125,10 +127,11 @@ namespace WpfMain.Module.PetModule
                 //var fileName = sp[sp.Length - 1];
                 //old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
                 //tInfo.Result = old;
-
+                var path= Path.Combine(AppVideoConfig.TempThumbnailPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
+                img.Save(path);
                 var old = tInfo.Result;
-                tInfo.Result = new TestResult();
-                old.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath });
+                tInfo.Result = new TestResult(); 
+                old.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath, ThumbnailSource = path });
                 tInfo.Result = old;
                 timer.Stop();
                 timeT.Visibility = Visibility.Hidden;
@@ -242,7 +245,7 @@ namespace WpfMain.Module.PetModule
         }
 
         public void Closed()
-        { 
+        {
             //关闭摄像头
             VideoMF?.Close();
             //处理图像资源
@@ -331,7 +334,7 @@ namespace WpfMain.Module.PetModule
 
         private void UCFiles_OnVideoClick(object sender, MediaItem e)
         {
-            UCLocalVideo video = new UCLocalVideo(e.Source); 
+            UCLocalVideo video = new UCLocalVideo(e.Source);
             video.ShowDialog();
         }
 

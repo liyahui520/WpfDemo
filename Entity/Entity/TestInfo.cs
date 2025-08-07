@@ -189,6 +189,30 @@ namespace Entity.Entity
         private bool _IsSelected;
 
         /// <summary>
+        /// 缩略图地址
+        /// </summary>
+        public string ThumbnailSource { get; set; }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public ImageSource ImageSource
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(ThumbnailSource))
+                {
+                    if (File.Exists(ThumbnailSource))
+                    {
+
+                        var buffer = File.ReadAllBytes(ThumbnailSource);
+                        return buffer.String2Image().ToBitmapImage();
+                    }
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 数据类型
         /// </summary>
         public MediaSourceType Type { get; set; }
@@ -251,7 +275,7 @@ namespace Entity.Entity
                     return buffer;
 
                 if (bitmap != null)
-                    buffer= bitmap.Bitmap2Byte();
+                    buffer = bitmap.Bitmap2Byte();
 
                 if (!string.IsNullOrEmpty(Source))
                 {
@@ -264,7 +288,7 @@ namespace Entity.Entity
                             //暂时不会有网上下载
                             break;
                         case MediaSourceType.LocalPath:
-                            if(File.Exists(Source))
+                            if (File.Exists(Source))
                                 buffer = File.ReadAllBytes(Source);
                             break;
                     }

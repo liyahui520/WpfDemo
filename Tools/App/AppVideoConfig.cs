@@ -17,6 +17,12 @@ namespace Tools.App
         /// </summary>
         public static string TempPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "Temp\\";
 
+
+        /// <summary>
+        /// 视频缩略图保存路径
+        /// </summary>
+        public static string TempThumbnailPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "Temp\\Thumbnail\\";
+
         /// <summary>
         /// 设备信息
         /// </summary>
@@ -35,6 +41,8 @@ namespace Tools.App
         {
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
+            if (!Directory.Exists(TempThumbnailPath))
+                Directory.CreateDirectory(TempThumbnailPath);
 
             ConfigPath = AppDomain.CurrentDomain.BaseDirectory + "Config\\";
             if (!Directory.Exists(ConfigPath))
@@ -45,7 +53,7 @@ namespace Tools.App
         /// <summary>
         /// 视频保存路径
         /// </summary>
-        public string VideoPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "VideoFile\\";
+        public string VideoPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + "VideoFile\\"; 
 
         /// <summary>
         /// 视频类型

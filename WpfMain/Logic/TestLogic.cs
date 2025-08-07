@@ -47,7 +47,10 @@ namespace WpfMain.Logic
             {
                 if (!Directory.Exists(AppStatic.VideoConfig.VideoPath))
                     Directory.CreateDirectory(AppStatic.VideoConfig.VideoPath);
+                if (!Directory.Exists(Path.Combine(AppStatic.VideoConfig.VideoPath, name, "Thumbnail\\")))
+                    Directory.CreateDirectory(Path.Combine(AppStatic.VideoConfig.VideoPath, name, "Thumbnail\\"));
                 string dname = Path.Combine(AppStatic.VideoConfig.VideoPath, name);
+                string tname = Path.Combine(AppStatic.VideoConfig.VideoPath, name, "Thumbnail\\");
                 if (!Directory.Exists(dname))
                     Directory.CreateDirectory(dname);
 
@@ -58,7 +61,11 @@ namespace WpfMain.Logic
                     x.Type = MediaSourceType.LocalPath;
                     x.Name = x.Name;
                 });
-                tInfo.Result?.Vedios?.ForEach(x => File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name), Path.Combine(dname, x.Name)));
+                tInfo.Result?.Vedios?.ForEach(x =>
+                {
+                    File.Copy(Path.Combine(AppVideoConfig.TempPath, x.Name), Path.Combine(dname, x.Name),true);
+                    File.Copy(x.ThumbnailSource, Path.Combine(tname, Path.GetFileName(x.ThumbnailSource)),true); 
+                });
             }
 
             File.WriteAllText(jsonfileName, JsonConvert.SerializeObject(tInfo));
