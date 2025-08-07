@@ -114,29 +114,43 @@ namespace WpfMain.Module.PetModule
             }
             if (isStart)
             {
-                isStart = false;
-                System.Drawing.Image img = await VideoMF?.Capture();
-                string videoPath = await VideoMF?.End();
-                if (tInfo.Result.Vedios == null)
-                    tInfo.Result.Vedios = new List<MediaItem>();
+                try
+                {
+                    isStart = false;
+                    StartCamp.IsEnabled = false;
+                    StartCamp.Content = "正在停止..";
+                    timer.Stop();
+                    timeT.Visibility = Visibility.Hidden;
+                    System.Drawing.Image img = await VideoMF?.Capture();
+                    string videoPath = await VideoMF?.End();
+                    if (tInfo.Result.Vedios == null)
+                        tInfo.Result.Vedios = new List<MediaItem>();
 
 
-                //var old = tInfo.Result;
-                //tInfo.Result = new TestResult();
-                //var sp = videoPath.Split('\\');
-                //var fileName = sp[sp.Length - 1];
-                //old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
-                //tInfo.Result = old;
-                var path= Path.Combine(AppVideoConfig.TempThumbnailPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
-                img.Save(path);
-                var old = tInfo.Result;
-                tInfo.Result = new TestResult(); 
-                old.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath, ThumbnailSource = path });
-                tInfo.Result = old;
-                timer.Stop();
-                timeT.Visibility = Visibility.Hidden;
-                VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
-                StartCamp.Content = "开始录像";
+                    //var old = tInfo.Result;
+                    //tInfo.Result = new TestResult();
+                    //var sp = videoPath.Split('\\');
+                    //var fileName = sp[sp.Length - 1];
+                    //old.Vedios.Add(new MediaItem() { Source = videoPath, Name = fileName, Type = MediaSourceType.LocalPath });
+                    //tInfo.Result = old;
+                    var path = Path.Combine(AppVideoConfig.TempThumbnailPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
+                    img.Save(path);
+                    var old = tInfo.Result;
+                    tInfo.Result = new TestResult();
+                    old.Vedios.Add(new MediaItem() { Source = videoPath, Name = Path.GetFileName(videoPath), Type = MediaSourceType.LocalPath, ThumbnailSource = path });
+                    tInfo.Result = old;
+                    VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
+                    StartCamp.Content = "开始录像";
+                    StartCamp.IsEnabled = true;
+                }
+                catch (Exception)
+                { 
+                    StartCamp.IsEnabled = true;
+                }
+                finally
+                {
+                    StartCamp.IsEnabled = true;
+                }
             }
             else
             {
