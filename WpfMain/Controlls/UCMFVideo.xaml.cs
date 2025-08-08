@@ -181,7 +181,7 @@ namespace WpfMain.Controlls
         /// 拍照
         /// </summary>
         /// <returns></returns>
-        public async Task<System.Drawing.Image> Capture()
+        public System.Drawing.Image Capture()
         {
             try
             {
@@ -255,7 +255,7 @@ namespace WpfMain.Controlls
             }
         }
 
-        public async Task Start()
+        public void Start()
         {
             //LogGpuAccelerationStatus();
             //var mediaType = new AMMediaType();
@@ -278,11 +278,10 @@ namespace WpfMain.Controlls
             isStart = true;
         }
 
-        public async Task<string> End()
+        public  string End()
         {
             // 停止录制
-            var a = "";
-            a =await cameraCaptureElement.StopRecording();
+            var a =cameraCaptureElement.StopRecording();
             //var a = Camra.End();
             ////cameraCaptureElement.Close();
             //Camra.CamClose();
@@ -293,12 +292,12 @@ namespace WpfMain.Controlls
             //}));
             //Camra.Pause();
             //cobVideoSource_SelectionChanged(null, null);
-            await Task.Delay(1000); // 等待1秒，确保文件写入完成
+            Task.Delay(1000); // 等待1秒，确保文件写入完成
             var _cancellationTokenSource = new CancellationTokenSource();
             if (IsFileInUse(a))
             {
                 // 异步等待文件释放
-                bool fileReleased = await WaitForFileReleaseAsync(a, _cancellationTokenSource.Token);
+                bool fileReleased = WaitForFileReleaseAsync(a, _cancellationTokenSource.Token);
                 if (fileReleased)
                     return a;
             } 
@@ -337,7 +336,7 @@ namespace WpfMain.Controlls
         /// <param name="filePath">文件路径</param>
         /// <param name="cancellationToken">取消令牌</param>
         /// <returns>如果文件被释放返回true，否则返回false</returns>
-        private async Task<bool> WaitForFileReleaseAsync(string filePath, CancellationToken cancellationToken)
+        private bool WaitForFileReleaseAsync(string filePath, CancellationToken cancellationToken)
         {
             const int checkIntervalMs = 2000; // 检查间隔，2秒
 
@@ -351,7 +350,7 @@ namespace WpfMain.Controlls
                 // 等待指定时间或直到取消请求
                 try
                 {
-                    await Task.Delay(checkIntervalMs, cancellationToken);
+                     Task.Delay(checkIntervalMs, cancellationToken);
                 }
                 catch (TaskCanceledException)
                 {

@@ -374,29 +374,30 @@ namespace WPFMediaKit.DirectShow.Controls
             }
             return devs;
         }
-        public async Task<string> StopRecording()
+        public string StopRecording()
         {
             string name = OutputFileName;
             try
             {
                 OutputFileName = string.Empty;
-                await ReLoad();
+                ReLoad();
                 return name;
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
             finally
             {
             }
-            return name;
         }
 
-        public async Task ReLoad()
+        public void ReLoad()
         {
-            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(async () =>
+
+            VideoCapturePlayer.Dispatcher.BeginInvoke((Action)(() =>
             {
+                //initCapture().Play();
                 VideoCapturePlayer.VideoCaptureDevice = initCapture();
                 VideoCapturePlayer.Play();
             }));
