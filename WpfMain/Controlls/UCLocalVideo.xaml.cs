@@ -41,6 +41,7 @@ namespace WpfMain.Controlls
             thread.Start();
             _isDisposed = false;
             _isMediaEnded = false;
+            Hide();
         }
         /// <summary>
         /// 初始化 VLC 控件
@@ -101,7 +102,8 @@ namespace WpfMain.Controlls
                     mainContent.Visibility = Visibility.Visible;
                     UpdateButtonStates(false);
                 });
-                InitVodio(path);
+                if (!string.IsNullOrWhiteSpace(path))
+                    InitVodio(path);
             }
             catch (Exception ex)
             {// 显示错误信息，允许用户重试
@@ -515,7 +517,7 @@ namespace WpfMain.Controlls
                         Task.WaitAny(stopTask, Task.Delay(1000)); // 等待1秒超时
                     }
                     Task.Run(() => mediaPlayer.Dispose());
-                    
+
                 }
             }
             catch { }
@@ -551,8 +553,8 @@ namespace WpfMain.Controlls
         /// </summary>
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            Window_Closing(null, null);
-            this.Close();
+            //Window_Closing(null, null);
+            this.Hide();
         }
 
 

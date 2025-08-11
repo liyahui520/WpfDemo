@@ -13,6 +13,7 @@ using Tools.Extend;
 using WpfMain.Logic;
 using System.Windows.Interop;
 using System.Windows.Media;
+using WpfMain.Controlls;
 
 namespace WpfMain
 {
@@ -62,7 +63,7 @@ namespace WpfMain
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
             LogUtil.Info("系统启动");
-
+            AppStatic.uCVideo = new UCLocalVideo("");
             //string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
             //foreach (string file in files)
             //{

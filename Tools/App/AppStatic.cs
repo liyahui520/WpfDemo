@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using Entity.Entity;
 
@@ -19,5 +20,7 @@ namespace Tools.App
         /// 分辨率列表
         /// </summary>
         public static Resolution Resolution { get; set; }
+
+        public static Control uCVideo { get; set; }
     }
 }
