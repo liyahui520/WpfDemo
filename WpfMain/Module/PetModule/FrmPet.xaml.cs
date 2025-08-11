@@ -98,7 +98,7 @@ namespace WpfMain.Module.PetModule
 
         private bool isStart = false;
 
-        private async void StartCamp_OnClick(object sender, RoutedEventArgs e)
+        private  void StartCamp_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
             {
@@ -121,8 +121,8 @@ namespace WpfMain.Module.PetModule
                     StartCamp.Content = "正在停止..";
                     timer.Stop();
                     timeT.Visibility = Visibility.Hidden;
-                    System.Drawing.Image img = await VideoMF?.Capture();
-                    string videoPath = await VideoMF?.End();
+                    System.Drawing.Image img = VideoMF?.Capture();
+                    string videoPath = VideoMF?.End();
                     if (tInfo?.Result?.Vedios == null)
                     {
                         if(tInfo == null)
@@ -196,7 +196,7 @@ namespace WpfMain.Module.PetModule
         }
 
         //拍照
-        private async void EndCamp_OnClick(object sender, RoutedEventArgs e)
+        private  void EndCamp_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
             {
@@ -211,7 +211,7 @@ namespace WpfMain.Module.PetModule
                 }
             }
             EndCamp.IsEnabled = false;
-            System.Drawing.Image img = await VideoMF?.Capture();
+            System.Drawing.Image img = VideoMF?.Capture();
             if (img != null)
             {
                 //string fullName = DateTime.Now.ToString("yyyyMMddHHmmss") + "-camp." + AppStatic.VideoConfig.ImageType;
