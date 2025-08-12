@@ -293,14 +293,18 @@ namespace WpfMain.Controlls
             //Camra.Pause();
             //cobVideoSource_SelectionChanged(null, null);
             Task.Delay(1000); // 等待1秒，确保文件写入完成
-            var _cancellationTokenSource = new CancellationTokenSource();
-            if (IsFileInUse(a))
-            {
-                // 异步等待文件释放
-                bool fileReleased = WaitForFileReleaseAsync(a, _cancellationTokenSource.Token);
-                if (fileReleased)
-                    return a;
-            } 
+           
+            //    var _cancellationTokenSource = new CancellationTokenSource();
+            //    if (IsFileInUse(a))
+            //{
+            //    Dispatcher.Invoke(() =>
+            //    {
+            //        // 异步等待文件释放
+            //        bool fileReleased = WaitForFileReleaseAsync(a, _cancellationTokenSource.Token);
+            //        if (fileReleased)
+            //            return a;
+            //    });
+            //}
             return a;
         }
 
