@@ -21,6 +21,7 @@ namespace Tools.App
         /// </summary>
         public static Resolution Resolution { get; set; }
 
-        public static Control uCVideo { get; set; }
+        public static Window uCVideo { get; set; }
+        public static UserControl uVCVideo { get; set; }
     }
 }

@@ -1,0 +1,295 @@
+using DrawTools;
+using PacsCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Entity.Entity;
+using Tools.App;
+using WpfAppNew.Logic;
+// using CuPrint;
+using System.Windows.Shapes;
+using Tools.Extend;
+using WpfAppNew.Controlls;
+using DevExpress.Utils.About;
+
+namespace WpfAppNew.Module.PetModule
+{
+    /// <summary>
+    /// FrmPet.xaml 的交互逻辑
+    /// </summary>
+    public partial class FrmPetImage : UserControl
+    {
+        public List<object> ResolutionDataList = new List<object>();
+        //private TestInfo tInfo;
+        public UCImageItemView UCD
+        {
+            get => (UCImageItemView)GetValue(UCDProperty);
+            set => SetValue(UCDProperty, value);
+        }
+        public TestInfo tInfos
+        {
+            get => (TestInfo)GetValue(TestInfoProperty);
+            set => SetValue(TestInfoProperty, value);
+        }
+        public PropertyGridDemoModel DemoModel1
+        {
+            get => (PropertyGridDemoModel)GetValue(DemoModel1Property);
+            set => SetValue(DemoModel1Property, value);
+        }
+
+
+
+        public static readonly DependencyProperty DemoModel1Property = DependencyProperty.Register(
+            nameof(DemoModel1), typeof(PropertyGridDemoModel), typeof(FrmPetImage), new PropertyMetadata(default(PropertyGridDemoModel)));
+
+        public static readonly DependencyProperty TestInfoProperty = DependencyProperty.Register(
+            nameof(tInfos), typeof(TestInfo), typeof(FrmPetImage), new PropertyMetadata(default(TestInfo)));
+
+        public static readonly DependencyProperty UCDProperty = DependencyProperty.Register(
+    nameof(UCD), typeof(UCImageItemView), typeof(FrmPetImage));
+
+
+        public FrmPetImage(TestInfo info, ImageItem item)
+        {
+            tInfos = info;
+            InitializeComponent();
+            DemoModel1 = new PropertyGridDemoModel();
+            ColorPicker.SelectedColorChanged += ColorPicker_SelectedColorChanged;
+            //HandyControl.Controls.Screenshot.Snapped += Screenshot_Snapped;
+            DataContext = this;
+            UCFilesImageAndVideo.SelectedImageItem = item;
+            UCD = new UCImageItemView(item);
+            UCD.SaveClick += UCD_SaveClick;
+            BorderImageContent.Child = UCD;
+        }
+
+
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_Zoom(object sender, RoutedEventArgs e)
+        {
+            //if (UCD != null)
+            //    UCD.Zoom += double.Parse(((Control)sender).Tag.ToString());
+            if (UCD != null)
+                UCD.DowheelZoom(double.Parse(((Control)sender).Tag.ToString()));
+        }
+
+        private void Button_Click_huanyuan(object sender, RoutedEventArgs e)
+        {
+            if (UCD != null)
+                UCD.Reduction();
+        }
+
+        private void Button_Click_Duibi(object sender, RoutedEventArgs e)
+        {
+            if (UCD != null)
+                UCD.Threshold += int.Parse(((Control)sender).Tag.ToString());
+
+        }
+
+        private void Button_Click_xuanzhuan(object sender, RoutedEventArgs e)
+        {
+            if (UCD != null)
+                UCD.Rotate(90);
+        }
+
+        private void Button_Click_fanzhuan(object sender, RoutedEventArgs e)
+        {
+            UCD.Flip();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (UCD == null)
+                return;
+
+            if (!(sender is Button bt))
+                return;
+
+            string tag = bt.Tag.ToString();
+
+            if (tag == "Clear")
+            {
+                UCD.Clear();
+                return;
+            }
+            UCD.Draw((DrawToolType)Enum.Parse(typeof(DrawToolType), bt.Tag.ToString()));
+        }
+
+        private void Button_Click_save(object sender, RoutedEventArgs e)
+        {
+            if (UCD != null)
+                UCD.SaveImage();
+        }
+
+
+
+        /// <summary>
+        /// 打开对比图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_Comparison(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog odf = new System.Windows.Forms.OpenFileDialog();
+            odf.Filter = "png文件(*.png;*.PNG)|*.png;*.PNG|JPG(*.jpg;*.jpeg)|*.jpg;*.jpeg";
+            if (odf.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+
+            tInfos.Result.Images.Add(new ImageItem
+            {
+                ImageSource = new BitmapImage(new Uri(odf.FileName)),
+                Name = System.IO.Path.GetFileNameWithoutExtension(odf.FileName)
+            });
+        }
+
+        /// <summary>
+        /// 关闭图片对比
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_CloseCmp(object sender, RoutedEventArgs e)
+        {
+            //GridRowContent2.Height = new GridLength(0, GridUnitType.Star);
+            GridRowContent2.Width = new GridLength(0, GridUnitType.Star);
+        }
+
+        /// <summary>
+        /// 打开/并闭 拾色器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_Coloe(object sender, RoutedEventArgs e)
+        {
+            ColorPicker.Visibility = ColorPicker.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+        }
+        /// <summary>
+        /// 设置涂鸦画笔颜色
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
+        {
+            ButtonColor.Foreground = ColorPicker.SelectedBrush;
+            if (UCD != null)
+                UCD.SetDrawingCanvasPinfo("Brush", ColorPicker.SelectedBrush);
+        }
+
+        /// <summary>
+        /// 设置涂鸦画笔 粗细
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NumericUpDown_ValueChanged(object sender, HandyControl.Data.FunctionEventArgs<double> e)
+        {
+            if (UCD != null)
+                UCD.SetDrawingCanvasPinfo("StrokeThickness", e.Info);
+        }
+
+        /// <summary>
+        /// 保存自带的截图功能的图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Screenshot_Snapped(object sender, HandyControl.Data.FunctionEventArgs<ImageSource> e)
+        {
+            var old = tInfos.Result;
+            tInfos.Result = new TestResult();
+            old.Images.Add(new ImageItem { Name = $"截图{DateTime.Now:yyyyMMddHHmmss}", ImageSource = e.Info });
+            tInfos.Result = old;
+        }
+
+        /// <summary>
+        /// 对比度拖拽事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RangeBase_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (UCD != null)
+                UCD.Threshold = Convert.ToInt32(e.NewValue);
+        }
+
+        /// <summary>
+        /// 保存检查
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_SaveTest(object sender, RoutedEventArgs e)
+        {
+            TestLogic.Save(tInfos);
+            HandyControl.Controls.MessageBox.Success($"保存成功！", "系统提示"); 
+        }
+
+        private void UCFiles_ImagesClick(object sender, TestInfo e)
+        {
+            BorderImageContent.Child = null;
+            UCD = new UCImageItemView(UCFilesImageAndVideo.SelectedImageItem);
+            UCD.SaveClick += UCD_SaveClick;
+            BorderImageContent.Child = UCD;
+        }
+
+        private void UCD_SaveClick(object sender, ImageItem e)
+        {
+            var old = tInfos.Result;
+            tInfos.Result = null;
+            var del = old.Images.FirstOrDefault(s => s.Name == e.Name);
+            del = e;
+            tInfos.Result = old;
+            UCFilesImageAndVideo.SelectedImageItem = e;
+
+        }
+
+        /// <summary>
+        /// 打印预览
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ButtonBase_Print_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!System.IO.File.Exists(tInfos.TestPath))
+            {
+                HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示"); 
+                return;
+            }
+
+            FrmModule f = new FrmModule(new UCPrintNotes(tInfos));
+            f.Title = "打印报告";
+            f.ShowDialog();
+            return;
+        }
+
+        private void screenshot_Click(object sender, RoutedEventArgs e)
+        {
+            Point screenPoint = UCD.PointToScreen(new Point(0, 0));
+            new MaskWindow(new Rectangle { RadiusX = screenPoint.X, RadiusY = screenPoint.Y, Width = UCD.ActualWidth, Height = UCD.ActualHeight }).Show();
+        }
+
+        /// <summary>
+        /// 撤销
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            UCD.Revoke();
+        }
+    }
+}
+

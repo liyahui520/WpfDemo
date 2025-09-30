@@ -14,7 +14,7 @@ namespace Tools.Extend.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool visibility = (bool)value;
-            return visibility ? Visibility.Visible : Visibility.Collapsed;
+            return !visibility ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -27,6 +27,10 @@ namespace Tools.Extend
             return logPath;
         }
 
+        public static void Warning(string text)
+        {
+            WriteLog("Warning", text);
+        }
         public static void Debug(string text)
         {
             WriteLog("Debug", text);

@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="WpfAppNew.Controlls.SimpleCameraPreview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfAppNew.Controlls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 摄像头选择区域 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <TextBlock Text="选择摄像头:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="CameraListComboBox" Width="150" SelectionChanged="CameraListComboBox_SelectionChanged"/>
+            <Button Content="刷新列表" Click="RefreshCameraList_Click" Margin="10,0,0,0" Padding="10,2"/>
+        </StackPanel>
+
+        <!-- 分辨率和录制设置区域 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+            <TextBlock Text="分辨率:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="ResolutionComboBox" Width="150" SelectionChanged="ResolutionComboBox_SelectionChanged"/>
+
+            <TextBlock Text="帧率:" VerticalAlignment="Center" Margin="20,0,10,0"/>
+            <ComboBox x:Name="FpsComboBox" Width="80">
+                <ComboBoxItem Content="15 FPS" Tag="15"/>
+                <ComboBoxItem Content="20 FPS" Tag="20"/>
+                <ComboBoxItem Content="25 FPS" Tag="25"/>
+                <ComboBoxItem Content="30 FPS" Tag="30" IsSelected="True"/>
+                <ComboBoxItem Content="50 FPS" Tag="50"/>
+                <ComboBoxItem Content="60 FPS" Tag="60"/>
+            </ComboBox>
+
+            <TextBlock Text="质量:" VerticalAlignment="Center" Margin="20,0,10,0"/>
+            <ComboBox x:Name="QualityComboBox" Width="100">
+                <ComboBoxItem Content="低" Tag="low"/>
+                <ComboBoxItem Content="中" Tag="medium" IsSelected="True"/>
+                <ComboBoxItem Content="高" Tag="high"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- 视频预览区域 -->
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="10">
+            <Grid>
+                <Image x:Name="PreviewImage" Stretch="Uniform"/>
+                <TextBlock Text="请选择摄像头并点击开始预览" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                         FontSize="24" Foreground="Gray"/>
+            </Grid>
+        </Border>
+
+        <!-- 控制按钮 -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="开始预览" 
+                  Click="StartPreview_Click" 
+                  Width="100" Height="30" Margin="5"/>
+            <Button Content="停止预览" 
+                  Click="StopPreview_Click" 
+                  Width="100" Height="30" Margin="5"/>
+            <Button Content="开始录制" 
+                  Click="StartRecording_Click" 
+                  Width="100" Height="30" Margin="5"/>
+            <Button Content="停止录制" 
+                  Click="StopRecording_Click" 
+                  Width="100" Height="30" Margin="5"/>
+        </StackPanel>
+
+        <!-- 状态栏 -->
+        <StatusBar Grid.Row="4">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusText" Text="就绪"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

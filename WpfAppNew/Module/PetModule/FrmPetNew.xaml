@@ -1,0 +1,294 @@
+<UserControl x:Class="WpfAppNew.Module.PetModule.FrmPetNew"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfAppNew.Module.PetModule"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:controls="clr-namespace:WpfAppNew.Controlls" xmlns:controls1="clr-namespace:WpfAppNew.OpenCV.Controls"
+             mc:Ignorable="d" 
+             xmlns:wm="clr-namespace:WpfAppNew.Module" xmlns:controls2="clr-namespace:WpfAppNew.EmguPlugs"
+             d:DesignHeight="450" d:DesignWidth="1800"
+             Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Module/PetModule/Geometries.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="350"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧控制面板 -->
+            <Border Grid.Column="0" CornerRadius="15" BorderThickness="1" Margin="5">
+                <Border.BorderBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#3498DB" Offset="0"/>
+                        <GradientStop Color="#2980B9" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#2C3E50" Offset="0"/>
+                        <GradientStop Color="#34495E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="315" ShadowDepth="3" Opacity="0.2" BlurRadius="8"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="0,5,0,0" Padding="10" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" FontSize="14" MouseLeftButtonDown="HeaderTextBlock_MouseLeftButtonDown">检查拍摄</TextBlock>
+                    <ScrollViewer Grid.Row="1" hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="10,0,10,10">
+                        <StackPanel Orientation="Vertical">
+                            <!-- 相机操作控制区域 -->
+                            <Expander Header="设备操作" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White" FontSize="20">
+                                <Expander.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Expander.Background>
+                                <Border Height="180" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4" Padding="10">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    </Border.Background>
+                                    <StackPanel Margin="10,0,10,0">
+                                        <!-- 设备选择区域 -->
+                                        <StackPanel Orientation="Vertical" Margin="5,5,0,0">
+                                            <TextBlock Text="设备选择" Foreground="White" FontSize="12" Margin="0,0,0,5"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ComboBox x:Name="DeviceComboBox" Grid.Column="0" Margin="0,0,5,0" 
+                                                         SelectionChanged="DeviceComboBox_SelectionChanged" Width="240"
+                                                         Background="White" Foreground="Black" FontSize="12"
+                                                         ToolTip="选择相机设备"/>
+                                                <Button x:Name="RefreshDevicesButton" Grid.Column="1" Content="🔄" 
+                                                       Click="RefreshDevicesButton_Click" Width="30" Height="25"
+                                                       Style="{StaticResource ButtonWarning}" Foreground="White" FontWeight="Bold"
+                                                       ToolTip="刷新设备列表" Cursor="Hand">
+                                                    <Button.Effect>
+                                                        <DropShadowEffect Color="Orange" Direction="315" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
+                                                    </Button.Effect>
+                                                </Button>
+                                            </Grid>
+                                        </StackPanel>
+                                        
+                                        <!-- 操作按钮区域 -->
+                                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Height="45" Margin="5,10,0,0">
+                                            <Button Content="📷 拍照" Margin="5" x:Name="TakeSnapshotButton" Click="TakeSnapshotButton_Click" 
+                                                    Style="{StaticResource ButtonSuccess}" Foreground="White" FontWeight="Bold" FontSize="14"
+                                                    ToolTip="点击拍摄照片" Cursor="Hand">
+                                                <Button.Effect>
+                                                    <DropShadowEffect Color="Green" Direction="315" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
+                                                </Button.Effect>
+                                            </Button>
+                                            <Button Content="🎥 开始录像" Margin="5" x:Name="StartRecordButton" Click="StartRecordButton_Click" 
+                                                    Style="{StaticResource ButtonInfo}" Foreground="White" FontWeight="Bold" FontSize="14"
+                                                    ToolTip="点击开始/停止录像" Cursor="Hand">
+                                                <Button.Effect>
+                                                    <DropShadowEffect Color="Blue" Direction="315" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
+                                                </Button.Effect>
+                                            </Button>
+                                        </VirtualizingStackPanel>
+                                        
+                                        <!-- 录像状态显示 -->
+                                        <StackPanel Orientation="Horizontal" Height="30" Margin="5,5,0,0" x:Name="RecordingTimePanel" Visibility="Hidden">
+                                            <TextBlock Text="正在录像中：" Margin="5" FontSize="14" Foreground="White"/>
+                                            <TextBlock Text="00:00:00" Margin="5" x:Name="RecordingTimeText" FontSize="14" Foreground="White"/>
+                                        </StackPanel>
+                                        
+                                        <!-- 音频选项 -->
+                                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5,10,0,0">
+                                            <CheckBox Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
+                                        </VirtualizingStackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Expander>
+
+                            <!-- 录像控制区域 -->
+                            <!--<Expander Header="录像" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White" FontSize="20">
+                                <Expander.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Expander.Background>
+                                <Border Height="150" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4" Padding="10">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="White" Opacity="0.2"/>
+                                    </Border.Background>
+                                    <StackPanel Margin="10,0,10,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <VirtualizingStackPanel Grid.Row="1" VerticalAlignment="Center" Orientation="Horizontal" Margin="5,10,0,0">
+                                                <CheckBox Grid.Column="1" Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
+                                            </VirtualizingStackPanel>
+                                        </Grid>
+                                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5,5,0,0">
+                                            <Button Content="开始录像" Margin="5" x:Name="StartRecordButton" Click="StartRecordButton_Click" Style="{StaticResource ButtonInfo}" Foreground="White"/>
+                                            <Button Content="拍照" Margin="5" x:Name="TakeSnapshotButton" Click="TakeSnapshotButton_Click" Style="{StaticResource ButtonSuccess}" Foreground="White"/>
+                                        </VirtualizingStackPanel>
+                                        <StackPanel Orientation="Horizontal" Height="30" Margin="5,5,0,0" x:Name="RecordingTimePanel" Visibility="Hidden">
+                                            <TextBlock Text="正在录像中：" Margin="5" FontSize="14"/>
+                                            <TextBlock Text="00:00:00" Margin="5" x:Name="RecordingTimeText" FontSize="14"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Expander>-->
+
+                            <!-- 遮罩控制区域 -->
+                            <Expander Header="遮罩" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White" FontSize="20">
+                                <Expander.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.2"/>
+                                </Expander.Background>
+                                <Border Height="50" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="Black" Opacity="0.2"/>
+                                    </Border.Background>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Resources>
+                                            <Style BasedOn="{StaticResource ButtonDashedBaseStyle}" TargetType="{x:Type Button}">
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter Property="BorderBrush" Value="White" />
+                                            </Style>
+                                        </StackPanel.Resources>
+                                        <Button Margin="5" x:Name="mask" Command="wm:StartMaskhotCommand.StartMaskhot" ToolTip="遮罩(鼠标右键或ESC键取消)" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource MaskGeometry}"/>
+                                        <Button Margin="5" x:Name="screenshot" ToolTip="截图(鼠标右键或ESC键取消)"  Command="hc:ControlCommands.StartScreenshot" FontSize="30" Width="30" Height="30" Padding="2" hc:IconElement.Geometry="{StaticResource ScreenshotGeometry}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Expander>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- 文件显示区域 -->
+                    <controls:UCFiles Grid.Row="2" ParentData="{Binding tInfo, Mode=TwoWay}" x:Name="FilesControl" ImagesClick="FilesControl_ImagesClick" VideoClick="FilesControl_VideoClick"/>
+                </Grid>
+            </Border>
+
+            <!-- 中间视频预览区域 -->
+            <Grid Grid.Column="1" Margin="10,5,10,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- 主预览区域 -->
+                <Border Grid.Row="0" CornerRadius="15" Name="VideoBorder" BorderThickness="2">
+                    <Border.BorderBrush>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4A90E2" Offset="0"/>
+                            <GradientStop Color="#7B68EE" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2C3E50" Offset="0"/>
+                            <GradientStop Color="#34495E" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3" BlurRadius="10"/>
+                    </Border.Effect>
+                    <Grid>
+                        <!-- 工业相机控件 - 主要使用的相机控件 -->
+                        <controls2:IndustrialCameraControl x:Name="IndustrialCameraControl" Margin="5" />
+                        <!-- OpenCV相机控件 - 备用控件，已隐藏 -->
+                        <controls1:CameraPreviewControl x:Name="CameraPreview" Visibility="Collapsed" />
+                        
+                        <!-- 预览状态指示器 -->
+                        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" 
+                                Background="#E74C3C" CornerRadius="10" Padding="8,4">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="8" Height="8" Fill="White" Margin="0,0,5,0">
+                                    <Ellipse.RenderTransform>
+                                        <ScaleTransform x:Name="PulseTransform" ScaleX="1" ScaleY="1"/>
+                                    </Ellipse.RenderTransform>
+                                    <Ellipse.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="PulseTransform" 
+                                                                   Storyboard.TargetProperty="ScaleX"
+                                                                   From="1" To="1.5" Duration="0:0:1" AutoReverse="True"/>
+                                                    <DoubleAnimation Storyboard.TargetName="PulseTransform" 
+                                                                   Storyboard.TargetProperty="ScaleY"
+                                                                   From="1" To="1.5" Duration="0:0:1" AutoReverse="True"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+                                <TextBlock Text="实时预览" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+                
+                <!-- 状态栏 -->
+                <Border Grid.Row="1" Margin="0,5,0,0" CornerRadius="8" Background="#34495E" Padding="10,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="设备状态：就绪" Foreground="#2ECC71" FontSize="12" FontWeight="Bold"/>
+                        <!--<TextBlock Grid.Column="2" Text="工业相机控制系统 v2.0" Foreground="#BDC3C7" FontSize="10" HorizontalAlignment="Right"/>-->
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 右侧属性设置区域 -->
+            <Grid Grid.Column="2">
+                <Border CornerRadius="15" BorderThickness="1" Margin="5">
+                    <Border.BorderBrush>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#27AE60" Offset="0"/>
+                            <GradientStop Color="#229954" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#2C3E50" Offset="0"/>
+                            <GradientStop Color="#34495E" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="315" ShadowDepth="3" Opacity="0.2" BlurRadius="8"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <controls:PropertyGridDemoCtl x:Name="PropertyGridControl" Margin="10" Background="Transparent" ParentData="{Binding tInfo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,15,0,10">
+                            <Button Content="💾 保存" Margin="20,0,20,0" Width="130" Height="40" Click="SaveButton_Click" 
+                                    Style="{StaticResource ButtonSuccess}" Foreground="White" FontWeight="Bold" FontSize="14"
+                                    ToolTip="保存当前检查结果" Cursor="Hand">
+                                <Button.Effect>
+                                    <DropShadowEffect Color="Green" Direction="315" ShadowDepth="3" Opacity="0.6" BlurRadius="6"/>
+                                </Button.Effect>
+                            </Button>
+                            <Button Content="🖨️ 打印" Margin="20,0,0,0" Width="130" Height="40" Click="PrintButton_Click" 
+                                    Style="{StaticResource ButtonPrimary}" Foreground="White" FontWeight="Bold" FontSize="14"
+                                    ToolTip="打印检查报告" Cursor="Hand">
+                                <Button.Effect>
+                                    <DropShadowEffect Color="Blue" Direction="315" ShadowDepth="3" Opacity="0.6" BlurRadius="6"/>
+                                </Button.Effect>
+                            </Button>
+                        </VirtualizingStackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

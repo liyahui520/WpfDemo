@@ -34,3 +34,11 @@ MFDemo/
 /.history/WpfMain/Module/PetModule
 /.history
 /视频录制配置修复说明.md
+OpenCv/obj/
+WpfAppNew/obj/
+Tools/obj/
+Tools/bin/
+OpenCv/bin/
+obj/
+Entity/bin/
+Log/

@@ -299,7 +299,7 @@ namespace Entity.Entity
         }
         [XmlIgnore]
         [JsonIgnore]
-        public ImageSource ImageSource
+        public new ImageSource ImageSource
         {
 
             get
