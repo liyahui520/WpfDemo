@@ -210,7 +210,7 @@
   </ItemGroup>
   <PropertyGroup>
     <ApplicationIcon>Static\Images\bitbug_favicon.ico</ApplicationIcon>
-    <BaseOutputPath>..\App\</BaseOutputPath>
+    <BaseOutputPath>..\App\Debug\</BaseOutputPath>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <Title>硕腾镜检系统</Title>
   </PropertyGroup>
@@ -220,7 +220,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;0067;CS0169;CS0414;1998</NoWarn>
     <DefineConstants>$(DefineConstants);Release</DefineConstants>
-    <OutputPath>..\App\Release\</OutputPath>
   </PropertyGroup>
 
   <!-- PostBuild事件：复制Libs文件夹到输出目录 -->
