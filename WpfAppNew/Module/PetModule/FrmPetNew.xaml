@@ -202,9 +202,7 @@
                     </Border.Effect>
                     <Grid>
                         <!-- 工业相机控件 - 主要使用的相机控件 -->
-                        <controls2:IndustrialCameraControl x:Name="IndustrialCameraControl" Margin="5" />
-                        <!-- OpenCV相机控件 - 备用控件，已隐藏 -->
-                        <controls1:CameraPreviewControl x:Name="CameraPreview" Visibility="Collapsed" />
+                        <controls2:IndustrialCameraControl x:Name="IndustrialCameraControl" Margin="5" /> 
                         
                         <!-- 预览状态指示器 -->
                         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" 

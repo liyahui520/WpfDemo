@@ -198,31 +198,7 @@ namespace WpfAppNew.Module.PetModule
                 Interval = TimeSpan.FromSeconds(2) // 2秒内点击五次
             };
             _clickTimer.Tick += ClickTimer_Tick;
-        }
-
-        /// <summary>
-        /// 初始化系统
-        /// </summary>
-        private void InitializeSystem()
-        {
-            try
-            {
-                // 订阅CameraPreviewControl的事件
-                CameraPreview.StatusChanged += OnCameraStatusChanged;
-                CameraPreview.RecordingStatusChanged += OnCameraRecordingStatusChanged;
-                CameraPreview.ErrorOccurred += OnCameraErrorOccurred;
-                CameraPreview.PerformanceStats += OnCameraPerformanceStats;
-
-                CameraPreview.SetOutputDirectory(AppVideoConfig.TempPath);
-                // 加载设备列表
-                LoadDeviceList();
-            }
-            catch (Exception ex)
-            {
-                LogUtil.Error($"初始化系统失败: {ex.Message}");
-                //Growl.Error($"初始化系统失败: {ex.Message}");
-            }
-        }
+        } 
 
         /// <summary>
         /// 加载设备列表（功能已迁移到IndustrialCameraControl）
@@ -503,7 +479,7 @@ namespace WpfAppNew.Module.PetModule
                 return;
             }
 
-            if (IndustrialCameraControl.IsRecording)
+            if (IndustrialCameraControl.IsRecording|| _isRecording)
             {
                 StopRecording();
             }
@@ -645,15 +621,7 @@ namespace WpfAppNew.Module.PetModule
                 TakeSnapshotButton.IsEnabled = true;
             }
         }
-
-
-        private void VideoStart_Click(object sender, RoutedEventArgs e)
-        {
-            CameraPreview?.StopPreview();
-            UCLocalVideo uc = new UCLocalVideo("D://temp//1.mp4");
-            uc.ShowDialog();
-            CameraPreview?.StartPreviewAsync();
-        }
+         
 
         /// <summary>
         /// 音频开启复选框选中事件
@@ -696,7 +664,7 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private void FilesControl_ImagesClick(object sender, TestInfo e)
         {
-            CameraPreview?.StopPreview();
+            IndustrialCameraControl.StopPreviewCommand?.Execute(null);
             FilesControl.SelectedImageItem = (sender as UCFiles).SelectedImageItem;
             FrmBackModule pet = new FrmBackModule(new FrmPetImage(e, (sender as UCFiles).SelectedImageItem));
             pet.title.Text = "查看";
@@ -704,7 +672,7 @@ namespace WpfAppNew.Module.PetModule
             pet.ShowDialog();
             tInfo = new TestInfo();
             tInfo = e;
-            CameraPreview?.StartPreviewAsync();
+            IndustrialCameraControl.StartPreviewCommand?.Execute(null);
         }
 
         /// <summary>
@@ -714,10 +682,10 @@ namespace WpfAppNew.Module.PetModule
         {
             //(AppStatic.uCVideo as UCLocalVideo)?.InitVodio(e.Source);
             //(AppStatic.uCVideo as UCLocalVideo).ShowDialog();
-            CameraPreview?.StopPreview();
+            IndustrialCameraControl.StopPreviewCommand?.Execute(null);
             UCOpenCvVideoPlayer uc = new UCOpenCvVideoPlayer(e.Source);
             uc.ShowDialog();
-            CameraPreview?.StartPreviewAsync();
+            IndustrialCameraControl.StartPreviewCommand?.Execute(null);
         }
 
         /// <summary>
@@ -740,7 +708,7 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CameraPreview.IsRecording)
+            if (IndustrialCameraControl.IsRecording)
             {
                 Growl.Warning("正在录像中，请先停止！");
                 return;
@@ -896,16 +864,10 @@ namespace WpfAppNew.Module.PetModule
         {
             try
             {
-                // 停止录像和预览
-                if (CameraPreview.IsRecording)
+                if (IndustrialCameraControl.IsPreviewRunning)
                 {
-                    CameraPreview.StopRecording();
+                    IndustrialCameraControl?.StopPreviewCommand.Execute(null);
                 }
-                if (CameraPreview.IsCapturing)
-                {
-                    CameraPreview.StopPreview();
-                }
-
                 // 停止定时器
                 _recordingTimer?.Stop();
                 _clickTimer?.Stop();
@@ -980,8 +942,8 @@ namespace WpfAppNew.Module.PetModule
         {
             try
             {
-                var performanceWindow = new PerformanceMonitorWindow(CameraPreview);
-                performanceWindow.Show();
+                //var performanceWindow = new PerformanceMonitorWindow(CameraPreview);
+                //performanceWindow.Show();
             }
             catch (Exception ex)
             {

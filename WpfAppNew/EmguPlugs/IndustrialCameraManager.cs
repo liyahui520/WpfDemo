@@ -696,29 +696,73 @@ namespace WpfAppNew.EmguPlugs
                     return false;
                 }
 
-                if (_currentFrame == null || _currentFrame.Empty())
+                // 线程安全地检查当前帧
+                Mat currentFrameCopy = null;
+                bool lockTaken = false;
+                try
                 {
-                    LogUtil.Error("IndustrialCameraManager: 当前无有效帧，无法开始录像");
+                    Monitor.TryEnter(_lockObject, 100, ref lockTaken); // 100ms超时
+                    if (!lockTaken)
+                    {
+                        LogUtil.Error("IndustrialCameraManager: 无法获取锁，开始录像失败");
+                        return false;
+                    }
+
+                    if (_currentFrame == null || _currentFrame.Empty())
+                    {
+                        LogUtil.Error("IndustrialCameraManager: 当前无有效帧，无法开始录像");
+                        return false;
+                    }
+
+                    // 创建当前帧的副本，避免在锁外访问时被释放
+                    currentFrameCopy = _currentFrame.Clone();
+                }
+                finally
+                {
+                    if (lockTaken)
+                    {
+                        Monitor.Exit(_lockObject);
+                    }
+                }
+
+                if (currentFrameCopy == null || currentFrameCopy.Empty())
+                {
+                    LogUtil.Error("IndustrialCameraManager: 无法获取有效帧副本，开始录像失败");
+                    currentFrameCopy?.Dispose();
                     return false;
                 }
 
                 _recordingFilePath = filePath;
                 var actualCodec = codec ?? FourCC.MJPG;
-                _videoWriter = new VideoWriter(filePath, actualCodec, fps, CurrentResolution);
+                
+                // 使用当前帧的尺寸创建视频写入器
+                var frameSize = new OpenCvSharp.Size(currentFrameCopy.Width, currentFrameCopy.Height);
+                _videoWriter = new VideoWriter(filePath, actualCodec, fps, frameSize);
+
+                // 释放帧副本
+                currentFrameCopy.Dispose();
 
                 if (!_videoWriter.IsOpened())
                 {
                     LogUtil.Error($"IndustrialCameraManager: 无法创建视频写入器 - {filePath}");
                     _videoWriter?.Dispose();
                     _videoWriter = null;
+                    // 确保录像状态为false
+                    _isRecording = false;
+                    IsRecording = false;
                     return false;
                 }
 
+                // 设置录像相关参数
                 _recordStartTime = DateTime.Now;
                 _recordedFrameCount = 0;
                 _recordFps = fps;
-                IsRecording = true;
-                LogUtil.Info($"IndustrialCameraManager: 录像已开始 - {filePath}");
+                
+                // 设置录像状态为true
+                _isRecording = true; // 先设置内部标志
+                IsRecording = true;  // 再设置公共属性，这会触发事件通知
+                
+                LogUtil.Info($"IndustrialCameraManager: 录像已开始 - {filePath}, 分辨率: {frameSize.Width}x{frameSize.Height}");
                 return true;
             }
             catch (Exception ex)
@@ -734,6 +778,7 @@ namespace WpfAppNew.EmguPlugs
         /// </summary>
         public string StopRecording()
         {
+            string filePath = null;
             try
             {
                 if (!IsRecording)
@@ -741,14 +786,38 @@ namespace WpfAppNew.EmguPlugs
                     return string.Empty;
                 }
 
-                _videoWriter?.Release();
-                _videoWriter?.Dispose();
-                _videoWriter = null;
+                // 先设置录制状态为false，防止新的写入操作
+                _isRecording = false;
+                IsRecording = false;
+
+                // 等待一小段时间，确保正在进行的写入操作完成
+                Thread.Sleep(50);
+
+                // 安全地释放视频写入器
+                lock (_lockObject)
+                {
+                    try
+                    {
+                        if (_videoWriter != null)
+                        {
+                            if (_videoWriter.IsOpened())
+                            {
+                                _videoWriter.Release();
+                            }
+                            _videoWriter.Dispose();
+                            _videoWriter = null;
+                        }
+                    }
+                    catch (Exception releaseEx)
+                    {
+                        LogUtil.Error($"IndustrialCameraManager: 释放视频写入器失败 - {releaseEx.Message}");
+                    }
+                }
 
                 var recordDuration = DateTime.Now - _recordStartTime;
-                IsRecording = false;
-                LogUtil.Info($"IndustrialCameraManager: 录像已停止 - {_recordingFilePath}, 时长{recordDuration.TotalSeconds:F2}秒，帧数{_recordedFrameCount}");
-                return _recordingFilePath;
+                filePath = _recordingFilePath;
+                LogUtil.Info($"IndustrialCameraManager: 录像已停止 - {filePath}, 时长{recordDuration.TotalSeconds:F2}秒，帧数{_recordedFrameCount}");
+                return filePath;
             }
             catch (Exception ex)
             {
@@ -758,7 +827,6 @@ namespace WpfAppNew.EmguPlugs
             }
             finally
             {
-
                 _recordingFilePath = null;
             }
         }
@@ -806,22 +874,29 @@ namespace WpfAppNew.EmguPlugs
                 }
 
                 // 创建视频写入器
-                var actualCodec = codec ?? FourCC.XVID;
-                _videoWriter = new VideoWriter(filePath, actualCodec, fps, new OpenCvSharp.Size(width, height), true);
+                    var actualCodec = codec ?? FourCC.XVID;
+                    _videoWriter = new VideoWriter(filePath, actualCodec, fps, new OpenCvSharp.Size(width, height), true);
 
                 if (!_videoWriter.IsOpened())
                 {
                     LogUtil.Error("IndustrialCameraManager: 无法创建视频写入器");
                     _videoWriter?.Dispose();
                     _videoWriter = null;
+                    // 确保录像状态为false
+                    _isRecording = false;
+                    IsRecording = false;
                     return false;
                 }
 
-                _isRecording = true;
+                // 设置录像相关参数
                 _recordStartTime = DateTime.Now;
                 _recordedFrameCount = 0;
                 _recordFps = fps;
                 _recordingFilePath = filePath;
+                
+                // 设置录像状态为true
+                _isRecording = true; // 先设置内部标志
+                IsRecording = true;  // 再设置公共属性，这会触发事件通知
 
                 LogUtil.Info($"IndustrialCameraManager: 视频录制已启动 - {width}x{height} @ {fps}fps");
                 return true;
@@ -853,16 +928,33 @@ namespace WpfAppNew.EmguPlugs
 
                 LogUtil.Info("IndustrialCameraManager: 停止录制视频");
 
+                // 先设置录制状态为false，防止新的写入操作
                 _isRecording = false;
+
+                // 等待一小段时间，确保正在进行的写入操作完成
+                await Task.Delay(50);
 
                 // 释放视频写入器
                 await Task.Run(() =>
                 {
                     lock (_lockObject)
                     {
-                        _videoWriter?.Release();
-                        _videoWriter?.Dispose();
-                        _videoWriter = null;
+                        try
+                        {
+                            if (_videoWriter != null)
+                            {
+                                if (_videoWriter.IsOpened())
+                                {
+                                    _videoWriter.Release();
+                                }
+                                _videoWriter.Dispose();
+                                _videoWriter = null;
+                            }
+                        }
+                        catch (Exception releaseEx)
+                        {
+                            LogUtil.Error($"IndustrialCameraManager: 异步释放视频写入器失败 - {releaseEx.Message}");
+                        }
                     }
                 });
 
@@ -1246,11 +1338,30 @@ namespace WpfAppNew.EmguPlugs
                             _currentFrame = enhancedFrame.Clone();
                         }
 
-                        // 录像处理
-                        if (_isRecording && _videoWriter != null && _videoWriter.IsOpened())
+                        // 录像处理 - 使用线程安全的方式
+                        if (_isRecording)
                         {
-                            _videoWriter.Write(enhancedFrame);
-                            _recordedFrameCount++;
+                            bool videoLockTaken = false;
+                            try
+                            {
+                                Monitor.TryEnter(_lockObject, 10, ref videoLockTaken); // 短超时
+                                if (videoLockTaken && _videoWriter != null && _videoWriter.IsOpened())
+                                {
+                                    _videoWriter.Write(enhancedFrame);
+                                    _recordedFrameCount++;
+                                }
+                            }
+                            catch (Exception videoEx)
+                            {
+                                LogUtil.Error($"IndustrialCameraManager: CaptureLoop视频写入失败 - {videoEx.Message}");
+                            }
+                            finally
+                            {
+                                if (videoLockTaken)
+                                {
+                                    Monitor.Exit(_lockObject);
+                                }
+                            }
                         }
 
                         // 触发帧捕获事件 - 使用安全的颜色转换
