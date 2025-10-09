@@ -91,7 +91,7 @@
       <HintPath>..\Libs\DrawTools.dll</HintPath>
     </Reference>
     <Reference Include="HandyControl">
-      <HintPath>..\..\..\05_Lis\Lis.core\Libs\HandyControl.dll</HintPath>
+      <HintPath>..\Libs\HandyControl.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
@@ -215,10 +215,10 @@
     <Title>硕腾镜检系统</Title>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;0067;CS0169;CS0414;1998</NoWarn>
+    <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;0067;CS0169;CS0414;1998</NoWarn>
+    <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168</NoWarn>
     <DefineConstants>$(DefineConstants);Release</DefineConstants>
     <OutputPath>..\App\Release\</OutputPath>
   </PropertyGroup>
