@@ -769,7 +769,7 @@ namespace WpfAppNew.EmguPlugs
             StopPreviewCommand = new RelayCommand(StopPreview, () => IsPreviewRunning);
             //CaptureImageCommand = new RelayCommand(CaptureImage, () => CanCapture);
             StartRecordingCommand = new RelayCommand(StartRecording, () => CanStartRecording);
-            StopRecordingCommand = new RelayCommand(StopRecording, () => IsRecording);
+            //StopRecordingCommand = new RelayCommand(StopRecording, () => IsRecording);
             FitToWindowCommand = new RelayCommand(FitToWindow);
             ActualSizeCommand = new RelayCommand(ActualSize);
             SetMagnificationCommand = new RelayCommand<object>(SetMagnification);
@@ -1228,12 +1228,12 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 开始录像
         /// </summary>
-        private void StartRecording()
+        public void StartRecording(string path)
         {
             try
             {
                 OperationStatus = "正在开始录像...";
-                var fileName = $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
+                var fileName = path;// $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
                 _cameraManager?.StartRecording(fileName);
             }
             catch (Exception ex)
@@ -1246,16 +1246,17 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 停止录像
         /// </summary>
-        private void StopRecording()
+        public string StopRecording()
         {
             try
             {
-                _cameraManager?.StopRecording();
                 OperationStatus = "录像已停止";
+               return _cameraManager?.StopRecording();
             }
             catch (Exception ex)
             {
                 LogUtil.Error($"IndustrialCameraControl: 停止录像失败 - {ex.Message}");
+                return string.Empty;
             }
         }
 
@@ -2083,11 +2084,19 @@ namespace WpfAppNew.EmguPlugs
     {
         private readonly Action _execute;
         private readonly Func<bool> _canExecute;
+        private Action<string> startRecording;
+        private Func<bool> value;
 
         public RelayCommand(Action execute, Func<bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
+        }
+
+        public RelayCommand(Action<string> startRecording, Func<bool> value)
+        {
+            this.startRecording = startRecording;
+            this.value = value;
         }
 
         public event EventHandler CanExecuteChanged

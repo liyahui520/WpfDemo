@@ -485,7 +485,7 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private void StartRecordButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(AppStatic.VideoConfig.ImagePath))
+            if (string.IsNullOrWhiteSpace(AppVideoConfig.TempPath))
             {
                 if (System.Windows.MessageBox.Show("视频路径未设置！请先配置", "系统提示", MessageBoxButton.OKCancel,
                         MessageBoxImage.Warning) == MessageBoxResult.OK)
@@ -509,19 +509,19 @@ namespace WpfAppNew.Module.PetModule
             }
             else
             {
-                StartRecording();
+                StartRecording(AppVideoConfig.TempPath + $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4");
             }
         }
 
         /// <summary>
         /// 开始录像
         /// </summary>
-        private void StartRecording()
+        private void StartRecording(string path)
         {
             try
             {
                 // 使用IndustrialCameraControl的录像功能
-                IndustrialCameraControl.StartRecordingCommand?.Execute(null);
+                IndustrialCameraControl.StartRecording(path);
 
                 // 更新UI状态
                 StartRecordButton.Content = "停止录像";
@@ -542,7 +542,7 @@ namespace WpfAppNew.Module.PetModule
         /// <summary>
         /// 停止录像
         /// </summary>
-        private void StopRecording()
+        private async void StopRecording()
         {
             try
             {
@@ -550,7 +550,7 @@ namespace WpfAppNew.Module.PetModule
                 StartRecordButton.Content = "正在停止..";
 
                 // 使用IndustrialCameraControl停止录像
-                IndustrialCameraControl.StopRecordingCommand?.Execute(null);
+                var path = IndustrialCameraControl.StopRecording();
 
                 // 更新UI状态
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
@@ -558,7 +558,15 @@ namespace WpfAppNew.Module.PetModule
                 RecordingTimePanel.Visibility = Visibility.Hidden;
                 _recordingTimer.Stop();
                 _isRecording = false;
+                var img = AppVideoConfig.TempThumbnailPath + $"{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
+                var scuess = await IndustrialCameraControl.CaptureImage(img);
+                if (tInfo.Result.Vedios == null)
+                    tInfo.Result.Vedios = new List<MediaItem>();
 
+                var old = tInfo.Result;
+                tInfo.Result = new TestResult();
+                old.Vedios.Add(new MediaItem() { Source = path, Name = path.Replace(AppVideoConfig.TempPath,""), IsEdit = false ,ThumbnailSource= img });
+                tInfo.Result = old;
                 LogUtil.Info("录像已停止");
             }
             catch (Exception ex)
@@ -608,7 +616,7 @@ namespace WpfAppNew.Module.PetModule
                 }
                 string fullName = $"0{tInfo.Result?.Images?.Count + 1}.{AppStatic.VideoConfig.ImageType}";
                 // 使用IndustrialCameraControl的拍照功能
-             var scuess=  await IndustrialCameraControl.CaptureImage(AppVideoConfig.TempPath + fullName);
+                var scuess = await IndustrialCameraControl.CaptureImage(AppVideoConfig.TempPath + fullName);
                 if (scuess)
                 {
                     LogUtil.Info("拍照完成");
@@ -624,8 +632,8 @@ namespace WpfAppNew.Module.PetModule
 
                 var old = tInfo.Result;
                 tInfo.Result = new TestResult();
-                old.Images.Add(new ImageItem() { ImageSource = new Bitmap(AppVideoConfig.TempPath + fullName).BitmapToImageSource(), Name = fullName,IsEdit=false });
-                tInfo.Result = old; 
+                old.Images.Add(new ImageItem() { ImageSource = new Bitmap(AppVideoConfig.TempPath + fullName).BitmapToImageSource(), Name = fullName, IsEdit = false });
+                tInfo.Result = old;
             }
             catch (Exception exception)
             {

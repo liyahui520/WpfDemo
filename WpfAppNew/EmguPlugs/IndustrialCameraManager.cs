@@ -732,13 +732,13 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 停止录像
         /// </summary>
-        public void StopRecording()
+        public string StopRecording()
         {
             try
             {
                 if (!IsRecording)
                 {
-                    return;
+                    return string.Empty;
                 }
 
                 _videoWriter?.Release();
@@ -748,12 +748,18 @@ namespace WpfAppNew.EmguPlugs
                 var recordDuration = DateTime.Now - _recordStartTime;
                 IsRecording = false;
                 LogUtil.Info($"IndustrialCameraManager: 录像已停止 - {_recordingFilePath}, 时长{recordDuration.TotalSeconds:F2}秒，帧数{_recordedFrameCount}");
-                _recordingFilePath = null;
+                return _recordingFilePath;
             }
             catch (Exception ex)
             {
                 LogUtil.Error($"IndustrialCameraManager: 停止录像失败 - {ex.Message}");
                 ErrorOccurred?.Invoke(this, new ErrorOccurredEventArgs(ex));
+                return string.Empty;
+            }
+            finally
+            {
+
+                _recordingFilePath = null;
             }
         }
 
