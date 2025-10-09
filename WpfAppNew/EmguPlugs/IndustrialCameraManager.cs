@@ -95,7 +95,7 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 同步锁
         /// </summary>
-        private readonly object _lockObject = new object();
+        private readonly ReaderWriterLockSlim _lockObject = new ReaderWriterLockSlim();
 
         /// <summary>
         /// 预览帧率
@@ -580,11 +580,11 @@ namespace WpfAppNew.EmguPlugs
 
                 Mat captureFrame = null;
                 
-                // 使用Monitor.TryEnter避免死锁，设置超时时间
+                // 使用读锁获取当前帧，避免死锁，设置超时时间
                 bool lockTaken = false;
                 try
                 {
-                    Monitor.TryEnter(_lockObject, TimeSpan.FromMilliseconds(500), ref lockTaken);
+                    lockTaken = _lockObject.TryEnterReadLock(500);
                     if (lockTaken)
                     {
                         if (_currentFrame != null && !_currentFrame.Empty())
@@ -597,7 +597,7 @@ namespace WpfAppNew.EmguPlugs
                 {
                     if (lockTaken)
                     {
-                        Monitor.Exit(_lockObject);
+                        _lockObject.ExitReadLock();
                     }
                 }
 
@@ -696,32 +696,52 @@ namespace WpfAppNew.EmguPlugs
                     return false;
                 }
 
-                // 线程安全地检查当前帧
+                // 线程安全地检查当前帧，增加重试机制
                 Mat currentFrameCopy = null;
                 bool lockTaken = false;
-                try
+                int retryCount = 0;
+                const int maxRetries = 3;
+                
+                while (retryCount < maxRetries && currentFrameCopy == null)
                 {
-                    Monitor.TryEnter(_lockObject, 100, ref lockTaken); // 100ms超时
-                    if (!lockTaken)
+                    try
                     {
-                        LogUtil.Error("IndustrialCameraManager: 无法获取锁，开始录像失败");
-                        return false;
-                    }
+                        // 使用读锁获取当前帧，增加超时时间到500ms
+                        lockTaken = _lockObject.TryEnterReadLock(500);
+                        if (!lockTaken)
+                        {
+                            retryCount++;
+                            LogUtil.Warning($"IndustrialCameraManager: 第{retryCount}次尝试获取锁失败，等待后重试");
+                            
+                            if (retryCount < maxRetries)
+                            {
+                                Thread.Sleep(100); // 等待100ms后重试
+                                continue;
+                            }
+                            else
+                            {
+                                LogUtil.Error("IndustrialCameraManager: 多次尝试后仍无法获取锁，开始录像失败");
+                                return false;
+                            }
+                        }
 
-                    if (_currentFrame == null || _currentFrame.Empty())
-                    {
-                        LogUtil.Error("IndustrialCameraManager: 当前无有效帧，无法开始录像");
-                        return false;
-                    }
+                        if (_currentFrame == null || _currentFrame.Empty())
+                        {
+                            LogUtil.Error("IndustrialCameraManager: 当前无有效帧，无法开始录像");
+                            return false;
+                        }
 
-                    // 创建当前帧的副本，避免在锁外访问时被释放
-                    currentFrameCopy = _currentFrame.Clone();
-                }
-                finally
-                {
-                    if (lockTaken)
+                        // 创建当前帧的副本，避免在锁外访问时被释放
+                        currentFrameCopy = _currentFrame.Clone();
+                        break; // 成功获取帧，退出重试循环
+                    }
+                    finally
                     {
-                        Monitor.Exit(_lockObject);
+                        if (lockTaken)
+                        {
+                            _lockObject.ExitReadLock();
+                            lockTaken = false;
+                        }
                     }
                 }
 
@@ -748,7 +768,6 @@ namespace WpfAppNew.EmguPlugs
                     _videoWriter?.Dispose();
                     _videoWriter = null;
                     // 确保录像状态为false
-                    _isRecording = false;
                     IsRecording = false;
                     return false;
                 }
@@ -758,9 +777,8 @@ namespace WpfAppNew.EmguPlugs
                 _recordedFrameCount = 0;
                 _recordFps = fps;
                 
-                // 设置录像状态为true
-                _isRecording = true; // 先设置内部标志
-                IsRecording = true;  // 再设置公共属性，这会触发事件通知
+                // 设置录像状态为true（直接使用属性，确保事件触发）
+                IsRecording = true;  // 直接设置公共属性，这会触发事件通知
                 
                 LogUtil.Info($"IndustrialCameraManager: 录像已开始 - {filePath}, 分辨率: {frameSize.Width}x{frameSize.Height}");
                 return true;
@@ -786,16 +804,18 @@ namespace WpfAppNew.EmguPlugs
                     return string.Empty;
                 }
 
-                // 先设置录制状态为false，防止新的写入操作
-                _isRecording = false;
+                // 先设置录制状态为false，防止新的写入操作（直接使用属性，确保事件触发）
                 IsRecording = false;
 
                 // 等待一小段时间，确保正在进行的写入操作完成
                 Thread.Sleep(50);
 
-                // 安全地释放视频写入器
-                lock (_lockObject)
+                // 安全地释放视频写入器，使用超时机制避免死锁
+                bool lockTaken = _lockObject.TryEnterWriteLock(2000); // 2秒超时
+                if (!lockTaken)
                 {
+                    LogUtil.Warning("IndustrialCameraManager: 无法获取写锁来释放视频写入器，强制释放");
+                    // 即使无法获取锁，也要尝试释放资源
                     try
                     {
                         if (_videoWriter != null)
@@ -810,7 +830,33 @@ namespace WpfAppNew.EmguPlugs
                     }
                     catch (Exception releaseEx)
                     {
-                        LogUtil.Error($"IndustrialCameraManager: 释放视频写入器失败 - {releaseEx.Message}");
+                        LogUtil.Error($"IndustrialCameraManager: 强制释放视频写入器失败 - {releaseEx.Message}");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        try
+                        {
+                            if (_videoWriter != null)
+                            {
+                                if (_videoWriter.IsOpened())
+                                {
+                                    _videoWriter.Release();
+                                }
+                                _videoWriter.Dispose();
+                                _videoWriter = null;
+                            }
+                        }
+                        catch (Exception releaseEx)
+                        {
+                            LogUtil.Error($"IndustrialCameraManager: 释放视频写入器失败 - {releaseEx.Message}");
+                        }
+                    }
+                    finally
+                    {
+                        _lockObject.ExitWriteLock();
                     }
                 }
 
@@ -854,6 +900,67 @@ namespace WpfAppNew.EmguPlugs
                     return false;
                 }
 
+                // 线程安全地检查当前帧，增加重试机制
+                Mat currentFrameCopy = null;
+                bool lockTaken = false;
+                int retryCount = 0;
+                const int maxRetries = 3;
+                
+                while (retryCount < maxRetries && currentFrameCopy == null)
+                {
+                    try
+                    {
+                        // 使用读锁获取当前帧，增加超时时间到500ms
+                        lockTaken = _lockObject.TryEnterReadLock(500);
+                        if (!lockTaken)
+                        {
+                            retryCount++;
+                            LogUtil.Warning($"IndustrialCameraManager: 第{retryCount}次尝试获取锁失败，等待后重试");
+                            
+                            if (retryCount < maxRetries)
+                            {
+                                await Task.Delay(100); // 等待100ms后重试
+                                continue;
+                            }
+                            else
+                            {
+                                LogUtil.Error("IndustrialCameraManager: 无法获取锁，开始录制失败");
+                                return false;
+                            }
+                        }
+
+                        // 检查是否有有效帧
+                        if (_currentFrame != null && !_currentFrame.Empty())
+                        {
+                            currentFrameCopy = _currentFrame.Clone();
+                        }
+                    }
+                    finally
+                    {
+                        if (lockTaken)
+                        {
+                            _lockObject.ExitReadLock();
+                            lockTaken = false;
+                        }
+                    }
+                    
+                    if (currentFrameCopy == null)
+                    {
+                        retryCount++;
+                        if (retryCount < maxRetries)
+                        {
+                            LogUtil.Warning($"IndustrialCameraManager: 第{retryCount}次获取帧失败，等待后重试");
+                            await Task.Delay(100);
+                        }
+                    }
+                }
+
+                if (currentFrameCopy == null)
+                {
+                    LogUtil.Error("IndustrialCameraManager: 无法获取有效帧，开始录制失败");
+                    return false;
+                }
+
                 LogUtil.Info($"IndustrialCameraManager: 开始录制视频到 {filePath}");
 
                 // 确保目录存在
@@ -864,26 +971,27 @@ namespace WpfAppNew.EmguPlugs
                 }
 
                 // 获取当前分辨率
-                var width = (int)CurrentResolution.Width;
-                var height = (int)CurrentResolution.Height;
+                var width = currentFrameCopy.Width;
+                var height = currentFrameCopy.Height;
 
                 if (width <= 0 || height <= 0)
                 {
                     LogUtil.Warning("IndustrialCameraManager: 无效的视频分辨率");
+                    currentFrameCopy?.Dispose();
                     return false;
                 }
 
                 // 创建视频写入器
-                    var actualCodec = codec ?? FourCC.XVID;
-                    _videoWriter = new VideoWriter(filePath, actualCodec, fps, new OpenCvSharp.Size(width, height), true);
+                var actualCodec = codec ?? FourCC.XVID;
+                _videoWriter = new VideoWriter(filePath, actualCodec, fps, new OpenCvSharp.Size(width, height), true);
 
                 if (!_videoWriter.IsOpened())
                 {
                     LogUtil.Error("IndustrialCameraManager: 无法创建视频写入器");
                     _videoWriter?.Dispose();
                     _videoWriter = null;
+                    currentFrameCopy?.Dispose();
                     // 确保录像状态为false
-                    _isRecording = false;
                     IsRecording = false;
                     return false;
                 }
@@ -894,9 +1002,11 @@ namespace WpfAppNew.EmguPlugs
                 _recordFps = fps;
                 _recordingFilePath = filePath;
                 
-                // 设置录像状态为true
-                _isRecording = true; // 先设置内部标志
-                IsRecording = true;  // 再设置公共属性，这会触发事件通知
+                // 设置录像状态为true（直接使用属性，确保事件触发）
+                IsRecording = true;  // 直接设置公共属性，这会触发事件通知
+
+                // 释放临时帧
+                currentFrameCopy?.Dispose();
 
                 LogUtil.Info($"IndustrialCameraManager: 视频录制已启动 - {width}x{height} @ {fps}fps");
                 return true;
@@ -904,7 +1014,8 @@ namespace WpfAppNew.EmguPlugs
             catch (Exception ex)
             {
                 LogUtil.Error($"IndustrialCameraManager: 启动录制失败 - {ex.Message}");
-                _isRecording = false;
+                // 确保录像状态为false
+                IsRecording = false;
                 _videoWriter?.Dispose();
                 _videoWriter = null;
                 ErrorOccurred?.Invoke(this, new ErrorOccurredEventArgs(ex));
@@ -928,17 +1039,20 @@ namespace WpfAppNew.EmguPlugs
 
                 LogUtil.Info("IndustrialCameraManager: 停止录制视频");
 
-                // 先设置录制状态为false，防止新的写入操作
-                _isRecording = false;
+                // 先设置录制状态为false，防止新的写入操作（直接使用属性，确保事件触发）
+                IsRecording = false;
 
                 // 等待一小段时间，确保正在进行的写入操作完成
                 await Task.Delay(50);
 
-                // 释放视频写入器
+                // 释放视频写入器，使用超时机制避免死锁
                 await Task.Run(() =>
                 {
-                    lock (_lockObject)
+                    bool lockTaken = _lockObject.TryEnterWriteLock(2000); // 2秒超时
+                    if (!lockTaken)
                     {
+                        LogUtil.Warning("IndustrialCameraManager: 无法获取写锁来异步释放视频写入器，强制释放");
+                        // 即使无法获取锁，也要尝试释放资源
                         try
                         {
                             if (_videoWriter != null)
@@ -953,7 +1067,33 @@ namespace WpfAppNew.EmguPlugs
                         }
                         catch (Exception releaseEx)
                         {
-                            LogUtil.Error($"IndustrialCameraManager: 异步释放视频写入器失败 - {releaseEx.Message}");
+                            LogUtil.Error($"IndustrialCameraManager: 强制异步释放视频写入器失败 - {releaseEx.Message}");
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            try
+                            {
+                                if (_videoWriter != null)
+                                {
+                                    if (_videoWriter.IsOpened())
+                                    {
+                                        _videoWriter.Release();
+                                    }
+                                    _videoWriter.Dispose();
+                                    _videoWriter = null;
+                                }
+                            }
+                            catch (Exception releaseEx)
+                            {
+                                LogUtil.Error($"IndustrialCameraManager: 异步释放视频写入器失败 - {releaseEx.Message}");
+                            }
+                        }
+                        finally
+                        {
+                            _lockObject.ExitWriteLock();
                         }
                     }
                 });
@@ -1124,6 +1264,19 @@ namespace WpfAppNew.EmguPlugs
         }
 
         /// <summary>
+        /// 获取录像持续时间
+        /// </summary>
+        /// <returns>录像持续时间</returns>
+        public TimeSpan GetRecordingDuration()
+        {
+            if (_isRecording)
+            {
+                return DateTime.Now - _recordStartTime;
+            }
+            return TimeSpan.Zero;
+        }
+
+        /// <summary>
         /// 释放资源
         /// </summary>
         public void Dispose()
@@ -1201,52 +1354,170 @@ namespace WpfAppNew.EmguPlugs
                 return;
             }
 
+            Mat frame = null;
+            Mat processedFrame = null;
+            BitmapSource bitmapSource = null;
+            string currentStep = "初始化";
+            
             try
             {
-                lock (_lockObject)
+                // 第一步：获取原始帧（需要写锁保护相机访问）
+                currentStep = "获取相机锁";
+                bool lockTaken = _lockObject.TryEnterWriteLock(50); // 50ms超时
+                if (!lockTaken)
                 {
-                    var frame = new Mat();
-                    if (_camera.Read(frame) && !frame.Empty())
+                    // 如果无法获取锁，跳过这一帧，避免阻塞
+                    LogUtil.Debug("IndustrialCameraManager: 无法获取相机锁，跳过当前帧");
+                    return;
+                }
+                
+                try
+                {
+                    currentStep = "读取相机帧";
+                    frame = new Mat();
+                    if (!_camera.Read(frame) || frame.Empty())
                     {
-                        // 添加调试信息
-                        if (_frameCounter % 30 == 0) // 每30帧输出一次调试信息
+                        frame?.Dispose();
+                        LogUtil.Debug("IndustrialCameraManager: 相机读取失败或帧为空");
+                        return;
+                    }
+                    
+                    // 验证帧的基本属性
+                    if (frame.Width <= 0 || frame.Height <= 0 || frame.Channels() <= 0)
+                    {
+                        LogUtil.Warning($"IndustrialCameraManager: 读取到无效帧 - 尺寸:{frame.Width}x{frame.Height}, 通道:{frame.Channels()}");
+                        frame?.Dispose();
+                        return;
+                    }
+                }
+                finally
+                {
+                    _lockObject.ExitWriteLock();
+                }
+
+                // 第二步：处理帧（在锁外执行，提高并发性能）
+                if (frame != null && !frame.Empty())
+                {
+                    // 添加调试信息
+                    if (_frameCounter % 30 == 0) // 每30帧输出一次调试信息
+                    {
+                        LogUtil.Debug($"IndustrialCameraManager: 获取帧成功 - 尺寸:{frame.Width}x{frame.Height}, 通道:{frame.Channels()}, 类型:{frame.Type()}");
+                        
+                        // 检查图像是否全黑
+                        try
                         {
-                            LogUtil.Debug($"IndustrialCameraManager: 获取帧成功 - 尺寸:{frame.Width}x{frame.Height}, 通道:{frame.Channels()}, 类型:{frame.Type()}");
-                            
-                            // 检查图像是否全黑
                             var scalar = Cv2.Mean(frame);
                             LogUtil.Debug($"IndustrialCameraManager: 图像平均亮度 - R:{scalar.Val0:F2}, G:{scalar.Val1:F2}, B:{scalar.Val2:F2}");
                         }
-
-                        // 应用图像处理
-                        _processedFrame?.Dispose();
-                        _processedFrame = ProcessFrame(frame);
-
-                        // 更新当前帧
-                        _currentFrame?.Dispose();
-                        _currentFrame = _processedFrame.Clone();
-
-                        // 触发帧捕获事件 - 使用安全的颜色转换
-                        var bitmapSource = SafeMatToBitmapSource(_processedFrame);
-                        FrameCaptured?.Invoke(this, new FrameCapturedEventArgs(bitmapSource, _processedFrame.Clone()));
-
-                        // 如果正在录制，写入视频
-                        if (_isRecording && _videoWriter != null && _videoWriter.IsOpened())
+                        catch (Exception meanEx)
                         {
-                            _videoWriter.Write(_processedFrame);
-                            _recordedFrameCount++;
+                            LogUtil.Warning($"IndustrialCameraManager: 计算图像平均亮度失败 - {meanEx.Message}");
                         }
-
-                        // 更新性能统计
-                        UpdatePerformanceStats();
                     }
-                    frame.Dispose();
+
+                    // 应用图像处理（在锁外执行）
+                    currentStep = "处理帧";
+                    try
+                    {
+                        processedFrame = ProcessFrame(frame);
+                        if (processedFrame == null || processedFrame.Empty())
+                        {
+                            LogUtil.Warning("IndustrialCameraManager: ProcessFrame返回空帧");
+                            return;
+                        }
+                    }
+                    catch (Exception processEx)
+                    {
+                        LogUtil.Error($"IndustrialCameraManager: ProcessFrame失败 - {processEx.Message}");
+                        throw new Exception($"帧处理失败: {processEx.Message}", processEx);
+                    }
+                    
+                    // 创建位图源（在锁外执行）
+                    currentStep = "转换位图源";
+                    try
+                    {
+                        bitmapSource = SafeMatToBitmapSource(processedFrame);
+                        if (bitmapSource == null)
+                        {
+                            LogUtil.Warning("IndustrialCameraManager: SafeMatToBitmapSource返回空值");
+                            return;
+                        }
+                    }
+                    catch (Exception bitmapEx)
+                    {
+                        LogUtil.Error($"IndustrialCameraManager: SafeMatToBitmapSource失败 - {bitmapEx.Message}");
+                        throw new Exception($"位图转换失败: {bitmapEx.Message}", bitmapEx);
+                    }
+
+                    // 第三步：更新共享资源（需要写锁保护）
+                    currentStep = "更新共享资源";
+                    lockTaken = _lockObject.TryEnterWriteLock(20); // 减少到20ms超时，因为操作更快
+                    if (lockTaken)
+                    {
+                        try
+                        {
+                            // 更新当前帧
+                            _processedFrame?.Dispose();
+                            _processedFrame = processedFrame.Clone();
+                            
+                            _currentFrame?.Dispose();
+                            _currentFrame = processedFrame.Clone();
+
+                            // 注意：录像逻辑已移至异步处理，避免在主帧处理中阻塞
+
+                            // 更新性能统计
+                            UpdatePerformanceStats();
+                        }
+                        finally
+                        {
+                            _lockObject.ExitWriteLock();
+                        }
+                    }
+                    else
+                    {
+                        LogUtil.Debug("IndustrialCameraManager: 无法获取更新锁，跳过资源更新");
+                    }
+
+                    // 第四步：触发事件（在锁外执行，避免事件处理阻塞）
+                    currentStep = "触发事件";
+                    if (bitmapSource != null)
+                    {
+                        try
+                        {
+                            FrameCaptured?.Invoke(this, new FrameCapturedEventArgs(bitmapSource, processedFrame.Clone()));
+                        }
+                        catch (Exception eventEx)
+                        {
+                            LogUtil.Error($"IndustrialCameraManager: FrameCaptured事件处理失败 - {eventEx.Message}");
+                            // 事件处理失败不应该影响主流程，所以不重新抛出异常
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                LogUtil.Error($"IndustrialCameraManager: 预览帧处理失败 - {ex.Message}");
+                // 记录详细的错误信息，包括当前执行步骤
+                var errorMessage = $"预览帧处理失败 - 步骤:{currentStep}, 类型:{ex.GetType().Name}, 消息:{ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $", 内部异常:{ex.InnerException.Message}";
+                }
+                
+                LogUtil.Error($"IndustrialCameraManager: {errorMessage}");
+                
+                // 如果是特定的异常类型，提供更多上下文信息
+                if (ex.Message.Contains("videoSample") || ex.Message.Contains("内存") || ex.Message.Contains("指针"))
+                {
+                    LogUtil.Error($"IndustrialCameraManager: 疑似内存访问问题 - 帧信息: frame={frame?.Width}x{frame?.Height}x{frame?.Channels()}, processedFrame={processedFrame?.Width}x{processedFrame?.Height}x{processedFrame?.Channels()}");
+                }
+                
                 ErrorOccurred?.Invoke(this, new ErrorOccurredEventArgs(ex));
+            }
+            finally
+            {
+                // 清理资源
+                frame?.Dispose();
+                processedFrame?.Dispose();
             }
         }
 
@@ -1329,39 +1600,78 @@ namespace WpfAppNew.EmguPlugs
                     // 读取帧
                     if (_camera.Read(frame) && !frame.Empty())
                     {
-                        // 应用图像增强
+                        // 在锁外应用图像增强，减少锁持有时间
                         var enhancedFrame = ApplyImageEnhancement(frame);
 
-                        lock (_lockObject)
+                        // 使用写锁更新当前帧，减少锁竞争
+                        Mat previousFrame = null;
+                        bool frameLockTaken = false;
+                        try
                         {
-                            _currentFrame?.Dispose();
-                            _currentFrame = enhancedFrame.Clone();
+                            frameLockTaken = _lockObject.TryEnterWriteLock(5); // 减少帧更新的锁等待时间到5ms
+                            if (frameLockTaken)
+                            {
+                                previousFrame = _currentFrame;
+                                _currentFrame = enhancedFrame.Clone();
+                            }
+                            // 如果无法获取锁，跳过帧更新，避免阻塞
                         }
+                        finally
+                        {
+                            if (frameLockTaken)
+                            {
+                                _lockObject.ExitWriteLock();
+                            }
+                        }
+                        
+                        // 在锁外释放之前的帧，避免在锁内执行耗时操作
+                        previousFrame?.Dispose();
 
-                        // 录像处理 - 使用线程安全的方式
+                        // 录像处理 - 使用异步方式，避免阻塞主循环
                         if (_isRecording)
                         {
-                            bool videoLockTaken = false;
-                            try
+                            var frameToRecord = enhancedFrame.Clone();
+                            // 使用Task.Run异步处理录像，完全避免阻塞主循环
+                            _ = Task.Run(() =>
                             {
-                                Monitor.TryEnter(_lockObject, 10, ref videoLockTaken); // 短超时
-                                if (videoLockTaken && _videoWriter != null && _videoWriter.IsOpened())
+                                try
                                 {
-                                    _videoWriter.Write(enhancedFrame);
-                                    _recordedFrameCount++;
+                                    bool videoLockTaken = false;
+                                    try
+                                    {
+                                        // 录像使用写锁，但设置较短的超时时间避免阻塞
+                                        videoLockTaken = _lockObject.TryEnterWriteLock(30); // 30ms超时，快速失败
+                                        if (videoLockTaken && _videoWriter != null && _videoWriter.IsOpened())
+                                        {
+                                            _videoWriter.Write(frameToRecord);
+                                            Interlocked.Increment(ref _recordedFrameCount);
+                                        }
+                                        else if (!videoLockTaken)
+                                        {
+                                            // 降低日志级别，避免过多输出
+                                            if (_recordedFrameCount % 30 == 0) // 每30帧输出一次
+                                            {
+                                                LogUtil.Debug("IndustrialCameraManager: 异步录像无法获取锁，跳过当前帧");
+                                            }
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        if (videoLockTaken)
+                                        {
+                                            _lockObject.ExitWriteLock();
+                                        }
+                                    }
                                 }
-                            }
-                            catch (Exception videoEx)
-                            {
-                                LogUtil.Error($"IndustrialCameraManager: CaptureLoop视频写入失败 - {videoEx.Message}");
-                            }
-                            finally
-                            {
-                                if (videoLockTaken)
+                                catch (Exception videoEx)
                                 {
-                                    Monitor.Exit(_lockObject);
+                                    LogUtil.Error($"IndustrialCameraManager: 异步录像写入失败 - {videoEx.Message}");
                                 }
-                            }
+                                finally
+                                {
+                                    frameToRecord?.Dispose();
+                                }
+                            });
                         }
 
                         // 触发帧捕获事件 - 使用安全的颜色转换
@@ -1637,10 +1947,26 @@ namespace WpfAppNew.EmguPlugs
         private BitmapSource SafeMatToBitmapSource(Mat mat)
         {
             if (mat == null || mat.Empty())
+            {
+                LogUtil.Warning("IndustrialCameraManager: SafeMatToBitmapSource - 输入Mat为空或无效");
                 return null;
+            }
 
             try
             {
+                // 验证Mat的基本属性
+                if (mat.Width <= 0 || mat.Height <= 0)
+                {
+                    LogUtil.Warning($"IndustrialCameraManager: SafeMatToBitmapSource - Mat尺寸无效: {mat.Width}x{mat.Height}");
+                    return null;
+                }
+
+                if (mat.Channels() <= 0 || mat.Channels() > 4)
+                {
+                    LogUtil.Warning($"IndustrialCameraManager: SafeMatToBitmapSource - Mat通道数无效: {mat.Channels()}");
+                    return null;
+                }
+
                 // 确保Mat格式正确
                 Mat convertedMat = null;
                 try
@@ -1651,40 +1977,71 @@ namespace WpfAppNew.EmguPlugs
                         // 灰度图转RGB
                         convertedMat = new Mat();
                         Cv2.CvtColor(mat, convertedMat, ColorConversionCodes.GRAY2RGB);
-                        LogUtil.Debug("IndustrialCameraManager: 转换灰度图像为RGB格式");
+                        //LogUtil.Debug("IndustrialCameraManager: 转换灰度图像为RGB格式");
                     }
                     else if (mat.Channels() == 3)
                     {
                         // BGR转RGB - 这是关键的颜色修复
                         convertedMat = new Mat();
                         Cv2.CvtColor(mat, convertedMat, ColorConversionCodes.BGR2RGB);
-                        LogUtil.Debug("IndustrialCameraManager: 转换BGR图像为RGB格式（修复颜色显示）");
+                        //LogUtil.Debug("IndustrialCameraManager: 转换BGR图像为RGB格式（修复颜色显示）");
                     }
                     else if (mat.Channels() == 4)
                     {
                         // BGRA转RGBA
                         convertedMat = new Mat();
                         Cv2.CvtColor(mat, convertedMat, ColorConversionCodes.BGRA2RGBA);
-                        LogUtil.Debug("IndustrialCameraManager: 转换BGRA图像为RGBA格式");
+                        //LogUtil.Debug("IndustrialCameraManager: 转换BGRA图像为RGBA格式");
                     }
                     else
                     {
                         convertedMat = mat.Clone();
-                        LogUtil.Debug($"IndustrialCameraManager: 使用原始图像格式（{mat.Channels()}通道）");
+                        //LogUtil.Debug($"IndustrialCameraManager: 使用原始图像格式（{mat.Channels()}通道）");
+                    }
+
+                    // 验证转换后的Mat
+                    if (convertedMat == null || convertedMat.Empty())
+                    {
+                        LogUtil.Warning("IndustrialCameraManager: SafeMatToBitmapSource - 颜色转换后Mat为空");
+                        return null;
                     }
 
                     // 使用安全的方式创建BitmapSource
                     var width = convertedMat.Width;
                     var height = convertedMat.Height;
-                    var stride = width * convertedMat.Channels();
+                    var channels = convertedMat.Channels();
+                    var stride = width * channels;
+                    
+                    // 验证数据大小
+                    var expectedDataSize = height * stride;
+                    if (expectedDataSize <= 0 || expectedDataSize > int.MaxValue / 2)
+                    {
+                        LogUtil.Warning($"IndustrialCameraManager: SafeMatToBitmapSource - 数据大小异常: {expectedDataSize}");
+                        return null;
+                    }
+
+                    // 验证Mat数据指针
+                    if (convertedMat.Data == IntPtr.Zero)
+                    {
+                        LogUtil.Warning("IndustrialCameraManager: SafeMatToBitmapSource - Mat数据指针为空");
+                        return null;
+                    }
                     
                     // 创建字节数组副本，避免直接使用Mat的内存指针
-                    var imageData = new byte[height * stride];
-                    System.Runtime.InteropServices.Marshal.Copy(convertedMat.Data, imageData, 0, imageData.Length);
+                    var imageData = new byte[expectedDataSize];
+                    try
+                    {
+                        System.Runtime.InteropServices.Marshal.Copy(convertedMat.Data, imageData, 0, expectedDataSize);
+                    }
+                    catch (Exception copyEx)
+                    {
+                        LogUtil.Error($"IndustrialCameraManager: SafeMatToBitmapSource - 内存拷贝失败: {copyEx.Message}");
+                        return null;
+                    }
 
                     // 确定像素格式
                     System.Windows.Media.PixelFormat pixelFormat;
-                    switch (convertedMat.Channels())
+                    switch (channels)
                     {
                         case 1:
                             pixelFormat = System.Windows.Media.PixelFormats.Gray8;
@@ -1693,7 +2050,8 @@ namespace WpfAppNew.EmguPlugs
                             pixelFormat = System.Windows.Media.PixelFormats.Rgb24;
                             break; 
                         default:
-                            throw new NotSupportedException($"不支持的通道数: {convertedMat.Channels()}");
+                            LogUtil.Warning($"IndustrialCameraManager: SafeMatToBitmapSource - 不支持的通道数: {channels}");
+                            return null;
                     }
 
                     // 创建BitmapSource
@@ -1724,7 +2082,7 @@ namespace WpfAppNew.EmguPlugs
             }
             catch (Exception ex)
             {
-                LogUtil.Error($"IndustrialCameraManager: SafeMatToBitmapSource转换失败 - {ex.Message}");
+                LogUtil.Error($"IndustrialCameraManager: SafeMatToBitmapSource转换失败 - 类型:{ex.GetType().Name}, 消息:{ex.Message}, 堆栈:{ex.StackTrace}");
                 return null;
             }
         }

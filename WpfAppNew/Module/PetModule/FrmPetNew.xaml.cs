@@ -86,15 +86,7 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private DispatcherTimer _recordingTimer;
 
-        /// <summary>
-        /// 录像开始时间
-        /// </summary>
-        private DateTime _recordingStartTime;
 
-        /// <summary>
-        /// 是否正在录像
-        /// </summary>
-        private bool _isRecording;
 
 
         /// <summary>
@@ -247,10 +239,11 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private void UpdateRecordingTime()
         {
-            if (_isRecording)
+            if (IndustrialCameraControl != null && IndustrialCameraControl.IsRecording)
             {
-                var elapsed = DateTime.Now - _recordingStartTime;
-                RecordingTimeText.Text = elapsed.ToString(@"hh\:mm\:ss");
+                // 从IndustrialCameraControl获取录像持续时间
+                var duration = IndustrialCameraControl.RecordingDuration;
+                RecordingTimeText.Text = duration.ToString(@"hh\:mm\:ss");
             }
             else
             {
@@ -269,6 +262,8 @@ namespace WpfAppNew.Module.PetModule
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                if(e.Status == CameraStatus.Running)
+                IndustrialCameraControl.FitToWindowCommand.Execute(null); // 可选：自动调整预览窗口大小 
                 //StartPreviewButton.Content = e.Status == CameraStatus.Running ? "停止预览" : "开始预览";
                 //StartPreviewButton.Foreground = e.Status == CameraStatus.Running ?
                 //    new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 107, 107)) :
@@ -479,7 +474,7 @@ namespace WpfAppNew.Module.PetModule
                 return;
             }
 
-            if (IndustrialCameraControl.IsRecording|| _isRecording)
+            if (IndustrialCameraControl.IsRecording)
             {
                 StopRecording();
             }
@@ -501,10 +496,8 @@ namespace WpfAppNew.Module.PetModule
 
                 // 更新UI状态
                 StartRecordButton.Content = "停止录像";
-                _isRecording = true;
-                _recordingStartTime = DateTime.Now;
                 RecordingTimePanel.Visibility = Visibility.Visible;
-                _recordingTimer.Start();
+                _recordingTimer.Start(); // 继续使用定时器来更新UI显示
 
                 LogUtil.Info("开始录像");
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = false };
@@ -533,7 +526,6 @@ namespace WpfAppNew.Module.PetModule
                 StartRecordButton.Content = "开始录像";
                 RecordingTimePanel.Visibility = Visibility.Hidden;
                 _recordingTimer.Stop();
-                _isRecording = false;
                 var img = AppVideoConfig.TempThumbnailPath + $"{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
                 var scuess = await IndustrialCameraControl.CaptureImage(img);
                 if (tInfo.Result.Vedios == null)
@@ -834,6 +826,10 @@ namespace WpfAppNew.Module.PetModule
                         if (IndustrialCameraControl.StartPreviewCommand?.CanExecute(null) == true)
                         {
                             IndustrialCameraControl.StartPreviewCommand.Execute(null);
+
+                            // 等待连接完成
+                            await Task.Delay(1000);
+                            IndustrialCameraControl.FitToWindowCommand.Execute(null); // 可选：自动调整预览窗口大小 
                             LogUtil.Info("自动预览已启动");
                         }
                         else

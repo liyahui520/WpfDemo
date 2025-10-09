@@ -62,7 +62,7 @@
                                     </Border.Background>
                                     <StackPanel Margin="10,0,10,0">
                                         <!-- 设备选择区域 -->
-                                        <StackPanel Orientation="Vertical" Margin="5,5,0,0">
+                                        <StackPanel Orientation="Vertical" Margin="5,5,0,0" Visibility="Collapsed">
                                             <TextBlock Text="设备选择" Foreground="White" FontSize="12" Margin="0,0,0,5"/>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -83,6 +83,11 @@
                                                 </Button>
                                             </Grid>
                                         </StackPanel>
+
+                                        <!-- 音频选项 -->
+                                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5,10,0,0">
+                                            <CheckBox Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
+                                        </VirtualizingStackPanel>
                                         
                                         <!-- 操作按钮区域 -->
                                         <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Height="45" Margin="5,10,0,0">
@@ -101,51 +106,17 @@
                                                 </Button.Effect>
                                             </Button>
                                         </VirtualizingStackPanel>
-                                        
                                         <!-- 录像状态显示 -->
                                         <StackPanel Orientation="Horizontal" Height="30" Margin="5,5,0,0" x:Name="RecordingTimePanel" Visibility="Hidden">
                                             <TextBlock Text="正在录像中：" Margin="5" FontSize="14" Foreground="White"/>
                                             <TextBlock Text="00:00:00" Margin="5" x:Name="RecordingTimeText" FontSize="14" Foreground="White"/>
                                         </StackPanel>
                                         
-                                        <!-- 音频选项 -->
-                                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5,10,0,0">
-                                            <CheckBox Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
-                                        </VirtualizingStackPanel>
                                     </StackPanel>
                                 </Border>
                             </Expander>
 
-                            <!-- 录像控制区域 -->
-                            <!--<Expander Header="录像" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White" FontSize="20">
-                                <Expander.Background>
-                                    <SolidColorBrush Color="White" Opacity="0.2"/>
-                                </Expander.Background>
-                                <Border Height="150" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="0,0,4,4" Padding="10">
-                                    <Border.Background>
-                                        <SolidColorBrush Color="White" Opacity="0.2"/>
-                                    </Border.Background>
-                                    <StackPanel Margin="10,0,10,0">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
-                                            <VirtualizingStackPanel Grid.Row="1" VerticalAlignment="Center" Orientation="Horizontal" Margin="5,10,0,0">
-                                                <CheckBox Grid.Column="1" Foreground="White" Content="开启音频" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked" IsChecked="{Binding VideoModel.ExposureModel.IsAuto}" IsEnabled="{Binding VideoModel.ExposureModel.IsEnable}" Margin="5,5,0,0"/>
-                                            </VirtualizingStackPanel>
-                                        </Grid>
-                                        <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Height="40" Margin="5,5,0,0">
-                                            <Button Content="开始录像" Margin="5" x:Name="StartRecordButton" Click="StartRecordButton_Click" Style="{StaticResource ButtonInfo}" Foreground="White"/>
-                                            <Button Content="拍照" Margin="5" x:Name="TakeSnapshotButton" Click="TakeSnapshotButton_Click" Style="{StaticResource ButtonSuccess}" Foreground="White"/>
-                                        </VirtualizingStackPanel>
-                                        <StackPanel Orientation="Horizontal" Height="30" Margin="5,5,0,0" x:Name="RecordingTimePanel" Visibility="Hidden">
-                                            <TextBlock Text="正在录像中：" Margin="5" FontSize="14"/>
-                                            <TextBlock Text="00:00:00" Margin="5" x:Name="RecordingTimeText" FontSize="14"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Border>
-                            </Expander>-->
+
 
                             <!-- 遮罩控制区域 -->
                             <Expander Header="遮罩" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White" FontSize="20">
@@ -205,7 +176,7 @@
                         <controls2:IndustrialCameraControl x:Name="IndustrialCameraControl" Margin="5" /> 
                         
                         <!-- 预览状态指示器 -->
-                        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" 
+                        <!--<Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" 
                                 Background="#E74C3C" CornerRadius="10" Padding="8,4">
                             <StackPanel Orientation="Horizontal">
                                 <Ellipse Width="8" Height="8" Fill="White" Margin="0,0,5,0">
@@ -229,12 +200,12 @@
                                 </Ellipse>
                                 <TextBlock Text="实时预览" Foreground="White" FontSize="12" FontWeight="Bold"/>
                             </StackPanel>
-                        </Border>
+                        </Border>-->
                     </Grid>
                 </Border>
                 
                 <!-- 状态栏 -->
-                <Border Grid.Row="1" Margin="0,5,0,0" CornerRadius="8" Background="#34495E" Padding="10,5">
+                <!--<Border Grid.Row="1" Margin="0,5,0,0" CornerRadius="8" Background="#34495E" Padding="10,5">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -242,10 +213,9 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         
-                        <TextBlock Grid.Column="0" Text="设备状态：就绪" Foreground="#2ECC71" FontSize="12" FontWeight="Bold"/>
-                        <!--<TextBlock Grid.Column="2" Text="工业相机控制系统 v2.0" Foreground="#BDC3C7" FontSize="10" HorizontalAlignment="Right"/>-->
+                        <TextBlock Grid.Column="0" Text="设备状态：就绪" Foreground="#2ECC71" FontSize="12" FontWeight="Bold"/> 
                     </Grid>
-                </Border>
+                </Border>-->
             </Grid>
 
             <!-- 右侧属性设置区域 -->

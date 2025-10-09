@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Tools.App;
@@ -131,6 +132,11 @@ namespace WpfAppNew.EmguPlugs
         /// 录像持续时间
         /// </summary>
         private TimeSpan _recordingDuration = TimeSpan.Zero;
+
+        /// <summary>
+        /// 录像时间更新定时器
+        /// </summary>
+        private DispatcherTimer _recordingDurationTimer;
 
         /// <summary>
         /// 图像增强设置
@@ -745,6 +751,7 @@ namespace WpfAppNew.EmguPlugs
             InitializeComponent();
             InitializeCommands();
             InitializeManagers();
+            InitializeRecordingDurationTimer();
             
             DataContext = this;
             
@@ -822,6 +829,31 @@ namespace WpfAppNew.EmguPlugs
             {
                 LogUtil.Error($"IndustrialCameraControl: 管理器初始化失败 - {ex.Message}");
                 MessageBox.Show($"初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 初始化录像时间更新定时器
+        /// </summary>
+        private void InitializeRecordingDurationTimer()
+        {
+            _recordingDurationTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1) // 每秒更新一次
+            };
+            _recordingDurationTimer.Tick += RecordingDurationTimer_Tick;
+        }
+
+        /// <summary>
+        /// 录像时间定时器事件处理
+        /// </summary>
+        private void RecordingDurationTimer_Tick(object sender, EventArgs e)
+        {
+            if (IsRecording && _cameraManager != null)
+            {
+                // 从相机管理器获取录像持续时间
+                var duration = _cameraManager.GetRecordingDuration();
+                RecordingDuration = duration;
             }
         }
 
@@ -1665,8 +1697,15 @@ namespace WpfAppNew.EmguPlugs
                 IsRecording = e.IsRecording;
                 OperationStatus = e.IsRecording ? "录像已开始" : "录像已停止";
                 
-                if (!e.IsRecording)
+                if (e.IsRecording)
                 {
+                    // 开始录像时启动定时器
+                    _recordingDurationTimer?.Start();
+                }
+                else
+                {
+                    // 停止录像时停止定时器并重置时间
+                    _recordingDurationTimer?.Stop();
                     RecordingDuration = TimeSpan.Zero;
                 }
                 
@@ -1684,8 +1723,8 @@ namespace WpfAppNew.EmguPlugs
                 OperationStatus = $"错误: {e.Exception.Message}";
                 LogUtil.Error($"IndustrialCameraControl: 发生错误 - {e.Exception.Message}");
                 
-                // 显示错误消息
-                MessageBox.Show(e.Exception.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                //// 显示错误消息
+                //MessageBox.Show(e.Exception.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             });
         }
 
@@ -1957,7 +1996,7 @@ namespace WpfAppNew.EmguPlugs
                 debugCounter++;
                 if (debugCounter % 30 == 1) // 每30帧输出一次调试信息
                 {
-                    LogUtil.Debug($"ConvertMatToImageSource: 输入图像 - 尺寸:{mat.Width}x{mat.Height}, 通道:{mat.Channels()}, 类型:{mat.Type()}, 深度:{mat.Depth()}");
+                   // LogUtil.Debug($"ConvertMatToImageSource: 输入图像 - 尺寸:{mat.Width}x{mat.Height}, 通道:{mat.Channels()}, 类型:{mat.Type()}, 深度:{mat.Depth()}");
                 }
 
                 // 确保Mat格式正确
@@ -1972,7 +2011,7 @@ namespace WpfAppNew.EmguPlugs
                         Cv2.CvtColor(mat, convertedMat, ColorConversionCodes.GRAY2RGB);
                         if (debugCounter % 30 == 1)
                         {
-                            LogUtil.Debug("ConvertMatToImageSource: 检测到灰度图像，转换为RGB");
+                           // LogUtil.Debug("ConvertMatToImageSource: 检测到灰度图像，转换为RGB");
                         }
                     }
                     else if (mat.Channels() == 3)
@@ -1982,7 +2021,7 @@ namespace WpfAppNew.EmguPlugs
                         Cv2.CvtColor(mat, convertedMat, ColorConversionCodes.BGR2RGB);
                         if (debugCounter % 30 == 1)
                         {
-                            LogUtil.Debug("ConvertMatToImageSource: 检测到BGR图像，转换为RGB");
+                           // LogUtil.Debug("ConvertMatToImageSource: 检测到BGR图像，转换为RGB");
                         }
                     }
                     else if (mat.Channels() == 4)
@@ -1992,7 +2031,7 @@ namespace WpfAppNew.EmguPlugs
                         Cv2.CvtColor(mat, convertedMat, ColorConversionCodes.BGRA2RGBA);
                         if (debugCounter % 30 == 1)
                         {
-                            LogUtil.Debug("ConvertMatToImageSource: 检测到BGRA图像，转换为RGBA");
+                           // LogUtil.Debug("ConvertMatToImageSource: 检测到BGRA图像，转换为RGBA");
                         }
                     }
                     else
@@ -2061,6 +2100,9 @@ namespace WpfAppNew.EmguPlugs
         {
             try
             {
+                // 停止录像时间定时器
+                _recordingDurationTimer?.Stop();
+                
                 _microscopeController?.Dispose();
                 _cameraManager?.Dispose();
                 
