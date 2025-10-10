@@ -162,18 +162,18 @@ namespace WpfAppNew.Controlls
                             break;
                         case PlaybackState.Playing:
                             HideAllPanels();
-                            PlayPauseButton.Content = "⏸";
+                            UpdatePlayPauseButtonIcon(true);
                             break;
                         case PlaybackState.Paused:
-                            PlayPauseButton.Content = "▶";
+                            UpdatePlayPauseButtonIcon(false);
                             break;
                         case PlaybackState.Stopped:
-                            PlayPauseButton.Content = "▶";
+                            UpdatePlayPauseButtonIcon(false);
                             PositionSlider.Value = 0;
                             CurrentTimeText.Text = "00:00";
                             break;
                         case PlaybackState.Ended:
-                            PlayPauseButton.Content = "▶";
+                            UpdatePlayPauseButtonIcon(false);
                             break;
                         case PlaybackState.Error:
                             ShowError("播放出错");
@@ -242,7 +242,7 @@ namespace WpfAppNew.Controlls
             {
                 try
                 {
-                    PlayPauseButton.Content = "▶";
+                    UpdatePlayPauseButtonIcon(false);
                     LogUtil.Info("媒体播放结束");
                 }
                 catch (Exception ex)
@@ -494,7 +494,7 @@ namespace WpfAppNew.Controlls
                 if (_currentPlayer == null) return;
 
                 _currentPlayer.IsMuted = !_currentPlayer.IsMuted;
-                MuteButton.Content = _currentPlayer.IsMuted ? "🔇" : "🔊";
+                UpdateMuteButtonIcon(_currentPlayer.IsMuted);
                 LogUtil.Info($"静音状态: {_currentPlayer.IsMuted}");
             }
             catch (Exception ex)
@@ -518,11 +518,11 @@ namespace WpfAppNew.Controlls
                     // 更新静音按钮状态
                     if (e.NewValue == 0)
                     {
-                        MuteButton.Content = "🔇";
+                        UpdateMuteButtonIcon(true);
                     }
                     else if (!_currentPlayer.IsMuted)
                     {
-                        MuteButton.Content = "🔊";
+                        UpdateMuteButtonIcon(false);
                     }
                 }
             }
@@ -643,6 +643,44 @@ namespace WpfAppNew.Controlls
             else
             {
                 return timeSpan.ToString(@"m\:ss");
+            }
+        }
+
+        /// <summary>
+        /// 更新播放/暂停按钮图标
+        /// </summary>
+        /// <param name="isPlaying">是否正在播放</param>
+        private void UpdatePlayPauseButtonIcon(bool isPlaying)
+        {
+            try
+            {
+                if (PlayPauseButton.Content is TextBlock textBlock)
+                {
+                    textBlock.Text = isPlaying ? "&#xE769;" : "&#xE768;"; // 暂停图标 : 播放图标
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"更新播放按钮图标失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 更新静音按钮图标
+        /// </summary>
+        /// <param name="isMuted">是否静音</param>
+        private void UpdateMuteButtonIcon(bool isMuted)
+        {
+            try
+            {
+                if (MuteButton.Content is TextBlock textBlock)
+                {
+                    textBlock.Text = isMuted ? "&#xE74F;" : "&#xE767;"; // 静音图标 : 音量图标
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"更新静音按钮图标失败: {ex.Message}");
             }
         }
 

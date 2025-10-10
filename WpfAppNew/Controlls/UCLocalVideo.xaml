@@ -159,11 +159,15 @@
         <Border Grid.Row="1" Background="#FF000000" Margin="1">
             <Grid>
                 <!-- 播放器容器 -->
-                <Border x:Name="PlayerContainer" 
-                        Background="#FF000000"
-                        ClipToBounds="True">
-                    <!-- 播放器控件将在代码中动态添加 -->
-                </Border>
+                <Viewbox Stretch="Uniform" StretchDirection="Both">
+                    <Border x:Name="PlayerContainer" 
+                            Background="#FF000000"
+                            ClipToBounds="True"
+                            MinWidth="320"
+                            MinHeight="240">
+                        <!-- 播放器控件将在代码中动态添加 -->
+                    </Border>
+                </Viewbox>
 
                 <!-- 加载指示器 -->
                 <Grid x:Name="LoadingPanel" 
@@ -185,7 +189,7 @@
                       Background="#80000000" 
                       Visibility="Collapsed">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="400">
-                        <TextBlock Text="⚠" 
+                        <TextBlock Text="⚠️" 
                                    FontSize="48" 
                                    Foreground="#FFFF6B6B"
                                    HorizontalAlignment="Center"/>
@@ -206,7 +210,7 @@
                 <Grid x:Name="NoFilePanel" 
                       Background="#80000000">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="📁" 
+                        <TextBlock Text="📂" 
                                    FontSize="64" 
                                    Foreground="#FF6C6C6C"
                                    HorizontalAlignment="Center"/>
@@ -271,29 +275,29 @@
                     <!-- 播放控制 -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button x:Name="PlayPauseButton" 
-                                Content="▶" 
                                 Style="{StaticResource ModernButtonStyle}"
-                                FontSize="14"
-                                Width="40"
-                                Click="PlayPauseButton_Click"/>
+                                Width="50"
+                                Click="PlayPauseButton_Click">
+                            <TextBlock Text="▶" FontSize="14" HorizontalAlignment="Center"/>
+                        </Button>
                         <Button x:Name="StopButton" 
-                                Content="⏹" 
                                 Style="{StaticResource ModernButtonStyle}"
-                                FontSize="14"
                                 Width="50"
-                                Click="StopButton_Click"/>
+                                Click="StopButton_Click">
+                            <TextBlock Text="⏹" FontSize="14" HorizontalAlignment="Center"/>
+                        </Button>
                         <Button x:Name="PreviousButton" 
-                                Content="⏮" 
                                 Style="{StaticResource ModernButtonStyle}"
-                                FontSize="12"
                                 Width="50"
-                                Click="PreviousButton_Click"/>
+                                Click="PreviousButton_Click">
+                            <TextBlock Text="⏮" FontSize="12" HorizontalAlignment="Center"/>
+                        </Button>
                         <Button x:Name="NextButton" 
-                                Content="⏭" 
                                 Style="{StaticResource ModernButtonStyle}"
-                                FontSize="12"
                                 Width="50"
-                                Click="NextButton_Click"/>
+                                Click="NextButton_Click">
+                            <TextBlock Text="⏭" FontSize="12" HorizontalAlignment="Center"/>
+                        </Button>
                     </StackPanel>
 
                     <!-- 播放速度 -->
@@ -315,11 +319,11 @@
                     <!-- 音量控制 -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button x:Name="MuteButton" 
-                                Content="🔊" 
                                 Style="{StaticResource ModernButtonStyle}"
-                                FontSize="12"
-                                Width="40"
-                                Click="MuteButton_Click"/>
+                                Width="50"
+                                Click="MuteButton_Click">
+                            <TextBlock Text="🔊" FontSize="12" HorizontalAlignment="Center"/>
+                        </Button>
                         <Slider x:Name="VolumeSlider" 
                                 Style="{StaticResource ModernSliderStyle}"
                                 Width="80" 

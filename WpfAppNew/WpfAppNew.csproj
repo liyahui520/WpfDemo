@@ -215,10 +215,10 @@
     <Title>硕腾镜检系统</Title>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168</NoWarn>
+    <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168;4014</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168</NoWarn>
+    <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168;4014</NoWarn>
     <DefineConstants>$(DefineConstants);Release</DefineConstants>
     <OutputPath>..\App\Release\</OutputPath>
   </PropertyGroup>

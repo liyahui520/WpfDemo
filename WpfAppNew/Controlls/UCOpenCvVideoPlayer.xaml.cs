@@ -292,7 +292,7 @@ namespace WpfAppNew.Controlls
             }
             
             UpdatePlayButtonState(_isPlaying && !_isPaused);
-            ShowPlayStateOverlay(_isPaused ? "&#xE768;" : null); // 显示播放图标或隐藏
+            ShowPlayStateOverlay(_isPaused ? "▶" : null); // 显示播放图标或隐藏
             
             LogUtil.Info($"视频播放{(_isPaused ? "暂停" : "继续")}");
         }
@@ -835,7 +835,7 @@ namespace WpfAppNew.Controlls
         /// </summary>
         private void UpdatePlayButtonState(bool isPlaying)
         {
-            playButtonIcon.Text = isPlaying ? "&#xE769;" : "&#xE768;"; // 暂停图标 : 播放图标
+            playButtonIcon.Text = isPlaying ? "⏸" : "▶"; // 暂停图标 : 播放图标
             playButton.ToolTip = isPlaying ? "暂停" : "播放";
         }
 
@@ -941,7 +941,7 @@ namespace WpfAppNew.Controlls
         private async Task OnPlaybackCompleted()
         {
             await StopPlayback();
-            ShowPlayStateOverlay("&#xE768;"); // 显示播放图标
+            ShowPlayStateOverlay("▶"); // 显示播放图标
             LogUtil.Info("视频播放完成");
         }
 

@@ -487,7 +487,7 @@ namespace WpfAppNew.Module.PetModule
         /// <summary>
         /// 开始录像
         /// </summary>
-        private void StartRecording(string path)
+        private async void StartRecording(string path)
         {
             try
             {
@@ -519,7 +519,7 @@ namespace WpfAppNew.Module.PetModule
                 StartRecordButton.Content = "正在停止..";
 
                 // 使用IndustrialCameraControl停止录像
-                var path = IndustrialCameraControl.StopRecording();
+                var path =await IndustrialCameraControl.StopRecording();
 
                 // 更新UI状态
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };

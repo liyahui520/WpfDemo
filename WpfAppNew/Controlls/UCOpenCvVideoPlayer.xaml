@@ -159,28 +159,33 @@
                             Width="35" Height="35" 
                             Style="{StaticResource ControlButtonStyle}" 
                             ToolTip="最大化/还原">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE922;" FontSize="14"/>
+                        <TextBlock Text="⬜" FontSize="14"/>
                     </Button>
                     <Button Click="CloseButton_Click" 
                             Width="35" Height="35" 
                             Style="{StaticResource ControlButtonStyle}" 
                             ToolTip="关闭">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" FontSize="14"/>
+                        <TextBlock Text="✕" FontSize="14"/>
                     </Button>
                 </StackPanel>
             </DockPanel>
         </Grid>
 
         <!-- 视频显示区域 -->
-        <Grid Grid.Row="1" x:Name="videoContainer" Background="Black" MinWidth="640" MinHeight="480">
-            <!-- OpenCV 视频显示控件 -->
-            <Image x:Name="videoImage" 
-                   Width="640"
-                   Height="480"
-                   Stretch="Uniform"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   MouseLeftButtonDown="VideoArea_MouseClick"/>
+        <Grid Grid.Row="1" x:Name="videoContainer" Background="Black">
+            <!-- 视频容器 - 使用Viewbox实现等比例缩放 -->
+            <Viewbox Stretch="Uniform" StretchDirection="Both">
+                <Grid MinWidth="640" MinHeight="480">
+                    <!-- OpenCV 视频显示控件 -->
+                    <Image x:Name="videoImage" 
+                           Width="640"
+                           Height="480"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           MouseLeftButtonDown="VideoArea_MouseClick"/>
+                </Grid>
+            </Viewbox>
             
             <!-- 加载指示器 -->
             <Grid x:Name="loadingIndicator" Background="#80000000" Visibility="Collapsed">
@@ -223,8 +228,7 @@
                     </Ellipse.Effect>
                 </Ellipse>
                 <TextBlock x:Name="playStateIcon" 
-                           FontFamily="Segoe MDL2 Assets" 
-                           Text="&#xE768;" 
+                           Text="▶" 
                            FontSize="32" 
                            Foreground="{StaticResource TextPrimaryBrush}" 
                            HorizontalAlignment="Center" 
@@ -240,7 +244,7 @@
             </Grid.RowDefinitions>
 
             <!-- 进度条区域 -->
-            <Grid Grid.Row="0" Margin="20,5">
+            <Grid Grid.Row="0" Margin="22,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -259,7 +263,7 @@
                         Minimum="0" Maximum="100" Value="0"
                         PreviewMouseDown="ProgressSlider_PreviewMouseDown"
                         PreviewMouseMove="ProgressSlider_PreviewMouseMove"
-                        PreviewMouseUp="ProgressSlider_PreviewMouseUp"/>
+                        PreviewMouseUp="ProgressSlider_PreviewMouseUp" Height="8"/>
 
                 <TextBlock x:Name="totalTimeText" 
                            Grid.Column="2"
@@ -275,27 +279,26 @@
                             Style="{StaticResource ControlButtonStyle}"
                             ToolTip="打开文件"
                             Click="OpenButton_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8E5;" FontSize="16"/>
+                        <TextBlock Text="📁" FontSize="16"/>
                     </Button>
 
                     <Button x:Name="playButton" 
                             Style="{StaticResource ControlButtonStyle}"
                             ToolTip="播放/暂停"
                             Click="PlayButton_Click">
-                        <TextBlock x:Name="playButtonIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="16"/>
+                        <TextBlock x:Name="playButtonIcon" Text="▶" FontSize="16"/>
                     </Button>
 
                     <Button x:Name="stopButton" 
                             Style="{StaticResource ControlButtonStyle}"
                             ToolTip="停止"
                             Click="StopButton_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE71A;" FontSize="16"/>
+                        <TextBlock Text="⏹" FontSize="16"/>
                     </Button>
 
                     <Separator Width="2" Height="30" Background="{StaticResource SurfaceBrush}" Margin="10,0"/>
 
-                    <TextBlock Text="&#xE767;" 
-                               FontFamily="Segoe MDL2 Assets" 
+                    <TextBlock Text="🔊" 
                                Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center"
                                Margin="0,0,10,0"/>

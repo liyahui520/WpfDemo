@@ -1260,13 +1260,13 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 开始录像
         /// </summary>
-        public void StartRecording(string path)
+        public async void StartRecording(string path)
         {
             try
             {
                 OperationStatus = "正在开始录像...";
                 var fileName = path;// $"Video_{DateTime.Now:yyyyMMdd_HHmmss}.mp4";
-                _cameraManager?.StartRecording(fileName);
+               await _cameraManager?.StartRecordingAsync(fileName);
             }
             catch (Exception ex)
             {
@@ -1278,12 +1278,12 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 停止录像
         /// </summary>
-        public string StopRecording()
+        public async Task<string> StopRecording()
         {
             try
             {
                 OperationStatus = "录像已停止";
-               return _cameraManager?.StopRecording();
+               return await _cameraManager?.StopRecordingAsync();
             }
             catch (Exception ex)
             {
