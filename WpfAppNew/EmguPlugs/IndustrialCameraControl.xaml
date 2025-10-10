@@ -102,21 +102,10 @@
                                 <!-- 拍照和录像按钮已移除，由外部控制 -->
                             </StackPanel>
                             
-                            <!-- 录像状态 -->
+                            <!-- 录像状态 - 优化：移除动画以提升性能 -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"
                                         Visibility="{Binding IsRecording, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <Ellipse Width="8" Height="8" Fill="Red" Margin="0,0,5,0">
-                                    <Ellipse.Triggers>
-                                        <EventTrigger RoutedEvent="Loaded">
-                                            <BeginStoryboard>
-                                                <Storyboard RepeatBehavior="Forever">
-                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
-                                                                     From="1" To="0" Duration="0:0:1" AutoReverse="True"/>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </Ellipse.Triggers>
-                                </Ellipse>
+                                <Ellipse Width="8" Height="8" Fill="Red" Margin="0,0,5,0"/>
                                 <TextBlock Text="录像中" VerticalAlignment="Center" FontWeight="Medium" Foreground="Red"/>
                                 <TextBlock Text="{Binding RecordingDuration, StringFormat='{}{0:mm\\:ss}'}" 
                                            VerticalAlignment="Center" Margin="10,0,0,0" FontFamily="Consolas"/>
@@ -136,14 +125,15 @@
                     </Border>
                     
                     <!-- 图像预览区域 -->
-                    <ScrollViewer Grid.Row="1" x:Name="PreviewScrollViewer" 
-                                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                  Background="Black">
+                    <!-- 优化：移除滚动条，设置等比例显示并上下居中，使用Linear缩放提升性能 -->
+                    <Border Grid.Row="1" x:Name="PreviewContainer" Background="Black">
                         <Image x:Name="PreviewImage" 
                                Source="{Binding PreviewImageSource}"
-                               Stretch="None"
-                               RenderOptions.BitmapScalingMode="HighQuality"/>
-                    </ScrollViewer>
+                               Stretch="Uniform"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               RenderOptions.BitmapScalingMode="Linear"/>
+                    </Border>
                     
                     <!-- 预览信息栏 -->
                     <Border Grid.Row="2" Background="{DynamicResource ThirdRegionBrush}" 

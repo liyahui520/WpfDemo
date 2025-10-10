@@ -758,51 +758,19 @@ namespace WpfAppNew.OpenCv.Core
                             Backend = "DirectShow"
                         };
 
-                        // 尝试使用OpenCV获取设备的分辨率信息
-                        try
-                        {
-                            using (var capture = new VideoCapture(i))
-                            {
-                                if (capture.IsOpened())
-                                {
-                                    device.Width = (int)capture.Get(VideoCaptureProperties.FrameWidth);
-                                    device.Height = (int)capture.Get(VideoCaptureProperties.FrameHeight);
-                                    device.DefaultWidth = device.Width;
-                                    device.DefaultHeight = device.Height;
-                                    device.DefaultFps = capture.Get(VideoCaptureProperties.Fps);
-                                    
-                                    // 获取支持的分辨率（常见分辨率）
-                                    device.SupportedResolutions = GetSupportedResolutions();
-                                    device.SupportedFrameRates = GetSupportedFrameRates();
-                                    
-                                    Console.WriteLine($"CameraManager: 设备 {i} 分辨率: {device.Width}x{device.Height}, FPS: {device.DefaultFps}");
-                                }
-                                else
-                                {
-                                    // 如果OpenCV无法打开，设置默认值
-                                    device.Width = 640;
-                                    device.Height = 480;
-                                    device.DefaultWidth = 640;
-                                    device.DefaultHeight = 480;
-                                    device.DefaultFps = 30.0;
-                                    device.IsConnected = false;
-                                    device.Status = DeviceStatus.Error;
-                                    device.ErrorMessage = "OpenCV无法打开设备";
-                                    Console.WriteLine($"CameraManager: 设备 {i} OpenCV无法打开，使用默认配置");
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            // OpenCV检测失败，使用默认值
-                            device.Width = 640;
-                            device.Height = 480;
-                            device.DefaultWidth = 640;
-                            device.DefaultHeight = 480;
-                            device.DefaultFps = 30.0;
-                            device.ErrorMessage = $"OpenCV检测异常: {ex.Message}";
-                            Console.WriteLine($"CameraManager: 设备 {i} OpenCV检测异常: {ex.Message}");
-                        }
+                        // 设置默认参数，避免在扫描阶段用OpenCV打开每个设备
+                        // 实际的分辨率和帧率将在连接设备时获取
+                        device.Width = 640;
+                        device.Height = 480;
+                        device.DefaultWidth = 640;
+                        device.DefaultHeight = 480;
+                        device.DefaultFps = 30.0;
+                        
+                        // 设置常见的支持分辨率和帧率
+                        device.SupportedResolutions = GetSupportedResolutions();
+                        device.SupportedFrameRates = GetSupportedFrameRates();
+                        
+                        Console.WriteLine($"CameraManager: 设备 {i} 已添加，使用默认配置（实际参数将在连接时获取）");
 
                         devices.Add(device);
                         Console.WriteLine($"CameraManager: 成功添加设备 {i}: {device.Name}");

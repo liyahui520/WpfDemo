@@ -1,4 +1,4 @@
-﻿using DevExpress.Xpf.RichEdit;
+using DevExpress.Xpf.RichEdit;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
 using Entity.Entity;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Tools.App;
@@ -32,43 +33,153 @@ namespace WpfAppNew.Controlls
 
         /// <summary>
         /// 初始化加载文书
+        /// 优化：使用Task.Run替代Thread，提供更好的异常处理和性能
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UCPrintNotes_OnLoaded(object sender, RoutedEventArgs e)
+        private async void UCPrintNotes_OnLoaded(object sender, RoutedEventArgs e)
         {
-            Thread thread = new Thread(Init);
-            thread.IsBackground = true;
-            thread.Start();
-
+            try
+            {
+                // 显示加载指示器
+                ShowLoadingIndicator(true);
+                
+                // 异步初始化，避免阻塞UI线程
+                await Init();
+                
+                LogUtil.Info($"UCPrintNotes加载完成: {tInfo?.TestName}");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"UCPrintNotes加载失败: {ex.Message}");
+                // 可以在这里显示错误信息给用户
+                Dispatcher.Invoke(() =>
+                {
+                    HandyControl.Controls.MessageBox.Error($"打印文档加载失败：{ex.Message}", "系统提示");
+                });
+            }
+            finally
+            {
+                // 隐藏加载指示器
+                ShowLoadingIndicator(false);
+            }
         }
 
-        public void Init()
+        /// <summary>
+        /// 显示或隐藏加载指示器
+        /// </summary>
+        /// <param name="show">是否显示</param>
+        private void ShowLoadingIndicator(bool show)
         {
-            RichConntext frtext = new RichConntext();
-            frtext.ConntextType = RichConntextType.docx;
-            frtext.BindData = new List<RichConntext.RichConntextBindData>();
-
-            frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = AppStatic.AppHospital });
-            frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo });
-            frtext.BindData.Add(new RichConntext.RichConntextBindData { BindData = tInfo.Result });
             Dispatcher.Invoke(() =>
             {
-                this.richEditControl1.Document.LoadDocument(tInfo.TestPath, ConvertToDevType(RichConntextType.docx));
+                if (show)
+                {
+                    // 可以在这里添加加载指示器的显示逻辑
+                    this.IsEnabled = false;
+                    this.Opacity = 0.7;
+                }
+                else
+                {
+                    this.IsEnabled = true;
+                    this.Opacity = 1.0;
+                }
             });
+        }
 
-            foreach (var item in frtext.BindData)
-                LoadBingDataValues(item);
-            var a = tInfo.Result.Images;
-            if (a.Any(o => o.IsSelected))
-                a = tInfo.Result.Images.Where(o => o.IsSelected).ToList();
-            string html = string.Empty;
-            Dispatcher.Invoke(() =>
+        /// <summary>
+        /// 初始化打印文档
+        /// 优化：添加性能优化和错误处理，减少UI线程阻塞，支持异步图片加载
+        /// </summary>
+        public async Task Init()
+        {
+            try
             {
-                InsertImageAfterText(richEditControl1, "\\{<image \\S+>\\}", a);
-                this.richEditControl1.Refresh();
-            });
+                // 验证必要的数据
+                if (tInfo == null)
+                {
+                    LogUtil.Error("UCPrintNotes.Init: tInfo为空");
+                    return;
+                }
 
+                if (!System.IO.File.Exists(tInfo.TestPath))
+                {
+                    LogUtil.Error($"UCPrintNotes.Init: 模板文件不存在 - {tInfo.TestPath}");
+                    return;
+                }
+
+                LogUtil.Info($"UCPrintNotes.Init: 开始初始化 - {tInfo.TestName}");
+
+                // 准备绑定数据
+                RichConntext frtext = new RichConntext
+                {
+                    ConntextType = RichConntextType.docx,
+                    BindData = new List<RichConntext.RichConntextBindData>
+                    {
+                        new RichConntext.RichConntextBindData { BindData = AppStatic.AppHospital },
+                        new RichConntext.RichConntextBindData { BindData = tInfo },
+                        new RichConntext.RichConntextBindData { BindData = tInfo.Result }
+                    }
+                };
+
+                // 在UI线程加载文档
+                Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        this.richEditControl1.Document.LoadDocument(tInfo.TestPath, ConvertToDevType(RichConntextType.docx));
+                        LogUtil.Info($"UCPrintNotes.Init: 文档加载完成 - {tInfo.TestName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"UCPrintNotes.Init: 文档加载失败 - {ex.Message}");
+                        throw;
+                    }
+                });
+
+                // 绑定数据（在后台线程执行）
+                foreach (var item in frtext.BindData)
+                {
+                    LoadBingDataValues(item);
+                }
+
+                // 处理图片插入（异步优化）
+                var selectedImages = tInfo.Result.Images;
+                if (selectedImages.Any(o => o.IsSelected))
+                {
+                    selectedImages = tInfo.Result.Images.Where(o => o.IsSelected).ToList();
+                }
+
+                // 异步插入图片，避免阻塞UI线程
+                if (selectedImages.Any())
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        try
+                        {
+                            LogUtil.Info($"UCPrintNotes.Init: 开始插入 {selectedImages.Count} 张图片 - {tInfo.TestName}");
+                            InsertImageAfterText(richEditControl1, "\\{<image \\S+>\\}", selectedImages);
+                            LogUtil.Info($"UCPrintNotes.Init: 图片插入完成 - {tInfo.TestName}");
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"UCPrintNotes.Init: 图片插入失败 - {ex.Message}");
+                            // 图片插入失败不应该阻止整个文档的显示
+                        }
+                    });
+                }
+                else
+                {
+                    LogUtil.Info($"UCPrintNotes.Init: 无选中图片需要插入 - {tInfo.TestName}");
+                }
+
+                LogUtil.Info($"UCPrintNotes.Init: 初始化完成 - {tInfo.TestName}");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"UCPrintNotes.Init: 初始化失败 - {ex.Message}");
+                throw; // 重新抛出异常，让调用者处理
+            }
         }
 
         // 动态插入HTML到指定文字后 
@@ -212,24 +323,36 @@ namespace WpfAppNew.Controlls
         private DocumentPosition pos = null;
         private int imgWidth = 0;
         private int imgHeight = 0;
-        public void InsertImageAfterText(RichEditControl richEdit, string targetText, List<ImageItem> item)
+        /// <summary>
+        /// 在指定文字后插入图片（优化版本）
+        /// 支持图片压缩、缓存和异步加载
+        /// </summary>
+        /// <param name="richEdit">富文本编辑器控件</param>
+        /// <param name="targetText">目标文字正则表达式</param>
+        /// <param name="item">图片项列表</param>
+        public async void InsertImageAfterText(RichEditControl richEdit, string targetText, List<ImageItem> item)
         {
+            if (item == null || !item.Any())
+                return;
+
             richEdit.BeginUpdate();
             try
             {
                 if (pos == null)
                 {
-
                     // 查找目标文字范围 
                     DocumentRange searchRange = richEdit.Document.CreateRange(0, richEdit.Document.Range.End.ToInt());
-                    //DocumentRange foundRange = richEdit.Document.FindAll(targetText,
-                    //    DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive, searchRange).FirstOrDefault();
-
                     DocumentRange foundRange = richEdit.Document.FindAll(new Regex(targetText), searchRange).FirstOrDefault();
+                    
+                    if (foundRange == null) 
+                    {
+                        LogUtil.Warning($"未找到目标文字: {targetText}");
+                        return;
+                    }
+
                     string test = richEdit.Document.GetText(foundRange);
                     ParseImageSize(test);
                     richEdit.Document.Replace(foundRange, "");
-                    if (foundRange == null) return;
                     pos = foundRange.End;
                 }
 
@@ -241,40 +364,214 @@ namespace WpfAppNew.Controlls
                     // 插入换行符 
                     var rh = richEdit.Document.InsertText(pos, "\n");
                     pos = rh.End;
-                    item.ForEach(i =>
-                    {
-                        // 插入图片并设置布局 
-                        DocumentImage image = richEdit.Document.Images.Insert(pos, i.BitBuffer.Byte2Bitmap());
-                        image.Size = new SizeF(imgWidth, imgHeight);
-                        pos = image.Range.End;
 
-                        rh = richEdit.Document.InsertText(pos, "\u00A0\u00A0");
-                        pos = rh.End;
-                        // 获取包含图片的段落 
-#pragma warning disable CS0618 // 类型或成员已过时
-                        Paragraph paragraph = richEdit.Document.GetParagraph(pos);
-#pragma warning restore CS0618 // 类型或成员已过时
-
-                        // 设置段落间距 
-                        paragraph.SpacingAfter = 20;    // 段后间距 
-                        paragraph.SpacingBefore = 20;  // 段前间距 
-                        paragraph.LeftIndent = 20;     // 左缩进 
-                        paragraph.RightIndent = 20;    // 右缩进  
-                        paragraph.Alignment = ParagraphAlignment.Justify;
-                        paragraph.ContextualSpacing = true; // 上下段落间距相等
-                        paragraph.LineSpacingMultiplier = 1.5f; // 行间距倍数 
-
-                        paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Multiple;
-                        pos = paragraph.Range.End;
-
-                    });
+                    // 异步处理图片加载和插入
+                    await ProcessImagesAsync(richEdit, item);
                 }
 
-                richEdit.Refresh(); //.ActiveView.ReLayout();
+                richEdit.Refresh();
+                LogUtil.Info($"图片插入完成，共处理 {item.Count} 张图片");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"图片插入失败: {ex.Message}");
+                throw;
             }
             finally
             {
                 richEdit.EndUpdate();
+            }
+        }
+
+        /// <summary>
+        /// 显示图片加载进度指示器
+        /// </summary>
+        /// <param name="show">是否显示</param>
+        /// <param name="message">状态消息</param>
+        private void ShowImageLoadingProgress(bool show, string message = "")
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    LoadingPanel.Visibility = Visibility.Visible;
+                    LoadingOverlay.Visibility = Visibility.Visible;
+                    LoadingStatusText.Text = message;
+                    ImageProgressBar.Value = 0;
+                    ProgressText.Text = "准备加载图片...";
+                }
+                else
+                {
+                    LoadingPanel.Visibility = Visibility.Collapsed;
+                    LoadingOverlay.Visibility = Visibility.Collapsed;
+                }
+            });
+        }
+
+        /// <summary>
+        /// 更新图片加载进度
+        /// </summary>
+        /// <param name="current">当前进度</param>
+        /// <param name="total">总数</param>
+        /// <param name="message">进度消息</param>
+        private void UpdateImageProgress(int current, int total, string message = "")
+        {
+            Dispatcher.Invoke(() =>
+            {
+                double progress = total > 0 ? (double)current / total * 100 : 0;
+                ImageProgressBar.Value = progress;
+                ProgressText.Text = string.IsNullOrEmpty(message) 
+                    ? $"加载图片 {current}/{total} ({progress:F0}%)" 
+                    : message;
+                LoadingStatusText.Text = $"正在处理第 {current} 张图片，共 {total} 张";
+            });
+        }
+
+        /// <summary>
+        /// 异步处理图片加载和插入（支持懒加载）
+        /// </summary>
+        /// <param name="richEdit">富文本编辑器控件</param>
+        /// <param name="images">图片列表</param>
+        private async Task ProcessImagesAsync(RichEditControl richEdit, List<ImageItem> images)
+        {
+            const int batchSize = 3; // 每批处理的图片数量
+            const int delayBetweenBatches = 100; // 批次间延迟（毫秒）
+
+            LogUtil.Info($"开始分批处理 {images.Count} 张图片，每批 {batchSize} 张");
+            
+            // 显示进度指示器
+            ShowImageLoadingProgress(true, $"准备加载 {images.Count} 张图片");
+            
+            int processedCount = 0;
+
+            // 分批处理图片，避免一次性加载过多图片导致UI卡顿
+            for (int i = 0; i < images.Count; i += batchSize)
+            {
+                var batch = images.Skip(i).Take(batchSize).ToList();
+                LogUtil.Info($"处理第 {i / batchSize + 1} 批图片，共 {batch.Count} 张");
+
+                // 并行处理当前批次的图片
+                var batchTasks = batch.Select(async (imageItem, batchIndex) =>
+                {
+                    int globalIndex = i + batchIndex;
+                    try
+                    {
+                        // 在后台线程处理图片优化
+                        var optimizedBitmap = await Task.Run(() =>
+                        {
+                            if (imageItem.BitBuffer == null || imageItem.BitBuffer.Length == 0)
+                            {
+                                LogUtil.Warning($"图片 {globalIndex + 1} 数据为空，跳过处理");
+                                return null;
+                            }
+
+                            // 根据文档显示需求优化图片尺寸
+                            // 打印文档通常不需要超高分辨率，适当压缩可以大幅提升性能
+                            int maxWidth = Math.Max(imgWidth * 2, 800);  // 保证打印质量的同时控制大小
+                            int maxHeight = Math.Max(imgHeight * 2, 600);
+                            
+                            LogUtil.Info($"正在优化图片 {globalIndex + 1}，目标尺寸: {maxWidth}x{maxHeight}");
+                            return imageItem.BitBuffer.Byte2BitmapOptimized(maxWidth, maxHeight, 85, true);
+                        });
+
+                        if (optimizedBitmap != null)
+                        {
+                            // 在UI线程插入图片
+                            await Dispatcher.InvokeAsync(() =>
+                            {
+                                try
+                                {
+                                    DocumentImage image = richEdit.Document.Images.Insert(pos, optimizedBitmap);
+                                    image.Size = new SizeF(imgWidth, imgHeight);
+                                    pos = image.Range.End;
+
+                                    var rh = richEdit.Document.InsertText(pos, "\u00A0\u00A0");
+                                    pos = rh.End;
+
+                                    // 获取包含图片的段落并设置格式
+                                    SetParagraphFormat(richEdit, pos);
+                                    
+                                    LogUtil.Info($"图片 {globalIndex + 1} 插入成功");
+                                    
+                                    // 更新进度
+                                    processedCount++;
+                                    UpdateImageProgress(processedCount, images.Count);
+                                }
+                                catch (Exception ex)
+                                {
+                                    LogUtil.Error($"图片 {globalIndex + 1} 插入UI失败: {ex.Message}");
+                                }
+                            });
+                        }
+                        else
+                        {
+                            // 即使图片处理失败，也要更新进度计数
+                            processedCount++;
+                            UpdateImageProgress(processedCount, images.Count, $"图片 {globalIndex + 1} 处理失败");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"图片 {globalIndex + 1} 处理失败: {ex.Message}");
+                        processedCount++;
+                        UpdateImageProgress(processedCount, images.Count, $"图片 {globalIndex + 1} 处理失败");
+                    }
+                });
+
+                // 等待当前批次完成
+                await Task.WhenAll(batchTasks);
+
+                // 批次间短暂延迟，让UI有时间响应
+                if (i + batchSize < images.Count)
+                {
+                    await Task.Delay(delayBetweenBatches);
+                    
+                    // 在UI线程刷新显示
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        richEdit.Refresh();
+                    });
+                }
+            }
+
+            LogUtil.Info($"所有 {images.Count} 张图片处理完成");
+            
+            // 隐藏进度指示器
+            ShowImageLoadingProgress(false);
+            
+            // 显示缓存统计信息
+            var cacheStats = ObjectExtension.GetCacheStats();
+            LogUtil.Info($"图片加载完成，{cacheStats}");
+        }
+
+        /// <summary>
+        /// 设置段落格式
+        /// </summary>
+        /// <param name="richEdit">富文本编辑器控件</param>
+        /// <param name="position">位置</param>
+        private void SetParagraphFormat(RichEditControl richEdit, DocumentPosition position)
+        {
+            try
+            {
+#pragma warning disable CS0618 // 类型或成员已过时
+                Paragraph paragraph = richEdit.Document.GetParagraph(position);
+#pragma warning restore CS0618 // 类型或成员已过时
+
+                // 设置段落间距 
+                paragraph.SpacingAfter = 20;    // 段后间距 
+                paragraph.SpacingBefore = 20;  // 段前间距 
+                paragraph.LeftIndent = 20;     // 左缩进 
+                paragraph.RightIndent = 20;    // 右缩进  
+                paragraph.Alignment = ParagraphAlignment.Justify;
+                paragraph.ContextualSpacing = true; // 上下段落间距相等
+                paragraph.LineSpacingMultiplier = 1.5f; // 行间距倍数 
+                paragraph.LineSpacingType = DevExpress.XtraRichEdit.API.Native.ParagraphLineSpacing.Multiple;
+                
+                pos = paragraph.Range.End;
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"设置段落格式失败: {ex.Message}");
             }
         }
 

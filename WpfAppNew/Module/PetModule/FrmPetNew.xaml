@@ -25,23 +25,9 @@
                 <ColumnDefinition Width="350"/>
             </Grid.ColumnDefinitions>
 
-            <!-- 左侧控制面板 -->
-            <Border Grid.Column="0" CornerRadius="15" BorderThickness="1" Margin="5">
-                <Border.BorderBrush>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#3498DB" Offset="0"/>
-                        <GradientStop Color="#2980B9" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#2C3E50" Offset="0"/>
-                        <GradientStop Color="#34495E" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Direction="315" ShadowDepth="3" Opacity="0.2" BlurRadius="8"/>
-                </Border.Effect>
+            <!-- 左侧控制面板 - 优化：简化渐变和阴影效果 -->
+            <Border Grid.Column="0" CornerRadius="8" BorderThickness="1" Margin="5" 
+                    BorderBrush="#3498DB" Background="#2C3E50">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
@@ -73,14 +59,39 @@
                                                          SelectionChanged="DeviceComboBox_SelectionChanged" Width="240"
                                                          Background="White" Foreground="Black" FontSize="12"
                                                          ToolTip="选择相机设备"/>
-                                                <Button x:Name="RefreshDevicesButton" Grid.Column="1" Content="🔄" 
-                                                       Click="RefreshDevicesButton_Click" Width="30" Height="25"
-                                                       Style="{StaticResource ButtonWarning}" Foreground="White" FontWeight="Bold"
-                                                       ToolTip="刷新设备列表" Cursor="Hand">
-                                                    <Button.Effect>
-                                                        <DropShadowEffect Color="Orange" Direction="315" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
-                                                    </Button.Effect>
-                                                </Button>
+                                                <Grid Grid.Column="1">
+                                                    <!-- 刷新按钮 -->
+                                                    <Button x:Name="RefreshDevicesButton" Content="🔄" 
+                                                           Click="RefreshDevicesButton_Click" Width="30" Height="25"
+                                                           Style="{StaticResource ButtonWarning}" Foreground="White" FontWeight="Bold"
+                                                           ToolTip="刷新设备列表" Cursor="Hand">
+                                                        <Button.Effect>
+                                                            <DropShadowEffect Color="Orange" Direction="315" ShadowDepth="2" Opacity="0.5" BlurRadius="5"/>
+                                                        </Button.Effect>
+                                                    </Button>
+                                                    
+                                                    <!-- 加载指示器 -->
+                                                    <Border x:Name="DeviceLoadingIndicator" Width="30" Height="25" 
+                                                           Background="Orange" CornerRadius="3" Visibility="Collapsed">
+                                                        <TextBlock Text="⟳" FontSize="16" Foreground="White" FontWeight="Bold"
+                                                                  HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <TextBlock.RenderTransform>
+                                                                <RotateTransform x:Name="LoadingRotateTransform" CenterX="8" CenterY="8"/>
+                                                            </TextBlock.RenderTransform>
+                                                            <TextBlock.Triggers>
+                                                                <EventTrigger RoutedEvent="TextBlock.Loaded">
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard RepeatBehavior="Forever">
+                                                                            <DoubleAnimation Storyboard.TargetName="LoadingRotateTransform"
+                                                                                           Storyboard.TargetProperty="Angle"
+                                                                                           From="0" To="360" Duration="0:0:1"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </EventTrigger>
+                                                            </TextBlock.Triggers>
+                                                        </TextBlock>
+                                                    </Border>
+                                                </Grid>
                                             </Grid>
                                         </StackPanel>
 
@@ -154,23 +165,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <!-- 主预览区域 -->
-                <Border Grid.Row="0" CornerRadius="15" Name="VideoBorder" BorderThickness="2">
-                    <Border.BorderBrush>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#4A90E2" Offset="0"/>
-                            <GradientStop Color="#7B68EE" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#2C3E50" Offset="0"/>
-                            <GradientStop Color="#34495E" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Border.Effect>
-                        <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3" BlurRadius="10"/>
-                    </Border.Effect>
+                <!-- 主预览区域 - 优化：简化边框和背景效果 -->
+                <Border Grid.Row="0" CornerRadius="8" Name="VideoBorder" BorderThickness="2"
+                        BorderBrush="#4A90E2" Background="#2C3E50">
                     <Grid>
                         <!-- 工业相机控件 - 主要使用的相机控件 -->
                         <controls2:IndustrialCameraControl x:Name="IndustrialCameraControl" Margin="5" /> 
@@ -218,26 +215,12 @@
                 </Border>-->
             </Grid>
 
-            <!-- 右侧属性设置区域 -->
+            <!-- 右侧属性设置区域 - 优化：简化边框和背景效果 -->
             <Grid Grid.Column="2">
-                <Border CornerRadius="15" BorderThickness="1" Margin="5">
-                    <Border.BorderBrush>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#27AE60" Offset="0"/>
-                            <GradientStop Color="#229954" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.BorderBrush>
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#2C3E50" Offset="0"/>
-                            <GradientStop Color="#34495E" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Border.Effect>
-                        <DropShadowEffect Color="Black" Direction="315" ShadowDepth="3" Opacity="0.2" BlurRadius="8"/>
-                    </Border.Effect>
+                <Border CornerRadius="8" BorderThickness="1" Margin="5"
+                        BorderBrush="#27AE60" Background="#2C3E50">
                     <StackPanel>
-                        <controls:PropertyGridDemoCtl x:Name="PropertyGridControl" Margin="10" Background="Transparent" ParentData="{Binding tInfo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        <controls:PropertyGridDemoCtl x:Name="PropertyGridControl" Margin="10" Background="Transparent" ParentData="{Binding tInfo, UpdateSourceTrigger=LostFocus, Mode=TwoWay}"/>
                         <VirtualizingStackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,15,0,10">
                             <Button Content="💾 保存" Margin="20,0,20,0" Width="130" Height="40" Click="SaveButton_Click" 
                                     Style="{StaticResource ButtonSuccess}" Foreground="White" FontWeight="Bold" FontSize="14"

@@ -24,6 +24,7 @@ using WpfAppNew.Module.SysModule;
 using WpfAppNew.OpenCv.Core;
 using WpfAppNew.Windows; // 添加性能监控窗口引用
 using WpfAppNew.EmguPlugs; // 添加IndustrialCameraControl引用
+using WpfAppNew.Services;
 
 namespace WpfAppNew.Module.PetModule
 {
@@ -341,12 +342,19 @@ namespace WpfAppNew.Module.PetModule
         /// 刷新设备按钮点击事件
         /// 刷新设备列表并更新本地下拉框
         /// </summary>
-        private void RefreshDevicesButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshDevicesButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                // 显示加载指示器
+                DeviceLoadingIndicator.Visibility = Visibility.Visible;
+                RefreshDevicesButton.IsEnabled = false;
+
                 // 执行IndustrialCameraControl的刷新命令
                 IndustrialCameraControl?.RefreshDevicesCommand?.Execute(null);
+
+                // 等待一小段时间让设备检测完成
+                await Task.Delay(500);
 
                 // 更新本地设备列表
                 UpdateLocalDeviceList();
@@ -356,6 +364,12 @@ namespace WpfAppNew.Module.PetModule
             catch (Exception ex)
             {
                 LogUtil.Error($"刷新设备失败: {ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载指示器
+                DeviceLoadingIndicator.Visibility = Visibility.Collapsed;
+                RefreshDevicesButton.IsEnabled = true;
             }
         }
 
@@ -568,11 +582,16 @@ namespace WpfAppNew.Module.PetModule
             if (!IndustrialCameraControl.CanCapture)
             {
                 LogUtil.Warning("当前无法拍照，请确保设备已连接并正在预览");
-                Growl.Warning("当前无法拍照，请确保设备已连接并正在预览");
+                //Growl.Warning("当前无法拍照，请确保设备已连接并正在预览");
                 return;
             }
 
+            // 显示拍照进度指示器
             TakeSnapshotButton.IsEnabled = false;
+            TakeSnapshotButton.Content = "📷 拍照中...";
+            
+            // 显示进度提示
+            //Growl.Info("正在拍照，请稍候...");
 
             try
             {
@@ -588,11 +607,12 @@ namespace WpfAppNew.Module.PetModule
                 if (scuess)
                 {
                     LogUtil.Info("拍照完成");
+                    //Growl.Success("拍照成功！");
                 }
                 else
                 {
                     LogUtil.Error("拍照失败");
-                    Growl.Error("拍照失败");
+                    //Growl.Error("拍照失败");
                     return;
                 }
                 if (tInfo.Result.Images == null)
@@ -600,7 +620,23 @@ namespace WpfAppNew.Module.PetModule
 
                 var old = tInfo.Result;
                 tInfo.Result = new TestResult();
-                old.Images.Add(new ImageItem() { ImageSource = new Bitmap(AppVideoConfig.TempPath + fullName).BitmapToImageSource(), Name = fullName, IsEdit = false });
+                
+                // 使用优化的图片加载方式，避免内存泄漏
+                try
+                {
+                    using (var bitmap = new Bitmap(AppVideoConfig.TempPath + fullName))
+                    {
+                        var imageSource = bitmap.BitmapToImageSource();
+                        old.Images.Add(new ImageItem() { ImageSource = imageSource, Name = fullName, IsEdit = false });
+                    }
+                }
+                catch (Exception imgEx)
+                {
+                    LogUtil.Warning($"图片加载失败: {imgEx.Message}");
+                    // 如果图片加载失败，仍然添加记录但不包含图像源
+                    old.Images.Add(new ImageItem() { ImageSource = null, Name = fullName, IsEdit = false });
+                }
+                
                 tInfo.Result = old;
             }
             catch (Exception exception)
@@ -610,7 +646,9 @@ namespace WpfAppNew.Module.PetModule
             }
             finally
             {
+                // 恢复按钮状态
                 TakeSnapshotButton.IsEnabled = true;
+                TakeSnapshotButton.Content = "📷 拍照";
             }
         }
          
@@ -726,18 +764,58 @@ namespace WpfAppNew.Module.PetModule
 
         /// <summary>
         /// 打印按钮点击事件
+        /// 优化：使用PrintNotesService获取预加载的UCPrintNotes实例，提升加载速度
         /// </summary>
-        private void PrintButton_Click(object sender, RoutedEventArgs e)
+        private async void PrintButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!System.IO.File.Exists(tInfo.TestPath))
+            try
             {
-                //Growl.Error("打印模板文件不存在！");
-                return;
-            }
+                IndustrialCameraControl.StopPreviewCommand.Execute(null);
+                if (!System.IO.File.Exists(tInfo.TestPath))
+                {
+                    HandyControl.Controls.MessageBox.Warning("打印模板文件不存在！", "系统提示");
+                    return;
+                }
 
-            FrmModule f = new FrmModule(new UCPrintNotes(tInfo));
-            f.Title = "打印报告";
-            f.ShowDialog();
+                // 显示加载指示器
+                if (DeviceLoadingIndicator != null)
+                {
+                    DeviceLoadingIndicator.Visibility = Visibility.Visible;
+                }
+
+                // 异步预加载打印控件（如果还没有预加载）
+                await PrintNotesService.Instance.PreloadPrintNotesAsync(tInfo);
+
+                // 获取优化的UCPrintNotes实例
+                var printNotes = PrintNotesService.Instance.GetOrCreatePrintNotes(tInfo);
+                
+                if (printNotes != null)
+                {
+                    FrmModule f = new FrmModule(printNotes);
+                    f.Title = "打印报告";
+                    f.ShowDialog();
+                    
+                    LogUtil.Info($"打印报告窗口已打开: {tInfo.TestName}");
+                }
+                else
+                {
+                    HandyControl.Controls.MessageBox.Error("创建打印控件失败！", "系统提示");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"打印按钮点击处理失败: {ex.Message}");
+                HandyControl.Controls.MessageBox.Error($"打开打印报告失败：{ex.Message}", "系统提示");
+            }
+            finally
+            {
+                // 隐藏加载指示器
+                if (DeviceLoadingIndicator != null)
+                {
+                    DeviceLoadingIndicator.Visibility = Visibility.Collapsed;
+                }
+                IndustrialCameraControl.StartPreviewCommand.Execute(null);
+            }
         }
 
         #endregion

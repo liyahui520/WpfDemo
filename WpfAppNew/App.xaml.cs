@@ -15,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using WpfAppNew.Controlls;
 using WpfAppNew.Module.PetModule;
+using WpfAppNew.Services;
 
 namespace WpfAppNew
 {
@@ -66,6 +67,33 @@ namespace WpfAppNew
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
             LogUtil.Info("系统启动");
+            
+            // 启动相机设备异步初始化，提升用户体验
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await CameraInitializationService.Instance.StartInitializationAsync();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"相机初始化服务启动失败: {ex.Message}");
+                }
+            });
+            
+            // 启动打印服务异步初始化，预加载打印组件
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await PrintNotesService.Instance.StartAsync();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"打印服务初始化失败: {ex.Message}");
+                }
+            });
+            
             //AppStatic.uCVideo = new UCLocalVideo("");
             //AppStatic.uVCVideo = new FrmPetNew();
             //string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
@@ -83,17 +111,17 @@ namespace WpfAppNew
             //    }
             //}
 
-#if !DEBUG
-            try
-            {
-                if (!SetupLogic.Update())
-                    Current.Shutdown();
-            }
-            catch (Exception ex)
-            {
-                //BCLApplication.log.Error(ex);
-            }
-#endif
+//#if !DEBUG
+//            try
+//            {
+//                if (!SetupLogic.Update())
+//                    Current.Shutdown();
+//            }
+//            catch (Exception ex)
+//            {
+//                //BCLApplication.log.Error(ex);
+//            }
+//#endif
 
         }
 

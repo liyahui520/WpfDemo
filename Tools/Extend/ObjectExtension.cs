@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -656,8 +656,48 @@ namespace Tools.Extend
             return image;
         }
 
+        /// <summary>
+        /// 图片缓存字典，避免重复转换
+        /// </summary>
+        private static readonly Dictionary<string, CacheItem> _bitmapCache = new Dictionary<string, CacheItem>();
+        private static readonly object _cacheLock = new object();
+        private const int MaxCacheSize = 30; // 最大缓存数量
+        private const long MaxCacheMemory = 50 * 1024 * 1024; // 最大缓存内存 50MB
+        private static long _currentCacheMemory = 0;
+
+        /// <summary>
+        /// 缓存项，包含位图和访问时间
+        /// </summary>
+        private class CacheItem
+        {
+            public Bitmap Bitmap { get; set; }
+            public DateTime LastAccessed { get; set; }
+            public long MemorySize { get; set; }
+
+            public CacheItem(Bitmap bitmap)
+            {
+                Bitmap = bitmap;
+                LastAccessed = DateTime.Now;
+                // 估算位图内存大小 (宽 * 高 * 4字节/像素)
+                MemorySize = bitmap.Width * bitmap.Height * 4;
+            }
+
+            public void UpdateAccess()
+            {
+                LastAccessed = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// 将字节数组转换为Bitmap对象
+        /// </summary>
+        /// <param name="bytes">图片字节数组</param>
+        /// <returns>Bitmap对象</returns>
         public static Bitmap Byte2Bitmap(this byte[] bytes)
         {
+            if (bytes == null || bytes.Length == 0)
+                return null;
+
             byte[] bytelist = bytes;
             Bitmap bitmap = null;
             using (MemoryStream ms1 = new MemoryStream(bytelist))
@@ -666,6 +706,149 @@ namespace Tools.Extend
                 ms1.Close();
             }
             return bitmap;
+        }
+
+        /// <summary>
+        /// 将字节数组转换为优化的Bitmap对象（带缓存和压缩）
+        /// </summary>
+        /// <param name="bytes">图片字节数组</param>
+        /// <param name="maxWidth">最大宽度（像素）</param>
+        /// <param name="maxHeight">最大高度（像素）</param>
+        /// <param name="quality">压缩质量（1-100）</param>
+        /// <param name="useCache">是否使用缓存</param>
+        /// <returns>优化后的Bitmap对象</returns>
+        public static Bitmap Byte2BitmapOptimized(this byte[] bytes, int maxWidth = 800, int maxHeight = 600, int quality = 85, bool useCache = true)
+        {
+            if (bytes == null || bytes.Length == 0)
+                return null;
+
+            // 生成缓存键
+            string cacheKey = $"{bytes.GetHashCode()}_{maxWidth}_{maxHeight}_{quality}";
+            
+            if (useCache)
+            {
+                lock (_cacheLock)
+                {
+                    if (_bitmapCache.ContainsKey(cacheKey))
+                    {
+                        var cacheItem = _bitmapCache[cacheKey];
+                        cacheItem.UpdateAccess(); // 更新访问时间
+                        return new Bitmap(cacheItem.Bitmap); // 返回副本避免共享引用
+                    }
+                }
+            }
+
+            Bitmap originalBitmap = null;
+            Bitmap optimizedBitmap = null;
+
+            try
+            {
+                using (MemoryStream ms = new MemoryStream(bytes))
+                {
+                    originalBitmap = (Bitmap)System.Drawing.Image.FromStream(ms);
+                }
+
+                // 计算缩放比例
+                double scaleX = (double)maxWidth / originalBitmap.Width;
+                double scaleY = (double)maxHeight / originalBitmap.Height;
+                double scale = Math.Min(scaleX, scaleY);
+
+                // 如果图片已经足够小，直接返回
+                if (scale >= 1.0)
+                {
+                    optimizedBitmap = new Bitmap(originalBitmap);
+                }
+                else
+                {
+                    // 计算新尺寸
+                    int newWidth = (int)(originalBitmap.Width * scale);
+                    int newHeight = (int)(originalBitmap.Height * scale);
+
+                    // 创建缩放后的图片
+                    optimizedBitmap = new Bitmap(newWidth, newHeight);
+                    using (Graphics graphics = Graphics.FromImage(optimizedBitmap))
+                    {
+                        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                        graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                        graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+
+                        graphics.DrawImage(originalBitmap, 0, 0, newWidth, newHeight);
+                    }
+                }
+
+                // 添加到缓存
+                if (useCache)
+                {
+                    lock (_cacheLock)
+                    {
+                        if (!_bitmapCache.ContainsKey(cacheKey))
+                        {
+                            var newCacheItem = new CacheItem(new Bitmap(optimizedBitmap));
+                            
+                            // 检查内存限制，如果超出则清理最旧的缓存
+                            while ((_currentCacheMemory + newCacheItem.MemorySize > MaxCacheMemory || 
+                                   _bitmapCache.Count >= MaxCacheSize) && _bitmapCache.Count > 0)
+                            {
+                                // 找到最旧的缓存项（LRU策略）
+                                var oldestItem = _bitmapCache.OrderBy(x => x.Value.LastAccessed).First();
+                                _currentCacheMemory -= oldestItem.Value.MemorySize;
+                                oldestItem.Value.Bitmap?.Dispose();
+                                _bitmapCache.Remove(oldestItem.Key);
+                                
+                                LogUtil.Info($"清理缓存项: {oldestItem.Key}，释放内存: {oldestItem.Value.MemorySize / 1024}KB");
+                            }
+                            
+                            // 添加新的缓存项
+                            _bitmapCache[cacheKey] = newCacheItem;
+                            _currentCacheMemory += newCacheItem.MemorySize;
+                            
+                            LogUtil.Info($"添加缓存项: {cacheKey}，内存大小: {newCacheItem.MemorySize / 1024}KB，当前缓存总内存: {_currentCacheMemory / 1024 / 1024}MB");
+                        }
+                    }
+                }
+
+                return optimizedBitmap;
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"图片优化失败: {ex.Message}");
+                optimizedBitmap?.Dispose();
+                return originalBitmap; // 失败时返回原图
+            }
+            finally
+            {
+                // 注意：不要在这里释放originalBitmap，因为可能被返回
+            }
+        }
+
+        /// <summary>
+        /// 清理图片缓存
+        /// </summary>
+        public static void ClearBitmapCache()
+        {
+            lock (_cacheLock)
+            {
+                foreach (var cacheItem in _bitmapCache.Values)
+                {
+                    cacheItem?.Bitmap?.Dispose();
+                }
+                _bitmapCache.Clear();
+                _currentCacheMemory = 0;
+                LogUtil.Info("图片缓存已清理完毕");
+            }
+        }
+
+        /// <summary>
+        /// 获取缓存统计信息
+        /// </summary>
+        /// <returns>缓存统计信息</returns>
+        public static string GetCacheStats()
+        {
+            lock (_cacheLock)
+            {
+                return $"缓存项数量: {_bitmapCache.Count}/{MaxCacheSize}, 内存使用: {_currentCacheMemory / 1024 / 1024:F2}MB/{MaxCacheMemory / 1024 / 1024}MB";
+            }
         }
 
         #region Bitmap与ImageSource互转

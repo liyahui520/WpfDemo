@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WpfAppNew.Controlls.PropertyGridDemoCtl"
+<UserControl x:Class="WpfAppNew.Controlls.PropertyGridDemoCtl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:hc="https://handyorg.github.io/handycontrol" 
@@ -17,7 +17,7 @@
                 </hc:PropertyGrid.Background>
             </hc:PropertyGrid>-->
             <ScrollViewer  hc:ScrollViewerAttach.Orientation="Vertical" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Padding="5,0,5,5">
-                <StackPanel Orientation="Vertical" DataContext="{Binding ParentData, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <StackPanel Orientation="Vertical" DataContext="{Binding ParentData, UpdateSourceTrigger=LostFocus, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}}">
                     <Expander Header="病历信息" Margin="0,4,0,0" IsExpanded="True" BorderThickness="0" Foreground="White">
                         <Expander.Background>
                             <SolidColorBrush Color="White" Opacity="0.4"/>

@@ -16,6 +16,7 @@ using OpenCvSharp.WpfExtensions;
 using Tools.App;
 using Tools.Extend;
 using WpfAppNew.OpenCv.Core;
+using WpfAppNew.Services;
 
 namespace WpfAppNew.EmguPlugs
 {
@@ -97,6 +98,11 @@ namespace WpfAppNew.EmguPlugs
         /// 运行时间
         /// </summary>
         private TimeSpan _runningTime = TimeSpan.Zero;
+
+        /// <summary>
+        /// 是否正在刷新设备列表
+        /// </summary>
+        private bool _isRefreshingDevices = false;
 
         /// <summary>
         /// 缩放级别
@@ -755,10 +761,14 @@ namespace WpfAppNew.EmguPlugs
             
             DataContext = this;
             
-            // 初始化时刷新设备列表
-            RefreshDevices();
+            // 延迟异步刷新设备列表，避免阻塞UI线程
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(100); // 让UI先完成渲染
+                await RefreshDevicesAsync();
+            });
             
-            LogUtil.Info("IndustrialCameraControl: 工业相机控制界面初始化完成");
+            LogUtil.Info("IndustrialCameraControl: 工业相机控制界面初始化完成（设备检测异步进行中）");
         }
 
         #endregion
@@ -770,7 +780,7 @@ namespace WpfAppNew.EmguPlugs
         /// </summary>
         private void InitializeCommands()
         {
-            RefreshDevicesCommand = new RelayCommand(RefreshDevices);
+            RefreshDevicesCommand = new RelayCommand(async () => await RefreshDevicesAsync(), () => !_isRefreshingDevices);
             ConnectCommand = new RelayCommand(ToggleConnection);
             StartPreviewCommand = new RelayCommand(StartPreview, () => IsConnected && !IsPreviewRunning);
             StopPreviewCommand = new RelayCommand(StopPreview, () => IsPreviewRunning);
@@ -992,53 +1002,95 @@ namespace WpfAppNew.EmguPlugs
         #region 命令实现
 
         /// <summary>
-        /// 刷新设备列表
+        /// 刷新设备列表（同步版本，保持向后兼容）
         /// </summary>
         private void RefreshDevices()
         {
+            _ = RefreshDevicesAsync();
+        }
+
+        /// <summary>
+        /// 异步刷新设备列表
+        /// </summary>
+        private async Task RefreshDevicesAsync()
+        {
+            if (_isRefreshingDevices)
+            {
+                LogUtil.Info("IndustrialCameraControl: 设备刷新已在进行中，跳过重复请求");
+                return;
+            }
+
             try
             {
-                OperationStatus = "正在刷新设备...";
+                _isRefreshingDevices = true;
                 
-                // 清空现有设备列表
-                AvailableDevices.Clear();
-                
-                // 获取可用设备列表 - 使用静态方法
-                var devices = WpfAppNew.OpenCv.Core.CameraManager.GetAvailableDevices();
-                if (devices != null)
+                // 在UI线程上更新状态
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    foreach (var device in devices)
+                    OperationStatus = "正在刷新设备...";
+                    // 清空现有设备列表
+                    AvailableDevices.Clear();
+                    // 更新命令状态
+                    CommandManager.InvalidateRequerySuggested();
+                });
+                
+                // 优先使用缓存的设备列表，避免重复扫描
+                var devices = await CameraInitializationService.Instance.GetDevicesAsync();
+                
+                // 回到UI线程更新设备列表
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    if (devices != null)
                     {
-                        AvailableDevices.Add(device);
+                        foreach (var device in devices)
+                        {
+                            AvailableDevices.Add(device);
+                        }
                     }
-                }
+                    
+                    // 如果没有设备，添加一个默认设备用于测试
+                    if (AvailableDevices.Count == 0)
+                    {
+                        AvailableDevices.Add(new CameraDevice 
+                        { 
+                            Index = 0, 
+                            Name = "默认摄像头",
+                            Status = DeviceStatus.Available,
+                            IsConnected = true
+                        });
+                    }
+                    
+                    // 自动选择第一个可用设备
+                    if (AvailableDevices.Count > 0 && SelectedDevice == null)
+                    {
+                        SelectedDevice = AvailableDevices[0];
+                        LogUtil.Info($"IndustrialCameraControl: 自动选择设备 {SelectedDevice.Index}: {SelectedDevice.Name}");
+                    }
+                    
+                    OperationStatus = $"设备刷新完成，找到 {AvailableDevices.Count} 个设备";
+                });
                 
-                // 如果没有设备，添加一个默认设备用于测试
-                if (AvailableDevices.Count == 0)
-                {
-                    AvailableDevices.Add(new CameraDevice 
-                    { 
-                        Index = 0, 
-                        Name = "默认摄像头",
-                        Status = DeviceStatus.Available,
-                        IsConnected = true
-                    });
-                }
-                
-                // 自动选择第一个可用设备
-                if (AvailableDevices.Count > 0 && SelectedDevice == null)
-                {
-                    SelectedDevice = AvailableDevices[0];
-                    LogUtil.Info($"IndustrialCameraControl: 自动选择设备 {SelectedDevice.Index}: {SelectedDevice.Name}");
-                }
-                
-                OperationStatus = $"设备刷新完成，找到 {AvailableDevices.Count} 个设备";
-                LogUtil.Info($"IndustrialCameraControl: 设备列表已刷新，找到 {AvailableDevices.Count} 个设备");
+                LogUtil.Info($"IndustrialCameraControl: 设备列表已刷新，找到 {devices?.Count ?? 0} 个设备");
             }
             catch (Exception ex)
             {
                 LogUtil.Error($"IndustrialCameraControl: 刷新设备失败 - {ex.Message}");
-                OperationStatus = "设备刷新失败";
+                
+                // 在UI线程上更新错误状态
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    OperationStatus = "设备刷新失败";
+                });
+            }
+            finally
+            {
+                _isRefreshingDevices = false;
+                
+                // 更新命令状态
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                });
             }
         }
 
@@ -1105,6 +1157,7 @@ namespace WpfAppNew.EmguPlugs
                 {
                     IsPreviewRunning = true;
                     OperationStatus = "预览已启动";
+                    FitToWindow();
                 }
                 else
                 {
@@ -1294,26 +1347,16 @@ namespace WpfAppNew.EmguPlugs
 
         /// <summary>
         /// 适应窗口
+        /// 优化：适配新的等比例显示布局，重置图像变换为默认状态
         /// </summary>
         private void FitToWindow()
         {
             try
             {
-                if (PreviewScrollViewer != null && PreviewImage != null)
+                if (PreviewContainer != null && PreviewImage != null)
                 {
-                    // 计算适合窗口的缩放比例
-                    var scrollViewerSize = new System.Windows.Size(PreviewScrollViewer.ActualWidth, PreviewScrollViewer.ActualHeight);
-                    var imageSize = new System.Windows.Size(PreviewImage.ActualWidth, PreviewImage.ActualHeight);
-                    
-                    if (imageSize.Width > 0 && imageSize.Height > 0)
-                    {
-                        var scaleX = scrollViewerSize.Width / imageSize.Width;
-                        var scaleY = scrollViewerSize.Height / imageSize.Height;
-                        var scale = Math.Min(scaleX, scaleY);
-                        
-                        ZoomLevel = scale;
-                        ApplyZoom(scale);
-                    }
+                    // 恢复等比例显示模式，图像会自动适应容器大小并居中
+                    RestoreUniformStretch();
                 }
             }
             catch (Exception ex)
@@ -1324,15 +1367,20 @@ namespace WpfAppNew.EmguPlugs
 
         /// <summary>
         /// 实际大小
+        /// 优化：设置图像为实际像素大小显示
         /// </summary>
         private void ActualSize()
         {
             try
             {
-                if (PreviewScrollViewer != null)
+                if (PreviewContainer != null && PreviewImage != null)
                 {
+                    // 设置图像为实际像素大小，覆盖Stretch="Uniform"的自动缩放
+                    PreviewImage.Stretch = Stretch.None;
+                    PreviewImage.RenderTransform = Transform.Identity;
                     ZoomLevel = 1.0;
-                    ApplyZoom(1.0);
+                    
+                    LogUtil.Info("IndustrialCameraControl: 图像已设置为实际大小");
                 }
             }
             catch (Exception ex)
@@ -1343,6 +1391,7 @@ namespace WpfAppNew.EmguPlugs
 
         /// <summary>
         /// 应用缩放
+        /// 优化：支持在等比例显示模式下进行缩放
         /// </summary>
         /// <param name="scale">缩放比例</param>
         private void ApplyZoom(double scale)
@@ -1351,13 +1400,43 @@ namespace WpfAppNew.EmguPlugs
             {
                 if (PreviewImage != null)
                 {
+                    // 如果是缩放操作，切换到None模式以支持精确缩放
+                    if (Math.Abs(scale - 1.0) > 0.01)
+                    {
+                        PreviewImage.Stretch = Stretch.None;
+                    }
+                    
                     var transform = new ScaleTransform(scale, scale);
                     PreviewImage.RenderTransform = transform;
+                    
+                    LogUtil.Debug($"IndustrialCameraControl: 应用缩放 - {scale:F2}x");
                 }
             }
             catch (Exception ex)
             {
                 LogUtil.Warning($"IndustrialCameraControl: 应用缩放失败 - {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 恢复等比例显示模式
+        /// </summary>
+        private void RestoreUniformStretch()
+        {
+            try
+            {
+                if (PreviewImage != null)
+                {
+                    PreviewImage.Stretch = Stretch.Uniform;
+                    PreviewImage.RenderTransform = Transform.Identity;
+                    ZoomLevel = 1.0;
+                    
+                    LogUtil.Info("IndustrialCameraControl: 已恢复等比例显示模式");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Warning($"IndustrialCameraControl: 恢复等比例显示失败 - {ex.Message}");
             }
         }
 
