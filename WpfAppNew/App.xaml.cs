@@ -56,6 +56,8 @@ namespace WpfAppNew
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            // 在显示主窗体前，显式控制关闭行为，避免只有Splash时关闭导致应用退出
+            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             ConfigHelper.Instance.SetLang("zh-cn");
             AppStatic.VideoConfig = AppVideoConfig.GetConfig();
             AppStatic.AppHospital = AppHospital.GetConfig();
@@ -68,20 +70,11 @@ namespace WpfAppNew
             System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
             LogUtil.Info("系统启动");
             
-            // 启动相机设备异步初始化，提升用户体验
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    await CameraInitializationService.Instance.StartInitializationAsync();
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error($"相机初始化服务启动失败: {ex.Message}");
-                }
-            });
-            
-            // 启动打印服务异步初始化，预加载打印组件
+            // 显示启动Loading窗口，并在完成相机控件预加载后打开主窗口
+            var splash = new Windows.LoadingWindow();
+            splash.Show();
+
+            // 并行启动打印服务（不阻塞）
             _ = Task.Run(async () =>
             {
                 try
@@ -93,7 +86,45 @@ namespace WpfAppNew
                     LogUtil.Error($"打印服务初始化失败: {ex.Message}");
                 }
             });
-            
+
+            // 在后台异步完成相机控件预加载，完成后关闭Loading并显示主界面
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await IndustrialCameraPreloadService.Instance.StartPreloadAsync();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"IndustrialCameraControl预加载服务启动失败: {ex.Message}");
+                }
+                finally
+                {
+                    // 关闭Loading窗口
+                    splash.Dispatcher.Invoke(() =>
+                    {
+                        try { splash.Close(); } catch { }
+                    });
+
+                    // 打开主窗口
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        try
+                        {
+                            var main = new MainWindow();
+                            this.MainWindow = main;
+                            main.Show();
+                            // 主窗体已显示，恢复默认关闭行为
+                            this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                        }
+                        catch (Exception showEx)
+                        {
+                            LogUtil.Error($"显示主窗口失败: {showEx.Message}");
+                        }
+                    });
+                }
+            });
+
             //AppStatic.uCVideo = new UCLocalVideo("");
             //AppStatic.uVCVideo = new FrmPetNew();
             //string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");

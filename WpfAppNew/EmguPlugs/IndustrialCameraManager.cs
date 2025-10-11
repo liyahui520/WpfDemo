@@ -59,6 +59,14 @@ namespace WpfAppNew.EmguPlugs
         private WpfAppNew.Utils.PerformanceMonitor _performanceMonitor;
 
         /// <summary>
+        /// 警告节流器 - 避免频繁的警告日志
+        /// </summary>
+        private DateTime _lastMemoryWarningTime = DateTime.MinValue;
+        private DateTime _lastFrameTimeWarningTime = DateTime.MinValue;
+        private DateTime _lastUIBusyWarningTime = DateTime.MinValue;
+        private readonly TimeSpan _warningThrottleInterval = TimeSpan.FromSeconds(30); // 30秒内同类警告只显示一次
+
+        /// <summary>
         /// 视频录制器
         /// </summary>
         private VideoWriter _videoWriter;
@@ -455,8 +463,8 @@ namespace WpfAppNew.EmguPlugs
             // 初始化异步处理流水线
             StartAsyncProcessingPipeline();
             
-            // 初始化内存管理定时器（每30秒执行一次内存清理）
-            _memoryManagementTimer = new Timer(PerformMemoryManagement, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+            // 初始化内存管理定时器（每15秒执行一次内存清理，更积极的内存管理）
+                _memoryManagementTimer = new Timer(PerformMemoryManagement, null, TimeSpan.FromSeconds(15), TimeSpan.FromSeconds(15));
             
             // 初始化UI更新节流器（100ms间隔）
             _uiUpdateThrottler = new UIUpdateThrottler(Application.Current?.Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher, 100);
@@ -2250,8 +2258,19 @@ namespace WpfAppNew.EmguPlugs
                     var now = DateTime.Now;
                     var timeSinceLastCleanup = now - _lastMemoryCleanup;
                     
-                    // 如果距离上次清理超过30秒，执行内存清理
-                    if (timeSinceLastCleanup.TotalSeconds >= 30)
+                    // 获取当前内存使用情况
+                    var currentMemory = GC.GetTotalMemory(false) / 1024 / 1024; // MB
+                    
+                    // 更积极的内存清理条件：
+                    // 1. 距离上次清理超过15秒，或
+                    // 2. 内存使用超过800MB，或
+                    // 3. 队列积压严重
+                    bool shouldCleanup = timeSinceLastCleanup.TotalSeconds >= 15 ||
+                                       currentMemory > 800 ||
+                                       _processingQueue.Count > MaxProcessingQueueSize * 0.8 ||
+                                       _recordingQueue.Count > MaxRecordingQueueSize * 0.8;
+                    
+                    if (shouldCleanup)
                     {
                         // 获取当前内存使用情况
                         long memoryBefore = GC.GetTotalMemory(false);
@@ -2802,27 +2821,54 @@ namespace WpfAppNew.EmguPlugs
             try
             {
                 var stats = e.Stats;
+                var now = DateTime.Now;
                 
-                // 记录性能统计信息（仅在调试模式下）
+                // 记录性能统计信息（降低频率，每5秒记录一次）
                 #if DEBUG
-                LogUtil.Debug($"性能统计 - FPS: {stats.FPS:F1}, 帧时间: {stats.AverageFrameTime:F1}ms, " +
-                             $"内存: {stats.MemoryUsage}MB, CPU: {stats.CpuUsage:F1}%, UI繁忙: {stats.IsUIThreadBusy}");
+                if ((now - _lastMemoryWarningTime).TotalSeconds >= 5)
+                {
+                    LogUtil.Debug($"性能统计 - FPS: {stats.FPS:F1}, 帧时间: {stats.AverageFrameTime:F1}ms, " +
+                                 $"内存: {stats.MemoryUsage}MB, CPU: {stats.CpuUsage:F1}%, UI繁忙: {stats.IsUIThreadBusy}");
+                }
                 #endif
                 
-                // 如果性能指标异常，记录警告
-                if (stats.AverageFrameTime > 50) // 帧时间超过50ms
+                // 使用节流机制记录性能警告，避免频繁日志
+                
+                // 帧时间警告（超过100ms才警告，且30秒内只警告一次）
+                if (stats.AverageFrameTime > 100 && (now - _lastFrameTimeWarningTime) > _warningThrottleInterval)
                 {
                     LogUtil.Warning($"帧处理时间过长: {stats.AverageFrameTime:F1}ms");
+                    _lastFrameTimeWarningTime = now;
                 }
                 
-                if (stats.MemoryUsage > 1000) // 内存使用超过1GB
+                // 内存警告（提高阈值到1.5GB，且30秒内只警告一次）
+                if (stats.MemoryUsage > 1500 && (now - _lastMemoryWarningTime) > _warningThrottleInterval)
                 {
-                    LogUtil.Warning($"内存使用量过高: {stats.MemoryUsage}MB");
+                    LogUtil.Warning($"内存使用量过高: {stats.MemoryUsage}MB，建议检查内存泄漏");
+                    _lastMemoryWarningTime = now;
+                    
+                    // 触发内存清理
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect();
+                            LogUtil.Info("已执行内存清理操作");
+                        }
+                        catch (Exception ex)
+                        {
+                            LogUtil.Error($"内存清理失败: {ex.Message}");
+                        }
+                    });
                 }
                 
-                if (stats.IsUIThreadBusy)
+                // UI线程繁忙警告（30秒内只警告一次）
+                if (stats.IsUIThreadBusy && (now - _lastUIBusyWarningTime) > _warningThrottleInterval)
                 {
                     LogUtil.Warning("UI线程繁忙，可能影响用户体验");
+                    _lastUIBusyWarningTime = now;
                 }
             }
             catch (Exception ex)

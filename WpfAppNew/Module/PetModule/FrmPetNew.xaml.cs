@@ -100,6 +100,20 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private DispatcherTimer _clickTimer;
 
+        /// <summary>
+        /// 工业相机控件实例
+        /// </summary>
+        private IndustrialCameraControl _industrialCameraControl;
+
+        #endregion
+
+        #region 公共属性
+
+        /// <summary>
+        /// 获取工业相机控件实例（保持向后兼容）
+        /// </summary>
+        public IndustrialCameraControl IndustrialCameraControl => _industrialCameraControl;
+
         #endregion
 
         #region 依赖属性
@@ -825,11 +839,14 @@ namespace WpfAppNew.Module.PetModule
         /// <summary>
         /// 用户控件加载事件
         /// </summary>
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
                 //InitializeSystem();
+
+                // 异步加载预加载的IndustrialCameraControl
+                await LoadPreloadedCameraControlAsync();
 
                 // 初始化设备列表
                 InitializeDeviceList();
@@ -842,6 +859,61 @@ namespace WpfAppNew.Module.PetModule
         }
 
         /// <summary>
+        /// 加载预加载的IndustrialCameraControl
+        /// </summary>
+        private async Task LoadPreloadedCameraControlAsync()
+        {
+            try
+            {
+                LogUtil.Info("开始加载预加载的IndustrialCameraControl...");
+
+                // 获取预加载的控件实例
+                _industrialCameraControl = await IndustrialCameraPreloadService.Instance.GetOrCreateControlAsync();
+
+                if (_industrialCameraControl != null)
+                {
+                    // 将控件添加到容器中
+                    CameraControlContainer.Child = _industrialCameraControl;
+                    
+                    // 隐藏加载指示器
+                    CameraLoadingIndicator.Visibility = Visibility.Collapsed;
+                    
+                    LogUtil.Info("预加载的IndustrialCameraControl加载成功");
+                }
+                else
+                {
+                    LogUtil.Error("获取预加载的IndustrialCameraControl失败");
+                    
+                    // 创建新实例作为备用
+                    _industrialCameraControl = new IndustrialCameraControl();
+                    CameraControlContainer.Child = _industrialCameraControl;
+                    CameraLoadingIndicator.Visibility = Visibility.Collapsed;
+                    
+                    LogUtil.Info("使用新创建的IndustrialCameraControl实例");
+                }
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"加载IndustrialCameraControl异常: {ex.Message}");
+                
+                // 创建新实例作为备用
+                try
+                {
+                    _industrialCameraControl = new IndustrialCameraControl();
+                    CameraControlContainer.Child = _industrialCameraControl;
+                    CameraLoadingIndicator.Visibility = Visibility.Collapsed;
+                    
+                    LogUtil.Info("异常情况下使用新创建的IndustrialCameraControl实例");
+                }
+                catch (Exception createEx)
+                {
+                    LogUtil.Error($"创建备用IndustrialCameraControl实例失败: {createEx.Message}");
+                    CameraLoadingIndicator.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        /// <summary>
         /// 初始化设备列表
         /// 等待IndustrialCameraControl初始化完成，然后更新本地设备列表，并自动连接和开始预览
         /// </summary>
@@ -849,8 +921,39 @@ namespace WpfAppNew.Module.PetModule
         {
             try
             {
-                // 等待IndustrialCameraControl初始化完成
-                await Task.Delay(500);
+                // 确保控件已加载
+                if (_industrialCameraControl == null)
+                {
+                    LogUtil.Warning("IndustrialCameraControl未加载，跳过设备初始化");
+                    return;
+                }
+
+                // 延迟500ms，确保控件完全加载
+                //await Task.Delay(500);
+
+                // 刷新设备列表
+                _industrialCameraControl.RefreshDevicesCommand?.Execute(null);
+
+                // 等待设备列表更新
+                //await Task.Delay(1000);
+
+                // 获取设备列表
+                var devices = await CameraInitializationService.Instance.GetDevicesAsync();
+                LogUtil.Info($"检测到 {devices?.Count ?? 0} 个设备");
+
+                if (devices != null && devices.Count > 0)
+                {
+                    // 自动选择第一个设备（通过UI操作）
+                    // 注意：这里需要通过UI操作来选择设备，而不是直接调用方法
+                    LogUtil.Info($"检测到设备: {string.Join(", ", devices)}");
+
+                    // 延迟一下再开始预览
+                    await Task.Delay(500);
+
+                    // 开始预览（通过命令）
+                    _industrialCameraControl.StartPreviewCommand?.Execute(null);
+                    LogUtil.Info("自动开始预览");
+                }
 
                 // 更新本地设备列表
                 UpdateLocalDeviceList();

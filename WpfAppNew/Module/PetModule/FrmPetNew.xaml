@@ -169,8 +169,35 @@
                 <Border Grid.Row="0" CornerRadius="8" Name="VideoBorder" BorderThickness="2"
                         BorderBrush="#4A90E2" Background="#2C3E50">
                     <Grid>
-                        <!-- 工业相机控件 - 主要使用的相机控件 -->
-                        <controls2:IndustrialCameraControl x:Name="IndustrialCameraControl" Margin="5" /> 
+                        <!-- 工业相机控件容器 - 动态加载预加载的相机控件 -->
+                        <Border x:Name="CameraControlContainer" Margin="5" />
+                        
+                        <!-- 加载指示器 -->
+                        <Border x:Name="CameraLoadingIndicator" Background="#2C3E50" CornerRadius="8" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                Width="200" Height="100" Visibility="Visible">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="⟳" FontSize="32" Foreground="White" FontWeight="Bold"
+                                          HorizontalAlignment="Center" Margin="0,0,0,10">
+                                    <TextBlock.RenderTransform>
+                                        <RotateTransform x:Name="CameraLoadingRotateTransform" CenterX="16" CenterY="16"/>
+                                    </TextBlock.RenderTransform>
+                                    <TextBlock.Triggers>
+                                        <EventTrigger RoutedEvent="TextBlock.Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="CameraLoadingRotateTransform"
+                                                                   Storyboard.TargetProperty="Angle"
+                                                                   From="0" To="360" Duration="0:0:2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </TextBlock.Triggers>
+                                </TextBlock>
+                                <TextBlock Text="正在加载相机控件..." Foreground="White" FontSize="14" 
+                                          HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
                         
                         <!-- 预览状态指示器 -->
                         <!--<Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" 

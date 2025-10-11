@@ -1,0 +1,22 @@
+<Window x:Class="WpfAppNew.Windows.LoadingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="正在启动" Height="180" Width="360"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        ShowInTaskbar="True">
+    <Grid Background="#FAFAFA">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20">
+            <TextBlock Text="正在初始化相机控件，请稍候…" FontSize="16" Foreground="#333" Margin="0,0,0,12" />
+            <ProgressBar Width="240" Height="8" IsIndeterminate="True" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Text="提示：初始化完成后自动进入主界面" FontSize="12" Foreground="#666" HorizontalAlignment="Center" Margin="0,12,0,12" />
+    </Grid>
+</Window>

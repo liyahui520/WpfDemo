@@ -219,7 +219,20 @@ namespace WpfAppNew.Utils
                     
                     // 计算FPS
                     var framesDelta = _frameCount - _lastFrameCount;
-                    CurrentFPS = elapsed > 0 ? framesDelta / elapsed : 0;
+                    if (framesDelta > 0 && elapsed > 0)
+                    {
+                        CurrentFPS = framesDelta / elapsed;
+                    }
+                    else if (_frameTimeHistory.Count > 0)
+                    {
+                        // 备用FPS计算：基于帧时间历史
+                        var avgFrameTime = _frameTimeHistory.Average();
+                        CurrentFPS = avgFrameTime > 0 ? 1000.0 / avgFrameTime : 0;
+                    }
+                    else
+                    {
+                        CurrentFPS = 0;
+                    }
                     
                     // 计算平均帧时间
                     if (_frameTimeHistory.Count > 0)

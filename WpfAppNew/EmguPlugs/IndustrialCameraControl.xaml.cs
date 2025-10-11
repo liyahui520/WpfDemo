@@ -760,14 +760,14 @@ namespace WpfAppNew.EmguPlugs
             InitializeRecordingDurationTimer();
             
             DataContext = this;
-            
+
             // 延迟异步刷新设备列表，避免阻塞UI线程
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(100); // 让UI先完成渲染
-                await RefreshDevicesAsync();
-            });
-            
+            //_ = Task.Run(async () =>
+            //{
+            //    await Task.Delay(100); // 让UI先完成渲染
+            //    await RefreshDevicesAsync();
+            //});
+
             LogUtil.Info("IndustrialCameraControl: 工业相机控制界面初始化完成（设备检测异步进行中）");
         }
 
