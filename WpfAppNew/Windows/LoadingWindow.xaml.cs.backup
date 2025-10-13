@@ -1,0 +1,40 @@
+// 备份原始的复杂动画逻辑，以防需要回滚
+
+// 原始的StartProgressBarAnimation方法：
+/*
+private void StartProgressBarAnimation()
+{
+    if (_progressBar != null)
+    {
+        // 确保进度条处于不确定模式以启动动画
+        _progressBar.IsIndeterminate = true;
+        
+        // 使用Dispatcher确保在UI线程中执行，避免动画中断
+        Dispatcher.BeginInvoke(new System.Action(() =>
+        {
+            _progressBar.IsIndeterminate = false;
+            _progressBar.IsIndeterminate = true;
+        }), DispatcherPriority.Render);
+    }
+}
+*/
+
+// 原始的UpdateStatus方法：
+/*
+public void UpdateStatus(string status)
+{
+    Dispatcher.BeginInvoke(new System.Action(() =>
+    {
+        if (_statusText != null)
+        {
+            _statusText.Text = status;
+        }
+        
+        // 确保进度条动画不受文本更新影响
+        if (_progressBar != null && !_progressBar.IsIndeterminate)
+        {
+            _progressBar.IsIndeterminate = true;
+        }
+    }), DispatcherPriority.Background);
+}
+*/

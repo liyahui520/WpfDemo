@@ -608,7 +608,7 @@ namespace WpfAppNew.Controlls
             {
                 try
                 {
-                    var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{tInfo.TestName.ToString()}.docx");
+                    var exportPath = System.IO.Path.Combine(dialog.SelectedPath, $"{DateTime.Now:yyyyMMddHHmmss}-{tInfo.Pet.ToString()}-{tInfo.TestName.ToString()}.docx");
                     richEditControl1.SaveDocument(exportPath, DocumentFormat.OpenXml);
                     HandyControl.Controls.MessageBox.Success($"导出成功！", "系统提示");
                 }

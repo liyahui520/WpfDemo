@@ -56,105 +56,147 @@ namespace WpfAppNew
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            // 在显示主窗体前，显式控制关闭行为，避免只有Splash时关闭导致应用退出
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            ConfigHelper.Instance.SetLang("zh-cn");
-            AppStatic.VideoConfig = AppVideoConfig.GetConfig();
-            AppStatic.AppHospital = AppHospital.GetConfig();
-            AppStatic.PetInfo = PetInfo.GetConfig();
-            ConfigHelper.Instance.SetWindowDefaultStyle();
-            ConfigHelper.Instance.SetNavigationWindowDefaultStyle();
-            //初始化DLL配置
-            //Global.InitDllPath();
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
-            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
-            LogUtil.Info("系统启动");
             
-            // 显示启动Loading窗口，并在完成相机控件预加载后打开主窗口
+            // 立即创建并显示启动Loading窗口
             var splash = new Windows.LoadingWindow();
-            splash.Show();
+            // 窗口已在构造函数中显示并启动动画，这里立即更新状态
+            splash.UpdateStatus("正在初始化系统配置...");
+            
+            // 将所有初始化操作移到后台线程，避免阻塞UI
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    // 在后台线程执行配置初始化
+                    await Task.Run(() =>
+                    {
+                        ConfigHelper.Instance.SetLang("zh-cn");
+                        AppStatic.VideoConfig = AppVideoConfig.GetConfig();
+                        AppStatic.AppHospital = AppHospital.GetConfig();
+                        AppStatic.PetInfo = PetInfo.GetConfig();
+                        ConfigHelper.Instance.SetWindowDefaultStyle();
+                        ConfigHelper.Instance.SetNavigationWindowDefaultStyle();
+                        //初始化DLL配置
+                        //Global.InitDllPath();
+                        System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-Hans");
+                        System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-Hans");
+                        LogUtil.Info("系统启动");
+                    });
+                    
+                    splash.UpdateStatus("系统配置初始化完成");
+                    //await Task.Delay(200); // 短暂延迟让用户看到状态更新
+                    
+                    // 启动其他服务的初始化
+                    await InitializeServicesAsync(splash);
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"系统初始化失败: {ex.Message}");
+                    splash.UpdateStatus("系统初始化失败");
+                    
+                    // 即使初始化失败，也要正确关闭Loading窗口
+                    await Task.Delay(1000);
+                    splash.SetCompleted("初始化失败，请重试");
+                    await Task.Delay(500);
+                    splash.SafeClose();
+                    
+                    // 显示主窗口
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                        this.MainWindow = new MainWindow();
+                        this.MainWindow.Show();
+                    });
+                }
+            });
 
+        }
+
+        /// <summary>
+        /// 异步初始化各种服务
+        /// </summary>
+        /// <param name="splash">启动窗口实例</param>
+        /// <returns>异步任务</returns>
+        private async Task InitializeServicesAsync(Windows.LoadingWindow splash)
+        {
             // 并行启动打印服务（不阻塞）
             _ = Task.Run(async () =>
             {
                 try
                 {
+                    splash.UpdateStatus("正在初始化打印服务...");
                     await PrintNotesService.Instance.StartAsync();
+                    splash.UpdateStatus("打印服务初始化完成");
                 }
                 catch (Exception ex)
                 {
                     LogUtil.Error($"打印服务初始化失败: {ex.Message}");
+                    splash.UpdateStatus("打印服务初始化失败");
                 }
             });
 
             // 在后台异步完成相机控件预加载，完成后关闭Loading并显示主界面
-            _ = Task.Run(async () =>
+            try
             {
-                try
-                {
-                    await IndustrialCameraPreloadService.Instance.StartPreloadAsync();
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error($"IndustrialCameraControl预加载服务启动失败: {ex.Message}");
-                }
-                finally
-                {
-                    // 关闭Loading窗口
-                    splash.Dispatcher.Invoke(() =>
-                    {
-                        try { splash.Close(); } catch { }
-                    });
+                splash.UpdateStatus("正在初始化相机控件...");
+                await IndustrialCameraPreloadService.Instance.StartPreloadAsync();
+                splash.UpdateStatus("相机控件初始化完成");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"IndustrialCameraControl预加载服务启动失败: {ex.Message}");
+                splash.UpdateStatus("相机控件初始化失败");
+            }
+            finally
+            {
+                // 设置加载完成状态
+                splash.SetCompleted("初始化完成");
+                
+                // 延迟一点时间让用户看到完成状态
+                await Task.Delay(500);
+                
+                // 安全关闭Loading窗口
+                splash.SafeClose();
 
-                    // 打开主窗口
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        try
-                        {
-                            var main = new MainWindow();
-                            this.MainWindow = main;
-                            main.Show();
-                            // 主窗体已显示，恢复默认关闭行为
-                            this.ShutdownMode = ShutdownMode.OnMainWindowClose;
-                        }
-                        catch (Exception showEx)
-                        {
-                            LogUtil.Error($"显示主窗口失败: {showEx.Message}");
-                        }
-                    });
-                }
-            });
+                // 打开主窗口
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                    this.MainWindow = new MainWindow();
+                    this.MainWindow.Show();
+                });
+            }
+        }
 
-            //AppStatic.uCVideo = new UCLocalVideo("");
-            //AppStatic.uVCVideo = new FrmPetNew();
-            //string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-            //foreach (string file in files)
-            //{
-            //    using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
-            //    {
-            //        if (stream != null)
-            //        {
-            //            byte[] assemblyData = new byte[stream.Length];
-            //            stream.Read(assemblyData, 0, assemblyData.Length);
-            //            Assembly.Load(assemblyData);
-            //        }
+        //AppStatic.uCVideo = new UCLocalVideo("");
+        //AppStatic.uVCVideo = new FrmPetNew();
+        //string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+        //foreach (string file in files)
+        //{
+        //    using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
+        //    {
+        //        if (stream != null)
+        //        {
+        //            byte[] assemblyData = new byte[stream.Length];
+        //            stream.Read(assemblyData, 0, assemblyData.Length);
+        //            Assembly.Load(assemblyData);
+        //        }
 
-            //    }
-            //}
+        //    }
+        //}
 
 //#if !DEBUG
-//            try
-//            {
-//                if (!SetupLogic.Update())
-//                    Current.Shutdown();
-//            }
-//            catch (Exception ex)
-//            {
-//                //BCLApplication.log.Error(ex);
-//            }
+//        try
+//        {
+//            if (!SetupLogic.Update())
+//                Current.Shutdown();
+//        }
+//        catch (Exception ex)
+//        {
+//            //BCLApplication.log.Error(ex);
+//        }
 //#endif
-
-        }
 
         // 在垃圾回收机制触发的时候，才能捕捉到Task异常
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)

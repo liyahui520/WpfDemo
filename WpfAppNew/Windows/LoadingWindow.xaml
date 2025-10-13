@@ -13,8 +13,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20">
-            <TextBlock Text="正在初始化相机控件，请稍候…" FontSize="16" Foreground="#333" Margin="0,0,0,12" />
-            <ProgressBar Width="240" Height="8" IsIndeterminate="True" />
+            <TextBlock x:Name="StatusText" Text="正在启动应用程序..." FontSize="16" Foreground="#333" Margin="0,0,0,12" />
+            <ProgressBar x:Name="LoadingProgressBar" Width="240" Height="8" IsIndeterminate="True" 
+                        Foreground="#FF4CAF50" Background="#FFE0E0E0" 
+                        RenderTransformOrigin="0.5,0.5"
+                        IsEnabled="True" 
+                        Visibility="Visible"
+                        UseLayoutRounding="True"
+                        SnapsToDevicePixels="True" />
         </StackPanel>
 
         <TextBlock Grid.Row="1" Text="提示：初始化完成后自动进入主界面" FontSize="12" Foreground="#666" HorizontalAlignment="Center" Margin="0,12,0,12" />
