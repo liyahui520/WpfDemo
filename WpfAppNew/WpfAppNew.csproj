@@ -5,7 +5,7 @@
     <TargetFramework>net461</TargetFramework>
     <UseWPF>true</UseWPF>
     <LangVersion>7.3</LangVersion>
-    <AssemblyName>WpfAppNew</AssemblyName>
+    <AssemblyName>WpfMain</AssemblyName>
     <RootNamespace>WpfAppNew</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\App\Debug\</OutputPath>
