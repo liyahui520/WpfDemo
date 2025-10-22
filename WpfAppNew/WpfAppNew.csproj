@@ -216,11 +216,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168;4014</NoWarn>
+    <DebugType>none</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;0067;CS0169;CS0414;1998;0649;0168;4014</NoWarn>
     <DefineConstants>$(DefineConstants);Release</DefineConstants>
     <OutputPath>..\App\Release\</OutputPath>
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <!-- PostBuild事件：复制Libs文件夹到输出目录 -->
