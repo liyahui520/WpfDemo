@@ -2175,15 +2175,19 @@ namespace WpfAppNew.EmguPlugs
         /// <summary>
         /// 释放资源
         /// </summary>
-        public void Dispose()
+        public async void Dispose()
         {
             try
             {
-                // 停止录像时间定时器
-                _recordingDurationTimer?.Stop();
+                await Task.Run(() =>
+                {
+                    // 停止录像时间定时器
+                    _recordingDurationTimer?.Stop();
+
+                    _microscopeController?.Dispose();
+                    _cameraManager?.Dispose();
+                });
                 
-                _microscopeController?.Dispose();
-                _cameraManager?.Dispose();
                 
                 LogUtil.Info("IndustrialCameraControl: 资源已释放");
             }

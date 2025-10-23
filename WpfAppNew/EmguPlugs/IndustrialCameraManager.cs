@@ -454,25 +454,25 @@ namespace WpfAppNew.EmguPlugs
         {
             _fpsStopwatch = new Stopwatch();
             _enhancementSettings = new ImageEnhancementSettings();
-            
+
             // 初始化双缓冲区
             _frontBuffer = new Mat();
             _backBuffer = new Mat();
             _currentBufferIndex = 0;
-            
+
             // 初始化异步处理流水线
             StartAsyncProcessingPipeline();
-            
+
             // 初始化内存管理定时器（每15秒执行一次内存清理，更积极的内存管理）
-                _memoryManagementTimer = new Timer(PerformMemoryManagement, null, TimeSpan.FromSeconds(15), TimeSpan.FromSeconds(15));
-            
+            _memoryManagementTimer = new Timer(PerformMemoryManagement, null, TimeSpan.FromSeconds(15), TimeSpan.FromSeconds(15));
+
             // 初始化UI更新节流器（100ms间隔）
             _uiUpdateThrottler = new UIUpdateThrottler(Application.Current?.Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher, 100);
-            
+
             // 初始化性能监控器
             _performanceMonitor = new WpfAppNew.Utils.PerformanceMonitor(1000);
             _performanceMonitor.StatsUpdated += OnPerformanceStatsUpdated;
-            
+
             LogUtil.Info("IndustrialCameraManager: 工业相机管理器初始化完成，已启用无锁双缓冲机制、异步处理流水线、内存管理、UI更新节流和性能监控");
         }
 
@@ -692,7 +692,7 @@ namespace WpfAppNew.EmguPlugs
                 }
 
                 Mat captureFrame = null;
-                
+
                 // 使用无锁机制获取当前帧，完全避免锁竞争
                 captureFrame = GetCurrentFrameLockFree();
 
@@ -757,7 +757,7 @@ namespace WpfAppNew.EmguPlugs
                 if (success)
                 {
                     LogUtil.Info($"IndustrialCameraManager: 异步拍照成功，已保存到 {filePath}");
-                    
+
                     // 触发拍照完成事件
                     PhotoCaptured?.Invoke(this, new PhotoCapturedEventArgs(filePath, success, format));
                 }
@@ -796,7 +796,7 @@ namespace WpfAppNew.EmguPlugs
 
                 // 使用无锁机制获取当前帧
                 Mat currentFrameCopy = GetCurrentFrameLockFree();
-                
+
                 if (currentFrameCopy == null || currentFrameCopy.Empty())
                 {
                     LogUtil.Error("IndustrialCameraManager: 无法获取有效帧，开始录像失败");
@@ -806,7 +806,7 @@ namespace WpfAppNew.EmguPlugs
 
                 _recordingFilePath = filePath;
                 var actualCodec = codec ?? FourCC.MJPG;
-                
+
                 // 使用当前帧的尺寸创建视频写入器
                 var frameSize = new OpenCvSharp.Size(currentFrameCopy.Width, currentFrameCopy.Height);
                 _videoWriter = new VideoWriter(filePath, actualCodec, fps, CurrentResolution);
@@ -828,14 +828,14 @@ namespace WpfAppNew.EmguPlugs
                 _recordStartTime = DateTime.Now;
                 _recordedFrameCount = 0;
                 _recordFps = fps;
-                
+
                 // 启动专用录制线程
                 _recordingCancellationToken = new CancellationTokenSource();
                 _recordingTask = Task.Run(() => RecordingWorker(_recordingCancellationToken.Token));
-                
+
                 // 设置录像状态为true（直接使用属性，确保事件触发）
                 IsRecording = true;  // 直接设置公共属性，这会触发事件通知
-                
+
                 LogUtil.Info($"IndustrialCameraManager: 录像已开始 - {filePath}, 分辨率: {frameSize.Width}x{frameSize.Height}");
                 return true;
             }
@@ -988,7 +988,7 @@ namespace WpfAppNew.EmguPlugs
 
                 // 使用无锁机制获取当前帧
                 Mat currentFrameCopy = GetCurrentFrameLockFree();
-                
+
                 if (currentFrameCopy == null || currentFrameCopy.Empty())
                 {
                     LogUtil.Error("IndustrialCameraManager: 无法获取有效帧，开始录制失败");
@@ -1036,11 +1036,11 @@ namespace WpfAppNew.EmguPlugs
                 _recordedFrameCount = 0;
                 _recordFps = fps;
                 _recordingFilePath = filePath;
-                
+
                 // 启动专用录制线程
                 _recordingCancellationToken = new CancellationTokenSource();
                 _recordingTask = Task.Run(() => RecordingWorker(_recordingCancellationToken.Token));
-                
+
                 // 设置录像状态为true（直接使用属性，确保事件触发）
                 IsRecording = true;  // 直接设置公共属性，这会触发事件通知
 
@@ -1050,7 +1050,7 @@ namespace WpfAppNew.EmguPlugs
                 LogUtil.Info($"IndustrialCameraManager: 视频录制已启动 - {width}x{height} @ {fps}fps");
                 return true;
             }
-            
+
             catch (Exception ex)
             {
                 LogUtil.Error($"IndustrialCameraManager: 启动录制失败 - {ex.Message}");
@@ -1198,7 +1198,7 @@ namespace WpfAppNew.EmguPlugs
             try
             {
                 LogUtil.Debug("IndustrialCameraManager: 录制工作线程已启动");
-                
+
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     try
@@ -1206,7 +1206,7 @@ namespace WpfAppNew.EmguPlugs
                         // 批量处理帧数据以提高效率
                         var framesToProcess = new List<Mat>();
                         int batchSize = Math.Min(10, _recordingQueue.Count); // 每次最多处理10帧
-                        
+
                         // 收集一批帧进行处理
                         for (int i = 0; i < batchSize && _recordingQueue.TryDequeue(out Mat frame); i++)
                         {
@@ -1219,7 +1219,7 @@ namespace WpfAppNew.EmguPlugs
                                 frame?.Dispose();
                             }
                         }
-                        
+
                         if (framesToProcess.Count > 0)
                         {
                             // 使用录制专用锁保护视频写入器
@@ -1271,7 +1271,7 @@ namespace WpfAppNew.EmguPlugs
                         // 继续处理下一帧，不中断录制
                     }
                 }
-                
+
                 LogUtil.Debug("IndustrialCameraManager: 录制工作线程已停止");
             }
             catch (Exception ex)
@@ -1373,7 +1373,7 @@ namespace WpfAppNew.EmguPlugs
         public CameraDefaultSettings GetDeviceDefaultSettings()
         {
             var defaultSettings = new CameraDefaultSettings();
-            
+
             try
             {
                 if (_camera != null && _camera.IsOpened())
@@ -1384,21 +1384,21 @@ namespace WpfAppNew.EmguPlugs
                     defaultSettings.ContrastValue = GetCameraProperty(CameraProperty.Contrast);
                     defaultSettings.SaturationValue = GetCameraProperty(CameraProperty.Saturation);
                     defaultSettings.BrightnessValue = GetCameraProperty(CameraProperty.Brightness);
-                    
+
                     // 对于某些参数，如果设备返回0或无效值，使用合理的默认值
                     if (defaultSettings.ExposureValue <= 0) defaultSettings.ExposureValue = 0.5;
                     if (defaultSettings.GainValue <= 0) defaultSettings.GainValue = 0.5;
                     if (defaultSettings.ContrastValue <= 0) defaultSettings.ContrastValue = 1.0;
                     if (defaultSettings.SaturationValue <= 0) defaultSettings.SaturationValue = 1.0;
                     if (defaultSettings.BrightnessValue < 0) defaultSettings.BrightnessValue = 0.5;
-                    
+
                     // 伽马校正通常默认为1.0（无校正）
                     defaultSettings.GammaValue = 1.0;
-                    
+
                     // 布尔值参数的默认设置
                     defaultSettings.IsAutoWhiteBalance = true;
                     defaultSettings.IsNoiseReductionEnabled = false;
-                    
+
                     LogUtil.Info($"IndustrialCameraManager: 已从设备获取默认参数 - 曝光:{defaultSettings.ExposureValue:F2}, 增益:{defaultSettings.GainValue:F2}, 对比度:{defaultSettings.ContrastValue:F2}");
                 }
                 else
@@ -1428,7 +1428,7 @@ namespace WpfAppNew.EmguPlugs
                 defaultSettings.IsAutoWhiteBalance = true;
                 defaultSettings.IsNoiseReductionEnabled = false;
             }
-            
+
             return defaultSettings;
         }
 
@@ -1450,43 +1450,164 @@ namespace WpfAppNew.EmguPlugs
         /// </summary>
         public void Dispose()
         {
-            if (_disposed)
-                return;
-
             try
             {
-                StopRecording().GetAwaiter().GetResult();
-                StopCaptureAsync().GetAwaiter().GetResult();
-                StopAsyncProcessingPipeline();
+                if (_disposed)
+                    return;
+
+                try
+                {
+                    // 使用同步方式安全停止异步操作，避免死锁
+                    StopOperationsSafely();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"IndustrialCameraManager: Dispose中停止操作失败 - {ex.Message}");
+                }
+
+                _previewTimer?.Stop();
+                _previewTimer?.Dispose();
+
+                // 停止并释放内存管理定时器
+                _memoryManagementTimer?.Dispose();
+
+                // 释放UI更新节流器
+                _uiUpdateThrottler?.Dispose();
+
+                // 释放性能监控器
+                _performanceMonitor?.Dispose();
+
+                _camera?.Release();
+                _camera?.Dispose();
+                _currentFrame?.Dispose();
+                _processedFrame?.Dispose();
+
+                // 释放双缓冲区
+                _frontBuffer?.Dispose();
+                _backBuffer?.Dispose();
+
+                _disposed = true;
+                LogUtil.Info("IndustrialCameraManager: 资源已释放，包括双缓冲区、内存管理定时器、UI更新节流器和性能监控器");
             }
             catch (Exception ex)
             {
                 LogUtil.Error($"IndustrialCameraManager: Dispose中停止操作失败 - {ex.Message}");
             }
+        }
 
-            _previewTimer?.Stop();
-            _previewTimer?.Dispose();
+        /// <summary>
+        /// 安全停止所有操作，避免在Dispose中使用异步等待
+        /// </summary>
+        private void StopOperationsSafely()
+        {
+            try
+            {
+                LogUtil.Info("IndustrialCameraManager: 开始安全停止所有操作");
 
-            // 停止并释放内存管理定时器
-            _memoryManagementTimer?.Dispose();
+                // 1. 首先停止录制（同步方式）
+                if (_isRecording)
+                {
+                    try
+                    {
+                        _isRecording = false;
+                        _recordingCancellationToken?.Cancel();
+                        
+                        // 等待录制任务完成，但设置超时避免无限等待
+                        if (_recordingTask != null && !_recordingTask.IsCompleted)
+                        {
+                            if (!_recordingTask.Wait(2000)) // 等待2秒
+                            {
+                                LogUtil.Warning("IndustrialCameraManager: 录制任务停止超时");
+                            }
+                        }
+                        
+                        _recordingCancellationToken?.Dispose();
+                        _recordingCancellationToken = null;
+                        _recordingTask = null;
+                        
+                        LogUtil.Info("IndustrialCameraManager: 录制已停止");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"IndustrialCameraManager: 停止录制失败 - {ex.Message}");
+                    }
+                }
 
-            // 释放UI更新节流器
-            _uiUpdateThrottler?.Dispose();
+                // 2. 停止捕获任务（同步方式）
+                try
+                {
+                    if (_cancellationTokenSource != null)
+                    {
+                        _cancellationTokenSource.Cancel();
 
-            // 释放性能监控器
-            _performanceMonitor?.Dispose();
+                        // 等待捕获任务完成，但设置超时避免无限等待
+                        if (_captureTask != null && !_captureTask.IsCompleted)
+                        {
+                            if (!_captureTask.Wait(2000)) // 等待2秒
+                            {
+                                LogUtil.Warning("IndustrialCameraManager: 捕获任务停止超时");
+                            }
+                        }
 
-            _camera?.Release();
-            _camera?.Dispose();
-            _currentFrame?.Dispose();
-            _processedFrame?.Dispose();
-            
-            // 释放双缓冲区
-            _frontBuffer?.Dispose();
-            _backBuffer?.Dispose();
+                        _cancellationTokenSource.Dispose();
+                        _cancellationTokenSource = null;
+                        _captureTask = null;
+                    }
 
-            _disposed = true;
-            LogUtil.Info("IndustrialCameraManager: 资源已释放，包括双缓冲区、内存管理定时器、UI更新节流器和性能监控器");
+                    IsCapturing = false;
+                    _fpsStopwatch.Stop();
+                    _fpsStopwatch.Reset();
+                    
+                    LogUtil.Info("IndustrialCameraManager: 捕获已停止");
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"IndustrialCameraManager: 停止捕获失败 - {ex.Message}");
+                }
+
+                // 3. 停止异步处理流水线（同步方式）
+                try
+                {
+                    if (_processingCancellationToken != null)
+                    {
+                        _processingCancellationToken.Cancel();
+
+                        // 等待处理任务完成，但设置超时
+                        if (_processingTasks != null)
+                        {
+                            foreach (var task in _processingTasks)
+                            {
+                                if (task != null && !task.IsCompleted)
+                                {
+                                    task.Wait(1000); // 每个任务等待1秒
+                                }
+                            }
+                        }
+
+                        _processingCancellationToken.Dispose();
+                        _processingCancellationToken = null;
+                        _processingTasks = null;
+                    }
+
+                    // 清理处理队列中的剩余帧
+                    while (_processingQueue.TryDequeue(out Mat frame))
+                    {
+                        frame?.Dispose();
+                    }
+
+                    LogUtil.Info("IndustrialCameraManager: 异步处理流水线已停止");
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"IndustrialCameraManager: 停止异步处理流水线失败 - {ex.Message}");
+                }
+
+                LogUtil.Info("IndustrialCameraManager: 所有操作已安全停止");
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"IndustrialCameraManager: 安全停止操作失败 - {ex.Message}");
+            }
         }
 
         #endregion
@@ -1606,12 +1727,12 @@ namespace WpfAppNew.EmguPlugs
         private Mat ProcessFrame(Mat frame)
         {
             _processingStopwatch.Restart();
-            
+
             try
             {
                 // 优化：只在需要增强时才克隆，否则直接返回原帧
                 bool needsEnhancement = _enhancementSettings != null && _enhancementSettings.IsEnabled;
-                
+
                 // 记录原始图像信息（减少频率以提高性能）
                 if (_frameCount % 60 == 0) // 从30帧改为60帧，减少日志输出
                 {
@@ -1632,10 +1753,10 @@ namespace WpfAppNew.EmguPlugs
                 {
                     var enhanced = ApplyImageEnhancementOptimized(processed);
                     processed.Dispose(); // 立即释放中间结果
-                    
+
                     _processingStopwatch.Stop();
                     UpdateProcessingStats(_processingStopwatch.ElapsedMilliseconds);
-                    
+
                     return enhanced;
                 }
                 catch
@@ -1687,7 +1808,7 @@ namespace WpfAppNew.EmguPlugs
             if (_processedFrameCount % 100 == 0)
             {
                 var avgProcessingTime = _processedFrameCount > 0 ? (double)_totalProcessingTime / _processedFrameCount : 0;
-                
+
                 // 检查内存使用情况
                 var now = DateTime.Now;
                 if ((now - _lastMemoryCheck).TotalSeconds >= 5) // 每5秒检查一次内存
@@ -1721,10 +1842,10 @@ namespace WpfAppNew.EmguPlugs
             {
                 // 获取当前非活跃的缓冲区
                 var targetBuffer = _currentBufferIndex == 0 ? _backBuffer : _frontBuffer;
-                
+
                 // 释放旧的缓冲区内容
                 targetBuffer?.Dispose();
-                
+
                 // 将新帧克隆到目标缓冲区
                 if (_currentBufferIndex == 0)
                 {
@@ -1738,7 +1859,7 @@ namespace WpfAppNew.EmguPlugs
                     // 原子性地切换缓冲区索引
                     Interlocked.Exchange(ref _currentBufferIndex, 0);
                 }
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -1839,7 +1960,7 @@ namespace WpfAppNew.EmguPlugs
                 if (_cancellationTokenSource != null)
                 {
                     _cancellationTokenSource.Cancel();
-                    
+
                     if (_captureTask != null)
                     {
                         await _captureTask;
@@ -1887,12 +2008,12 @@ namespace WpfAppNew.EmguPlugs
                 {
                     var lookupTable = new Mat(1, 256, MatType.CV_8U);
                     var lookupTableData = lookupTable.GetGenericIndexer<byte>();
-                    
+
                     for (int i = 0; i < 256; i++)
                     {
                         lookupTableData[0, i] = (byte)(Math.Pow(i / 255.0, 1.0 / _enhancementSettings.Gamma) * 255);
                     }
-                    
+
                     Cv2.LUT(enhanced, lookupTable, enhanced);
                     lookupTable.Dispose();
                 }
@@ -1906,7 +2027,7 @@ namespace WpfAppNew.EmguPlugs
                         { -(float)_enhancementSettings.Sharpness, 1 + 4 * (float)_enhancementSettings.Sharpness, -(float)_enhancementSettings.Sharpness },
                         { 0, -(float)_enhancementSettings.Sharpness, 0 }
                     });
-                    
+
                     Cv2.Filter2D(enhanced, enhanced, -1, kernel);
                     kernel.Dispose();
                 }
@@ -1962,9 +2083,9 @@ namespace WpfAppNew.EmguPlugs
                         {
                             enhanced.CopyTo(gray);
                         }
-                        
+
                         Cv2.Canny(gray, edges, 50, 150);
-                        
+
                         if (enhanced.Channels() == 3)
                         {
                             using (var edgesBgr = new Mat())
@@ -2042,7 +2163,7 @@ namespace WpfAppNew.EmguPlugs
                     {
                         enhanced = frame.Clone();
                     }
-                    
+
                     var lookupTable = GetCachedGammaLookupTable(_enhancementSettings.Gamma);
                     Cv2.LUT(enhanced, lookupTable, enhanced);
                 }
@@ -2054,7 +2175,7 @@ namespace WpfAppNew.EmguPlugs
                     {
                         enhanced = frame.Clone();
                     }
-                    
+
                     var kernel = GetCachedSharpnessKernel(_enhancementSettings.Sharpness);
                     Cv2.Filter2D(enhanced, enhanced, -1, kernel);
                 }
@@ -2089,12 +2210,12 @@ namespace WpfAppNew.EmguPlugs
             {
                 lookupTable = new Mat(1, 256, MatType.CV_8U);
                 var lookupTableData = lookupTable.GetGenericIndexer<byte>();
-                
+
                 for (int i = 0; i < 256; i++)
                 {
                     lookupTableData[0, i] = (byte)(Math.Pow(i / 255.0, 1.0 / gamma) * 255);
                 }
-                
+
                 _gammaLookupCache[gamma] = lookupTable;
             }
             return lookupTable;
@@ -2114,7 +2235,7 @@ namespace WpfAppNew.EmguPlugs
                     { -(float)sharpness, 1 + 4 * (float)sharpness, -(float)sharpness },
                     { 0, -(float)sharpness, 0 }
                 });
-                
+
                 _sharpnessKernelCache[sharpness] = kernel;
             }
             return kernel;
@@ -2126,13 +2247,13 @@ namespace WpfAppNew.EmguPlugs
         private void UpdateFrameRate()
         {
             _frameCount++;
-            
+
             if (_fpsStopwatch.ElapsedMilliseconds >= 1000)
             {
                 CurrentFps = _frameCount * 1000.0 / _fpsStopwatch.ElapsedMilliseconds;
                 _frameCount = 0;
                 _fpsStopwatch.Restart();
-                
+
                 // 触发自适应帧率调整
                 AdjustAdaptiveFrameRate();
             }
@@ -2149,11 +2270,11 @@ namespace WpfAppNew.EmguPlugs
                 {
                     // 计算目标延迟时间（毫秒）
                     double targetDelayMs = 1000.0 / _targetFps;
-                    
+
                     // 检查队列状态并进行自适应调整
                     int processingQueueSize = _processingQueue.Count;
                     int recordingQueueSize = _recordingQueue.Count;
-                    
+
                     // 如果队列积压严重，增加延迟以减缓帧生成速度
                     if (processingQueueSize > MaxProcessingQueueSize * 0.8 || recordingQueueSize > MaxRecordingQueueSize * 0.8)
                     {
@@ -2167,14 +2288,14 @@ namespace WpfAppNew.EmguPlugs
                         LogUtil.Debug($"IndustrialCameraManager: 帧率过低({CurrentFps:F1}), 增加延迟到{_adaptiveDelayMs}ms");
                     }
                     // 如果队列状态良好且帧率稳定，减少延迟
-                    else if (CurrentFps > _targetFps * 0.95 && _adaptiveDelayMs > 0 && 
-                             processingQueueSize < MaxProcessingQueueSize * 0.3 && 
+                    else if (CurrentFps > _targetFps * 0.95 && _adaptiveDelayMs > 0 &&
+                             processingQueueSize < MaxProcessingQueueSize * 0.3 &&
                              recordingQueueSize < MaxRecordingQueueSize * 0.3)
                     {
                         _adaptiveDelayMs = Math.Max(_adaptiveDelayMs - 0.5, 0);
                         LogUtil.Debug($"IndustrialCameraManager: 帧率稳定({CurrentFps:F1}), 队列状态良好, 减少延迟到{_adaptiveDelayMs}ms");
                     }
-                    
+
                     // 记录帧时间历史，用于平滑调整
                     _frameTimeHistory.Enqueue(CurrentFps);
                     if (_frameTimeHistory.Count > MaxFrameTimeHistory)
@@ -2257,10 +2378,10 @@ namespace WpfAppNew.EmguPlugs
                 {
                     var now = DateTime.Now;
                     var timeSinceLastCleanup = now - _lastMemoryCleanup;
-                    
+
                     // 获取当前内存使用情况
                     var currentMemory = GC.GetTotalMemory(false) / 1024 / 1024; // MB
-                    
+
                     // 更积极的内存清理条件：
                     // 1. 距离上次清理超过15秒，或
                     // 2. 内存使用超过800MB，或
@@ -2269,27 +2390,27 @@ namespace WpfAppNew.EmguPlugs
                                        currentMemory > 800 ||
                                        _processingQueue.Count > MaxProcessingQueueSize * 0.8 ||
                                        _recordingQueue.Count > MaxRecordingQueueSize * 0.8;
-                    
+
                     if (shouldCleanup)
                     {
                         // 获取当前内存使用情况
                         long memoryBefore = GC.GetTotalMemory(false);
-                        
+
                         // 清理队列中的过期帧
                         CleanupExpiredFrames();
-                        
+
                         // 强制垃圾回收
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                         GC.Collect();
-                        
+
                         long memoryAfter = GC.GetTotalMemory(false);
                         long memoryFreed = memoryBefore - memoryAfter;
-                        
+
                         _lastMemoryCleanup = now;
-                        
+
                         LogUtil.Debug($"IndustrialCameraManager: 内存清理完成，释放 {memoryFreed / 1024 / 1024:F2} MB 内存");
-                        
+
                         // 记录队列状态
                         LogUtil.Debug($"IndustrialCameraManager: 队列状态 - 处理队列: {_processingQueue.Count}/{MaxProcessingQueueSize}, 录像队列: {_recordingQueue.Count}/{MaxRecordingQueueSize}");
                     }
@@ -2313,31 +2434,31 @@ namespace WpfAppNew.EmguPlugs
                 {
                     int framesToClean = (int)(_processingQueue.Count * 0.1); // 清理10%的帧
                     int cleanedCount = 0;
-                    
+
                     for (int i = 0; i < framesToClean && _processingQueue.TryDequeue(out Mat frame); i++)
                     {
                         frame?.Dispose();
                         cleanedCount++;
                     }
-                    
+
                     if (cleanedCount > 0)
                     {
                         LogUtil.Debug($"IndustrialCameraManager: 清理了 {cleanedCount} 个处理队列中的过期帧");
                     }
                 }
-                
+
                 // 如果录像队列过大，清理一些旧帧
                 if (_recordingQueue.Count > MaxRecordingQueueSize * 0.7)
                 {
                     int framesToClean = (int)(_recordingQueue.Count * 0.1); // 清理10%的帧
                     int cleanedCount = 0;
-                    
+
                     for (int i = 0; i < framesToClean && _recordingQueue.TryDequeue(out Mat frame); i++)
                     {
                         frame?.Dispose();
                         cleanedCount++;
                     }
-                    
+
                     if (cleanedCount > 0)
                     {
                         LogUtil.Debug($"IndustrialCameraManager: 清理了 {cleanedCount} 个录像队列中的过期帧");
@@ -2384,12 +2505,12 @@ namespace WpfAppNew.EmguPlugs
                 if (_processingCancellationToken != null)
                 {
                     _processingCancellationToken.Cancel();
-                    
+
                     if (_processingTasks != null)
                     {
                         await Task.WhenAll(_processingTasks);
                     }
-                    
+
                     _processingCancellationToken.Dispose();
                     _processingCancellationToken = null;
                     _processingTasks = null;
@@ -2433,12 +2554,12 @@ namespace WpfAppNew.EmguPlugs
                         {
                             // 异步处理帧（图像增强、分析等）
                             var processedFrame = await ProcessFrameAsync(frame, cancellationToken);
-                            
+
                             if (processedFrame != null)
                             {
                                 // 更新双缓冲区
                                 SwapFrameBufferLockFree(processedFrame);
-                                
+
                                 // 如果正在录像，将帧添加到录像队列
                                 if (IsRecording && _recordingQueue != null)
                                 {
@@ -2447,21 +2568,21 @@ namespace WpfAppNew.EmguPlugs
                                         // 克隆帧用于录像（避免与其他用途冲突）
                                         var frameToRecord = processedFrame.Clone();
                                         _recordingQueue.Enqueue(frameToRecord);
-                                        
+
                                         // 控制录像队列大小，避免内存溢出
                                         if (_recordingQueue.Count > MaxRecordingQueueSize)
                                         {
                                             // 批量丢弃多个旧帧以快速释放内存
                                             int framesToDrop = Math.Min(50, _recordingQueue.Count - MaxRecordingQueueSize + 50);
                                             int droppedCount = 0;
-                                            
+
                                             for (int i = 0; i < framesToDrop && _recordingQueue.TryDequeue(out Mat oldFrame); i++)
                                             {
                                                 oldFrame?.Dispose();
                                                 droppedCount++;
                                                 Interlocked.Increment(ref _droppedFrameCount);
                                             }
-                                            
+
                                             if (droppedCount > 0)
                                             {
                                                 LogUtil.Debug($"IndustrialCameraManager: 录像队列已满，批量丢弃 {droppedCount} 个最旧的帧");
@@ -2473,11 +2594,11 @@ namespace WpfAppNew.EmguPlugs
                                         LogUtil.Warning($"IndustrialCameraManager: 添加帧到录像队列失败 - {recordEx.Message}");
                                     }
                                 }
-                                
+
                                 // 触发帧捕获事件
                                 var bitmapSource = SafeMatToBitmapSource(processedFrame);
                                 FrameCaptured?.Invoke(this, new FrameCapturedEventArgs(bitmapSource, processedFrame.Clone()));
-                                
+
                                 processedFrame.Dispose();
                             }
 
@@ -2556,14 +2677,14 @@ namespace WpfAppNew.EmguPlugs
                     // 批量丢弃多个旧帧以快速释放内存
                     int framesToDrop = Math.Min(20, _processingQueue.Count - MaxProcessingQueueSize + 20);
                     int droppedCount = 0;
-                    
+
                     for (int i = 0; i < framesToDrop && _processingQueue.TryDequeue(out Mat oldFrame); i++)
                     {
                         oldFrame?.Dispose();
                         droppedCount++;
                         Interlocked.Increment(ref _droppedFrameCount);
                     }
-                    
+
                     if (droppedCount > 0)
                     {
                         LogUtil.Debug($"IndustrialCameraManager: 处理队列已满，批量丢弃 {droppedCount} 个最旧的帧");
@@ -2573,7 +2694,7 @@ namespace WpfAppNew.EmguPlugs
                 // 添加新帧到队列
                 _processingQueue.Enqueue(frame.Clone());
                 _processingQueueSemaphore.Release();
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -2696,7 +2817,7 @@ namespace WpfAppNew.EmguPlugs
                     var height = convertedMat.Height;
                     var channels = convertedMat.Channels();
                     var stride = width * channels;
-                    
+
                     // 验证数据大小
                     var expectedDataSize = height * stride;
                     if (expectedDataSize <= 0 || expectedDataSize > int.MaxValue / 2)
@@ -2711,7 +2832,7 @@ namespace WpfAppNew.EmguPlugs
                         LogUtil.Warning("IndustrialCameraManager: SafeMatToBitmapSource - Mat数据指针为空");
                         return null;
                     }
-                    
+
                     // 创建字节数组副本，避免直接使用Mat的内存指针
                     var imageData = new byte[expectedDataSize];
                     try
@@ -2733,7 +2854,7 @@ namespace WpfAppNew.EmguPlugs
                             break;
                         case 3:
                             pixelFormat = System.Windows.Media.PixelFormats.Rgb24;
-                            break; 
+                            break;
                         default:
                             LogUtil.Warning($"IndustrialCameraManager: SafeMatToBitmapSource - 不支持的通道数: {channels}");
                             return null;
@@ -2822,31 +2943,31 @@ namespace WpfAppNew.EmguPlugs
             {
                 var stats = e.Stats;
                 var now = DateTime.Now;
-                
+
                 // 记录性能统计信息（降低频率，每5秒记录一次）
-                #if DEBUG
+#if DEBUG
                 if ((now - _lastMemoryWarningTime).TotalSeconds >= 5)
                 {
                     LogUtil.Debug($"性能统计 - FPS: {stats.FPS:F1}, 帧时间: {stats.AverageFrameTime:F1}ms, " +
                                  $"内存: {stats.MemoryUsage}MB, CPU: {stats.CpuUsage:F1}%, UI繁忙: {stats.IsUIThreadBusy}");
                 }
-                #endif
-                
+#endif
+
                 // 使用节流机制记录性能警告，避免频繁日志
-                
+
                 // 帧时间警告（超过100ms才警告，且30秒内只警告一次）
                 if (stats.AverageFrameTime > 100 && (now - _lastFrameTimeWarningTime) > _warningThrottleInterval)
                 {
                     LogUtil.Warning($"帧处理时间过长: {stats.AverageFrameTime:F1}ms");
                     _lastFrameTimeWarningTime = now;
                 }
-                
+
                 // 内存警告（提高阈值到1.5GB，且30秒内只警告一次）
                 if (stats.MemoryUsage > 1500 && (now - _lastMemoryWarningTime) > _warningThrottleInterval)
                 {
                     LogUtil.Warning($"内存使用量过高: {stats.MemoryUsage}MB，建议检查内存泄漏");
                     _lastMemoryWarningTime = now;
-                    
+
                     // 触发内存清理
                     Task.Run(() =>
                     {
@@ -2863,7 +2984,7 @@ namespace WpfAppNew.EmguPlugs
                         }
                     });
                 }
-                
+
                 // UI线程繁忙警告（30秒内只警告一次）
                 if (stats.IsUIThreadBusy && (now - _lastUIBusyWarningTime) > _warningThrottleInterval)
                 {

@@ -205,7 +205,7 @@ namespace WpfAppNew.Module.PetModule
                 Interval = TimeSpan.FromSeconds(2) // 2秒内点击五次
             };
             _clickTimer.Tick += ClickTimer_Tick;
-        } 
+        }
 
         /// <summary>
         /// 加载设备列表（功能已迁移到IndustrialCameraControl）
@@ -277,8 +277,8 @@ namespace WpfAppNew.Module.PetModule
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                if(e.Status == CameraStatus.Running)
-                IndustrialCameraControl.FitToWindowCommand.Execute(null); // 可选：自动调整预览窗口大小 
+                if (e.Status == CameraStatus.Running)
+                    IndustrialCameraControl.FitToWindowCommand.Execute(null); // 可选：自动调整预览窗口大小 
                 //StartPreviewButton.Content = e.Status == CameraStatus.Running ? "停止预览" : "开始预览";
                 //StartPreviewButton.Foreground = e.Status == CameraStatus.Running ?
                 //    new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 107, 107)) :
@@ -547,7 +547,7 @@ namespace WpfAppNew.Module.PetModule
                 StartRecordButton.Content = "正在停止..";
 
                 // 使用IndustrialCameraControl停止录像
-                var path =await IndustrialCameraControl.StopRecording();
+                var path = await IndustrialCameraControl.StopRecording();
 
                 // 更新UI状态
                 VideoModel.ExposureModel = new Exposure() { IsAuto = VideoModel.ExposureModel.IsAuto, IsEnable = true };
@@ -561,7 +561,7 @@ namespace WpfAppNew.Module.PetModule
 
                 var old = tInfo.Result;
                 tInfo.Result = new TestResult();
-                old.Vedios.Add(new MediaItem() { Source = path, Name = path.Replace(AppVideoConfig.TempPath,""), IsEdit = false ,ThumbnailSource= img });
+                old.Vedios.Add(new MediaItem() { Source = path, Name = path.Replace(AppVideoConfig.TempPath, ""), IsEdit = false, ThumbnailSource = img });
                 tInfo.Result = old;
                 LogUtil.Info("录像已停止");
             }
@@ -603,7 +603,7 @@ namespace WpfAppNew.Module.PetModule
             // 显示拍照进度指示器
             TakeSnapshotButton.IsEnabled = false;
             TakeSnapshotButton.Content = "📷 拍照中...";
-            
+
             // 显示进度提示
             //Growl.Info("正在拍照，请稍候...");
 
@@ -634,7 +634,7 @@ namespace WpfAppNew.Module.PetModule
 
                 var old = tInfo.Result;
                 tInfo.Result = new TestResult();
-                
+
                 // 使用优化的图片加载方式，避免内存泄漏
                 try
                 {
@@ -650,7 +650,7 @@ namespace WpfAppNew.Module.PetModule
                     // 如果图片加载失败，仍然添加记录但不包含图像源
                     old.Images.Add(new ImageItem() { ImageSource = null, Name = fullName, IsEdit = false });
                 }
-                
+
                 tInfo.Result = old;
             }
             catch (Exception exception)
@@ -665,7 +665,7 @@ namespace WpfAppNew.Module.PetModule
                 TakeSnapshotButton.Content = "📷 拍照";
             }
         }
-         
+
 
         /// <summary>
         /// 音频开启复选框选中事件
@@ -784,6 +784,11 @@ namespace WpfAppNew.Module.PetModule
         {
             try
             {
+                await Task.Run(() =>
+                {
+                    TestLogic.Save(tInfo);
+                });
+
                 IndustrialCameraControl.StopPreviewCommand.Execute(null);
                 if (!System.IO.File.Exists(tInfo.TestPath))
                 {
@@ -802,13 +807,13 @@ namespace WpfAppNew.Module.PetModule
 
                 // 获取优化的UCPrintNotes实例
                 var printNotes = PrintNotesService.Instance.GetOrCreatePrintNotes(tInfo);
-                
+
                 if (printNotes != null)
                 {
                     FrmModule f = new FrmModule(printNotes);
                     f.Title = "打印报告";
                     f.ShowDialog();
-                    
+
                     LogUtil.Info($"打印报告窗口已打开: {tInfo.TestName}");
                 }
                 else
@@ -874,35 +879,35 @@ namespace WpfAppNew.Module.PetModule
                 {
                     // 将控件添加到容器中
                     CameraControlContainer.Child = _industrialCameraControl;
-                    
+
                     // 隐藏加载指示器
                     CameraLoadingIndicator.Visibility = Visibility.Collapsed;
-                    
+
                     LogUtil.Info("预加载的IndustrialCameraControl加载成功");
                 }
                 else
                 {
                     LogUtil.Error("获取预加载的IndustrialCameraControl失败");
-                    
+
                     // 创建新实例作为备用
                     _industrialCameraControl = new IndustrialCameraControl();
                     CameraControlContainer.Child = _industrialCameraControl;
                     CameraLoadingIndicator.Visibility = Visibility.Collapsed;
-                    
+
                     LogUtil.Info("使用新创建的IndustrialCameraControl实例");
                 }
             }
             catch (Exception ex)
             {
                 LogUtil.Error($"加载IndustrialCameraControl异常: {ex.Message}");
-                
+
                 // 创建新实例作为备用
                 try
                 {
                     _industrialCameraControl = new IndustrialCameraControl();
                     CameraControlContainer.Child = _industrialCameraControl;
                     CameraLoadingIndicator.Visibility = Visibility.Collapsed;
-                    
+
                     LogUtil.Info("异常情况下使用新创建的IndustrialCameraControl实例");
                 }
                 catch (Exception createEx)
@@ -1037,18 +1042,25 @@ namespace WpfAppNew.Module.PetModule
         /// <summary>
         /// 关闭资源
         /// </summary>
-        public void Closed()
+        public async void Closed()
         {
             try
             {
-                if (IndustrialCameraControl.IsPreviewRunning)
+                await Task.Run(() =>
                 {
-                    IndustrialCameraControl?.StopPreviewCommand.Execute(null);
-                }
-                // 停止定时器
-                _recordingTimer?.Stop();
-                _clickTimer?.Stop();
 
+                    if (IndustrialCameraControl.IsPreviewRunning)
+                    {
+                        //IndustrialCameraControl?.StopPreviewCommand.Execute(null);
+                        IndustrialCameraControl.Dispose();
+                    }
+
+                    // 停止定时器
+                    _recordingTimer?.Stop();
+                    _clickTimer?.Stop();
+
+                    
+                });
                 // 处理图像资源
                 if (tInfo?.Result?.Images != null)
                 {

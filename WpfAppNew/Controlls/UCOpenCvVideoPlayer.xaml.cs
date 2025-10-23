@@ -189,7 +189,7 @@ namespace WpfAppNew.Controlls
                         // 更新UI
                         Dispatcher.Invoke(() =>
                         {
-                            titleText.Text = $"OpenCV 视频播放器 - {Path.GetFileName(filePath)}";
+                            titleText.Text = $"视频播放器 - {Path.GetFileName(filePath)}";
                             resolutionText.Text = $"分辨率: {_videoWidth}x{_videoHeight}";
                             UpdateTimeDisplay(0, _totalDurationMs);
                             progressSlider.Maximum = _totalFrames;

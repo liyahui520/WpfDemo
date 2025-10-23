@@ -1,132 +1,263 @@
-// using CuPrint;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Entity.Entity;
-using Newtonsoft.Json;
-using Tools.App;
-using WpfAppNew.Controlls;
 using WpfAppNew.Logic;
-using System.Windows.Forms;
+using HandyControl.Controls;
+using MessageBox = HandyControl.Controls.MessageBox;
+using WpfAppNew.Controlls;
+using Tools.Extend;
+using WpfAppNew.EmguPlugs;
+using WpfAppNew.Services;
 
 namespace WpfAppNew.Module
 {
     /// <summary>
-    /// FrmHistory.xaml 的交互逻辑
+    /// 宠物检查历史记录管理页面
+    /// 提供历史记录查询、查看、删除等功能
     /// </summary>
-    public partial class FrmHistory : System.Windows.Controls.UserControl
+    public partial class FrmHistory : UserControl
     {
-
-        public static readonly DependencyProperty DataListProperty = DependencyProperty.Register(
-            nameof(DataList), typeof(List<TestInfo>), typeof(FrmHistory), new PropertyMetadata(default(List<TestInfo>)));
-
-        public List<TestInfo> DataList
-        {
-            get => (List<TestInfo>)GetValue(DataListProperty);
-            set => SetValue(DataListProperty, value);
-        }
-
+        /// <summary>
+        /// 构造函数
+        /// 初始化页面并加载数据
+        /// </summary>
         public FrmHistory()
         {
             InitializeComponent();
-
-            startTime.Text = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") + " 00:00:00";
-            endTime.Text = DateTime.Now.ToString("yyyy-MM-dd") + " 23:59:59";
-            InitData();
-        }
-
-        public void InitData()
-        {
-            DataList = TestLogic.Load(DateTime.Parse(startTime.Text.Trim()), DateTime.Parse(endTime.Text.Trim()));
+            Loaded += UserControl_Loaded;
         }
 
         /// <summary>
-        /// 点击查询
+        /// 页面加载完成事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitData();
+        }
+
+        /// <summary>
+        /// 初始化数据
+        /// </summary>
+        private void InitData()
+        {
+            // 加载检查历史数据 - 使用默认时间范围
+            var startTime = DateTime.Today.AddDays(-30);
+            var endTime = DateTime.Today.AddDays(1);
+            var dataList = TestLogic.Load(startTime, endTime);
+            
+            // 绑定到DataGrid
+            HistoryDataGrid.ItemsSource = dataList;
+            
+            // 更新状态栏
+            StatusText.Text = "数据加载完成";
+            RecordCountText.Text = $"共 {dataList.Count} 条记录";
+        }
+
+        /// <summary>
+        /// 查询按钮点击事件
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            DateTime d;
-            if (string.IsNullOrWhiteSpace(startTime.Text.Trim()) ||
-                !DateTime.TryParse(startTime.Text.Trim().ToString(), out d))
+            // 获取搜索条件
+            var startDate = StartDatePicker.SelectedDate ?? DateTime.Today.AddDays(-30);
+            var endDate = EndDatePicker.SelectedDate ?? DateTime.Today.AddDays(1);
+            var searchText = SearchTextBox.Text?.Trim();
+            
+            // 加载数据
+            var allData = TestLogic.Load(startDate, endDate);
+            var filteredData = allData.AsEnumerable();
+            
+            // 按关键词筛选
+            if (!string.IsNullOrEmpty(searchText))
             {
-                HandyControl.Controls.MessageBox.Error("开始时间不能为空！", "系统提示");
-                return;
+                filteredData = filteredData.Where(x => 
+                    x.Pet?.Contains(searchText) == true ||
+                    x.RecordNo?.Contains(searchText) == true ||
+                    x.Customer?.Contains(searchText) == true ||
+                    x.TestName?.Contains(searchText) == true);
             }
-            if (string.IsNullOrWhiteSpace(endTime.Text.Trim()) ||
-                !DateTime.TryParse(endTime.Text.Trim().ToString(), out d))
-            {
-                HandyControl.Controls.MessageBox.Error("结束时间不能为空！", "系统提示");
-                return;
-            }
-            InitData();
+            
+            var resultList = filteredData.ToList();
+            
+            // 绑定筛选后的数据
+            HistoryDataGrid.ItemsSource = resultList;
+            
+            // 更新状态栏
+            StatusText.Text = "查询完成";
+            RecordCountText.Text = $"共 {resultList.Count} 条记录";
+            
+            //MessageBox.Success($"查询完成，找到 {resultList.Count} 条记录！");
         }
 
         /// <summary>
-        /// 查看影像
+        /// 刷新按钮点击事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            InitData();
+            //MessageBox.Success("数据刷新成功！");
+        }
+
+        /// <summary>
+        /// 查询按钮点击事件（新UI）
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void QueryButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ButtonBase_OnClick(sender, e);
+        }
+
+        /// <summary>
+        /// 查看图片按钮点击事件
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void Img_OnClick(object sender, RoutedEventArgs e)
         {
-            var entity = (TestInfo)((System.Windows.FrameworkElement)e.Source).Tag;
-            FrmImgView view = new FrmImgView(entity);
-            view.Owner = AppStatic.MainWindow;
-            view.ShowDialog();
+            var button = sender as System.Windows.Controls.Button;
+            if (button?.DataContext is TestInfo testInfo)
+            {
+                var detail = new TestInfoDetailPage();
+                detail.TestInfo = testInfo;
+                FrmModule frm = new FrmModule(detail);
+                frm.ShowDialog();
+                //if (testInfo.Result?.Images?.Count > 0)
+                //{
+                //    // 显示图片查看窗口
+                //    MessageBox.Info($"查看图片：{testInfo.TestName} - 共 {testInfo.Result.Images.Count} 张图片");
+                //}
+                //else
+                //{
+                //    MessageBox.Warning("该记录没有关联的图片！");
+                //}
+            }
         }
 
         /// <summary>
-        /// 查看报告
+        /// 查看视频按钮点击事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void ButtonBase_San_OnClick(object sender, RoutedEventArgs e)
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void Video_OnClick(object sender, RoutedEventArgs e)
         {
-            var entity = (TestInfo)(((System.Windows.FrameworkElement)sender).Tag);
-            //FrmModule frm = new FrmModule(new UCPrint(entity));
-            //frm.ShowDialog();
-            if (!System.IO.File.Exists(entity.TestPath))
+            var button = sender as System.Windows.Controls.Button;
+            if (button?.DataContext is TestInfo testInfo)
             {
-                HandyControl.Controls.MessageBox.Error( "打印模板文件不存在！", "系统提示");
-                return;
+                if (testInfo.Result?.Vedios?.Count > 0)
+                {
+                    MessageBox.Info($"查看视频：{testInfo.TestName} - 共 {testInfo.Result.Vedios.Count} 个视频");
+                }
+                else
+                {
+                    MessageBox.Warning("该记录没有关联的视频！");
+                }
             }
-
-            FrmModule f = new FrmModule(new UCPrintNotes(entity));
-            f.Title = "打印模板";
-            f.ShowDialog();
-
         }
 
+        /// <summary>
+        /// 查看报告按钮点击事件
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private async void ButtonBase_San_OnClick(object sender, RoutedEventArgs e)
+        {
+            var button = sender as System.Windows.Controls.Button;
+            if (button?.DataContext is TestInfo testInfo)
+            {
+                // 显示报告查看窗口
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        TestLogic.Save(testInfo);
+                    });
+                     
+                    if (!System.IO.File.Exists(testInfo.TestPath))
+                    {
+                        HandyControl.Controls.MessageBox.Warning("打印模板文件不存在！", "系统提示");
+                        return;
+                    } 
+
+                    // 异步预加载打印控件（如果还没有预加载）
+                    await PrintNotesService.Instance.PreloadPrintNotesAsync(testInfo);
+
+                    // 获取优化的UCPrintNotes实例
+                    var printNotes = PrintNotesService.Instance.GetOrCreatePrintNotes(testInfo);
+
+                    if (printNotes != null)
+                    {
+                        FrmModule f = new FrmModule(printNotes);
+                        f.Title = "打印报告";
+                        f.ShowDialog();
+
+                        LogUtil.Info($"打印报告窗口已打开: {testInfo.TestName}");
+                    }
+                    else
+                    {
+                        HandyControl.Controls.MessageBox.Error("创建打印控件失败！", "系统提示");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"打印按钮点击处理失败: {ex.Message}");
+                    HandyControl.Controls.MessageBox.Error($"打开打印报告失败：{ex.Message}", "系统提示");
+                }
+                finally
+                { 
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除记录按钮点击事件
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void Delete_OnClick(object sender, RoutedEventArgs e)
         {
-            if (HandyControl.Controls.MessageBox.Ask("确定删除当前记录吗？", "系统提示") ==
-                MessageBoxResult.OK)
+            var button = sender as System.Windows.Controls.Button;
+            if (button?.DataContext is TestInfo testInfo)
             {
-                var entity = (TestInfo)((System.Windows.FrameworkElement)e.Source).Tag;
-                string name = $"{entity.TestDate:yyyyMMddHHmmss}_{entity.Id}";
-                string jsonfileName = Path.Combine(TestLogic.JsonDataPath, $"{name}.json");
-                File.Delete(jsonfileName);
-                TestLogic.Delete(entity);
-                HandyControl.Controls.MessageBox.Success("删除成功！", "系统提示");
-                InitData();
-            }
+                // 确认删除对话框
+                var result = MessageBox.Ask($"确定要删除 {testInfo.Pet} 的检查记录吗？", "确认删除");
+                if (result == MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        // 删除记录
+                        TestLogic.Delete(testInfo);
 
+                        // 刷新数据
+                        ButtonBase_OnClick(null, null);
+
+
+                        MessageBox.Success("删除成功！");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Error($"删除失败：{ex.Message}");
+                    }
+                }
+            }
         }
     }
-
-    //public class PropertyGridDataList
-    //{
-    //    public int Index { get; set; }
-    //    public string Name { get; set; }
-    //    public string Phone { get; set; }
-    //    public string Sex { get; set; }
-    //    public string DeviceName { get; set; }
-    //    public string Remark { get; set; }
-    //}
 }

@@ -72,7 +72,7 @@
                                     <RichTextBox Width="280" Height="180" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <FlowDocument> 
                                         <Paragraph>
-                                            <Run Text="{Binding Result.Remark}"/>
+                                            <Run Text="{Binding ParentData.Result.Remark, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                                         </Paragraph> 
                                     </FlowDocument>
                                 </RichTextBox>

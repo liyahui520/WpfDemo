@@ -256,7 +256,7 @@
                                     <DropShadowEffect Color="Green" Direction="315" ShadowDepth="3" Opacity="0.6" BlurRadius="6"/>
                                 </Button.Effect>
                             </Button>
-                            <Button Content="🖨️ 打印" Margin="20,0,0,0" Width="130" Height="40" Click="PrintButton_Click" 
+                            <Button Content="🖨️ 打印并保存" Margin="20,0,0,0" Width="130" Height="40" Click="PrintButton_Click" 
                                     Style="{StaticResource ButtonPrimary}" Foreground="White" FontWeight="Bold" FontSize="14"
                                     ToolTip="打印检查报告" Cursor="Hand">
                                 <Button.Effect>

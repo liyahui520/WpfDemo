@@ -6,39 +6,87 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800"
-             Background="#FF1E1E1E">
+             Title="本地视频播放器 - 宠物医疗系统"
+             Background="#FF2D2D30">
 
     <hc:Window.Resources>
-        <!-- 主题样式资源 -->
+        <!-- 转换器定义 -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
+        <!-- 统一的主题样式资源 -->
+        
+        <!-- 主要按钮样式 -->
         <Style x:Key="ModernButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#FF2D2D30"/>
-            <Setter Property="Foreground" Value="#FFFFFFFF"/>
-            <Setter Property="BorderBrush" Value="#FF3F3F46"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#FF007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Margin" Value="4,2"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4">
+                                CornerRadius="4"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
                             <ContentPresenter HorizontalAlignment="Center" 
                                             VerticalAlignment="Center"
                                             Margin="{TemplateBinding Padding}"/>
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="3" ShadowDepth="1" Opacity="0.2"/>
+                            </Border.Effect>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF3E3E42"/>
+                                <Setter Property="Background" Value="#FF1E90FF"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF1C1C1C"/>
+                                <Setter Property="Background" Value="#FF0066CC"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5"/>
+                                <Setter Property="Background" Value="#FF3F3F46"/>
+                                <Setter Property="Foreground" Value="#FF666666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 控制按钮样式 -->
+        <Style x:Key="ControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Background" Value="#FF3A3A3A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="5" ShadowDepth="2" Opacity="0.3"/>
+                            </Border.Effect>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF505050"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FF606060"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#FF2A2A2A"/>
+                                <Setter Property="Foreground" Value="#FF666666"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -48,9 +96,9 @@
 
         <!-- 进度条样式 -->
         <Style x:Key="ModernSliderStyle" TargetType="Slider">
-            <Setter Property="Background" Value="#FF3F3F46"/>
+            <Setter Property="Height" Value="8"/>
             <Setter Property="Foreground" Value="#FF007ACC"/>
-            <Setter Property="Height" Value="6"/>
+            <Setter Property="Background" Value="#FF3F3F46"/>
             <Setter Property="Margin" Value="8,4"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -59,19 +107,25 @@
                             <Border Name="TrackBackground" 
                                     Background="{TemplateBinding Background}" 
                                     Height="{TemplateBinding Height}"
-                                    CornerRadius="3"/>
-                            <Border Name="PART_SelectionRange" 
-                                    Background="{TemplateBinding Foreground}" 
-                                    Height="{TemplateBinding Height}"
-                                    CornerRadius="3"
-                                    HorizontalAlignment="Left"/>
-                            <Track Name="PART_Track">
+                                    CornerRadius="4"/>
+                            <Track Name="PART_Track" Orientation="Horizontal">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Background="{TemplateBinding Foreground}" 
+                                                  Height="{TemplateBinding Height}"
+                                                  Template="{x:Null}"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Background="Transparent" 
+                                                  Template="{x:Null}"/>
+                                </Track.IncreaseRepeatButton>
                                 <Track.Thumb>
-                                    <Thumb Width="16" Height="16">
+                                    <Thumb Width="16" Height="16" 
+                                           Background="{TemplateBinding Foreground}" 
+                                           Cursor="Hand">
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Ellipse Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Slider}}"
-                                                         Stroke="#FFFFFFFF" StrokeThickness="2"/>
+                                                <Ellipse Fill="{TemplateBinding Background}"
+                                                         Stroke="White" StrokeThickness="2"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -84,23 +138,45 @@
         </Style>
 
         <!-- 文本样式 -->
+        <Style x:Key="InfoTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFCCCCCC"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="5,2"/>
+        </Style>
+
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
         <Style x:Key="TimeTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#FFFFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontFamily" Value="Consolas, Courier New"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="8,0"/>
         </Style>
 
-        <!-- 播放器选择样式 -->
-        <Style x:Key="PlayerSelectorStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#FF2D2D30"/>
-            <Setter Property="Foreground" Value="#FFFFFFFF"/>
-            <Setter Property="BorderBrush" Value="#FF3F3F46"/>
+        <!-- 下拉框样式 -->
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FF3F3F46"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF007ACC"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,4"/>
             <Setter Property="Margin" Value="4,2"/>
             <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- 分组框样式 -->
+        <Style x:Key="GroupBoxStyle" TargetType="GroupBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF3F3F46"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
         </Style>
     </hc:Window.Resources>
 
@@ -111,20 +187,28 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 顶部工具栏 -->
-        <Border Grid.Row="0" Background="#FF252526" BorderBrush="#FF3F3F46" BorderThickness="0,0,0,1">
-            <Grid Margin="12,8">
+        <!-- 顶部标题栏 -->
+        <Border Grid.Row="0" Background="#FF1E1E1E" BorderBrush="#FF3F3F46" BorderThickness="0,0,0,1">
+            <Grid Margin="15,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- 播放器选择 -->
+                <!-- 标题图标和文字 -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="播放器:" Style="{StaticResource TimeTextStyle}" Margin="0,0,8,0"/>
+                    <TextBlock Text="🎬" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="本地视频播放器" 
+                               Style="{StaticResource HeaderTextStyle}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- 播放器选择 -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="播放器:" Style="{StaticResource InfoTextStyle}" Margin="0,0,8,0" VerticalAlignment="Center"/>
                     <ComboBox x:Name="PlayerSelector" 
-                              Style="{StaticResource PlayerSelectorStyle}"
+                              Style="{StaticResource ModernComboBoxStyle}"
                               Width="150"
                               SelectionChanged="PlayerSelector_SelectionChanged">
                         <ComboBoxItem Content="WPF MediaElement" Tag="MediaElement" IsSelected="True"/>
@@ -133,20 +217,8 @@
                     </ComboBox>
                 </StackPanel>
 
-                <!-- 文件信息 -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock x:Name="FileNameText" 
-                               Text="未加载文件" 
-                               Style="{StaticResource TimeTextStyle}"
-                               FontWeight="Bold"/>
-                </StackPanel>
-
                 <!-- 操作按钮 -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button x:Name="OpenFileButton" 
-                            Content="打开文件" 
-                            Style="{StaticResource ModernButtonStyle}"
-                            Click="OpenFileButton_Click"/>
                     <Button x:Name="SettingsButton" 
                             Content="设置" 
                             Style="{StaticResource ModernButtonStyle}"
@@ -178,7 +250,7 @@
                                           Foreground="#FF007ACC" 
                                           IsRunning="True"/>
                         <TextBlock Text="正在加载..." 
-                                   Style="{StaticResource TimeTextStyle}"
+                                   Style="{StaticResource InfoTextStyle}"
                                    HorizontalAlignment="Center"
                                    Margin="0,12,0,0"/>
                     </StackPanel>
@@ -195,7 +267,7 @@
                                    HorizontalAlignment="Center"/>
                         <TextBlock x:Name="ErrorText" 
                                    Text="播放出错" 
-                                   Style="{StaticResource TimeTextStyle}"
+                                   Style="{StaticResource InfoTextStyle}"
                                    HorizontalAlignment="Center"
                                    TextWrapping="Wrap"
                                    Margin="0,12,0,0"/>
@@ -215,29 +287,54 @@
                                    Foreground="#FF6C6C6C"
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="点击'打开文件'选择视频" 
-                                   Style="{StaticResource TimeTextStyle}"
+                                   Style="{StaticResource InfoTextStyle}"
                                    HorizontalAlignment="Center"
                                    Margin="0,16,0,0"/>
                         <TextBlock Text="支持 MP4, AVI, WMV, MOV 等格式" 
-                                   Style="{StaticResource TimeTextStyle}"
+                                   Style="{StaticResource InfoTextStyle}"
                                    HorizontalAlignment="Center"
                                    Foreground="#FF6C6C6C"
                                    FontSize="10"
                                    Margin="0,8,0,0"/>
                     </StackPanel>
                 </Grid>
+
+                <!-- 文件信息显示 -->
+                <Border Background="#80000000" 
+                        VerticalAlignment="Top" 
+                        HorizontalAlignment="Left"
+                        Margin="10"
+                        CornerRadius="4">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=FileNameText, Path=Text}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=FileNameText, Path=Text}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock x:Name="FileNameText" 
+                               Text="" 
+                               Style="{StaticResource InfoTextStyle}"
+                               Margin="8,4"/>
+                </Border>
             </Grid>
         </Border>
 
         <!-- 底部控制栏 -->
-        <Border Grid.Row="2" Background="#FF252526" BorderBrush="#FF3F3F46" BorderThickness="0,1,0,0">
-            <Grid Margin="12,8">
+        <Border Grid.Row="2" Background="#FF2C3E50" BorderBrush="#FF34495E" BorderThickness="0,1,0,0">
+            <Grid Margin="10,8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- 进度条 -->
+                <!-- 进度控制区域 -->
                 <Grid Grid.Row="0" Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -245,26 +342,36 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- 当前时间 -->
                     <TextBlock x:Name="CurrentTimeText" 
                                Grid.Column="0"
                                Text="00:00" 
-                               Style="{StaticResource TimeTextStyle}"/>
+                               Style="{StaticResource TimeTextStyle}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
 
-                    <Slider x:Name="PositionSlider" 
+                    <!-- 进度滑块 -->
+                    <Slider x:Name="ProgressSlider" 
                             Grid.Column="1"
                             Style="{StaticResource ModernSliderStyle}"
-                            Minimum="0" Maximum="100" Value="0"
-                            ValueChanged="PositionSlider_ValueChanged"
-                            PreviewMouseDown="PositionSlider_PreviewMouseDown"
-                            PreviewMouseUp="PositionSlider_PreviewMouseUp"/>
+                            Minimum="0" 
+                            Maximum="100" 
+                            Value="0"
+                            VerticalAlignment="Center"
+                            Margin="0,0,8,0"
+                            ValueChanged="ProgressSlider_ValueChanged"
+                            PreviewMouseLeftButtonDown="ProgressSlider_PreviewMouseLeftButtonDown"
+                            PreviewMouseLeftButtonUp="ProgressSlider_PreviewMouseLeftButtonUp"/>
 
-                    <TextBlock x:Name="DurationText" 
+                    <!-- 总时长 -->
+                    <TextBlock x:Name="TotalTimeText" 
                                Grid.Column="2"
                                Text="00:00" 
-                               Style="{StaticResource TimeTextStyle}"/>
+                               Style="{StaticResource TimeTextStyle}"
+                               VerticalAlignment="Center"/>
                 </Grid>
 
-                <!-- 控制按钮 -->
+                <!-- 播放控制区域 -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -272,67 +379,60 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- 播放控制 -->
+                    <!-- 左侧控制按钮 -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="OpenFileButton" 
+                                Content="📁" 
+                                Style="{StaticResource ControlButtonStyle}"
+                                Click="OpenFileButton_Click"
+                                ToolTip="打开文件"/>
+                        
                         <Button x:Name="PlayPauseButton" 
-                                Style="{StaticResource ModernButtonStyle}"
-                                Width="50"
-                                Click="PlayPauseButton_Click">
-                            <TextBlock Text="▶" FontSize="14" HorizontalAlignment="Center"/>
-                        </Button>
+                                Content="▶️" 
+                                Style="{StaticResource ControlButtonStyle}"
+                                Click="PlayPauseButton_Click"
+                                ToolTip="播放/暂停"/>
+                        
                         <Button x:Name="StopButton" 
-                                Style="{StaticResource ModernButtonStyle}"
-                                Width="50"
-                                Click="StopButton_Click">
-                            <TextBlock Text="⏹" FontSize="14" HorizontalAlignment="Center"/>
-                        </Button>
-                        <Button x:Name="PreviousButton" 
-                                Style="{StaticResource ModernButtonStyle}"
-                                Width="50"
-                                Click="PreviousButton_Click">
-                            <TextBlock Text="⏮" FontSize="12" HorizontalAlignment="Center"/>
-                        </Button>
-                        <Button x:Name="NextButton" 
-                                Style="{StaticResource ModernButtonStyle}"
-                                Width="50"
-                                Click="NextButton_Click">
-                            <TextBlock Text="⏭" FontSize="12" HorizontalAlignment="Center"/>
-                        </Button>
+                                Content="⏹️" 
+                                Style="{StaticResource ControlButtonStyle}"
+                                Click="StopButton_Click"
+                                ToolTip="停止"/>
                     </StackPanel>
 
-                    <!-- 播放速度 -->
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="速度:" Style="{StaticResource TimeTextStyle}" Margin="0,0,8,0"/>
-                        <ComboBox x:Name="SpeedSelector" 
-                                  Style="{StaticResource PlayerSelectorStyle}"
-                                  Width="80"
-                                  SelectionChanged="SpeedSelector_SelectionChanged">
-                            <ComboBoxItem Content="0.5x" Tag="0.5"/>
-                            <ComboBoxItem Content="0.75x" Tag="0.75"/>
-                            <ComboBoxItem Content="1.0x" Tag="1.0" IsSelected="True"/>
-                            <ComboBoxItem Content="1.25x" Tag="1.25"/>
-                            <ComboBoxItem Content="1.5x" Tag="1.5"/>
-                            <ComboBoxItem Content="2.0x" Tag="2.0"/>
-                        </ComboBox>
+                    <!-- 中间信息显示 -->
+                    <StackPanel Grid.Column="1" 
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="状态: " 
+                                   Style="{StaticResource InfoTextStyle}"/>
+                        <TextBlock x:Name="StatusText" 
+                                   Text="就绪" 
+                                   Style="{StaticResource InfoTextStyle}"
+                                   Foreground="#FF007ACC"/>
                     </StackPanel>
 
-                    <!-- 音量控制 -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- 右侧音量控制 -->
+                    <StackPanel Grid.Column="2" 
+                                Orientation="Horizontal" 
+                                VerticalAlignment="Center">
                         <Button x:Name="MuteButton" 
-                                Style="{StaticResource ModernButtonStyle}"
-                                Width="50"
-                                Click="MuteButton_Click">
-                            <TextBlock Text="🔊" FontSize="12" HorizontalAlignment="Center"/>
-                        </Button>
+                                Content="🔊" 
+                                Style="{StaticResource ControlButtonStyle}"
+                                Click="MuteButton_Click"
+                                ToolTip="静音/取消静音"/>
+                        
                         <Slider x:Name="VolumeSlider" 
                                 Style="{StaticResource ModernSliderStyle}"
-                                Width="80" 
-                                Minimum="0" Maximum="100" Value="50"
-                                ValueChanged="VolumeSlider_ValueChanged"/>
-                        <TextBlock x:Name="VolumeText" 
-                                   Text="50%" 
-                                   Style="{StaticResource TimeTextStyle}"
-                                   Width="35"/>
+                                Minimum="0" 
+                                Maximum="100" 
+                                Value="50"
+                                Width="80"
+                                VerticalAlignment="Center"
+                                Margin="8,0,0,0"
+                                ValueChanged="VolumeSlider_ValueChanged"
+                                ToolTip="音量"/>
                     </StackPanel>
                 </Grid>
             </Grid>

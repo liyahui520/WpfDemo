@@ -169,7 +169,7 @@ namespace WpfAppNew.Controlls
                             break;
                         case PlaybackState.Stopped:
                             UpdatePlayPauseButtonIcon(false);
-                            PositionSlider.Value = 0;
+                            ProgressSlider.Value = 0;
                             CurrentTimeText.Text = "00:00";
                             break;
                         case PlaybackState.Ended:
@@ -200,7 +200,7 @@ namespace WpfAppNew.Controlls
                 {
                     if (!_isUserSeeking && e.Duration > 0)
                     {
-                        PositionSlider.Value = (e.Position / e.Duration) * 100;
+                        ProgressSlider.Value = (e.Position / e.Duration) * 100;
                         CurrentTimeText.Text = FormatTime(e.Position);
                     }
                 }
@@ -220,7 +220,7 @@ namespace WpfAppNew.Controlls
             {
                 try
                 {
-                    DurationText.Text = FormatTime(e.Duration);
+                    TotalTimeText.Text = FormatTime(e.Duration);
                     FileNameText.Text = Path.GetFileName(e.FilePath);
                     HideAllPanels();
                     
@@ -429,7 +429,7 @@ namespace WpfAppNew.Controlls
         /// <summary>
         /// 进度条值改变事件
         /// </summary>
-        private void PositionSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ProgressSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
             {
@@ -447,31 +447,37 @@ namespace WpfAppNew.Controlls
         }
 
         /// <summary>
-        /// 进度条鼠标按下事件
+        /// 进度滑块鼠标按下事件处理
         /// </summary>
-        private void PositionSlider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void ProgressSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _isUserSeeking = true;
         }
 
         /// <summary>
-        /// 进度条鼠标释放事件
+        /// 进度滑块鼠标释放事件处理
         /// </summary>
-        private void PositionSlider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void ProgressSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _isUserSeeking = false;
         }
 
         /// <summary>
-        /// 播放速度选择改变事件
+        /// 播放速度选择改变事件处理
         /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void SpeedSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
                 if (_currentPlayer == null) return;
 
-                var selectedItem = SpeedSelector.SelectedItem as ComboBoxItem;
+                var selectedItem = e.AddedItems.Count > 0 ? e.AddedItems[0] as ComboBoxItem : null;
                 if (selectedItem?.Tag != null && double.TryParse(selectedItem.Tag.ToString(), out double speed))
                 {
                     _currentPlayer.PlaybackRate = speed;
@@ -504,8 +510,10 @@ namespace WpfAppNew.Controlls
         }
 
         /// <summary>
-        /// 音量滑块值改变事件
+        /// 音量滑块值改变事件处理
         /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -513,7 +521,6 @@ namespace WpfAppNew.Controlls
                 if (_currentPlayer != null)
                 {
                     _currentPlayer.Volume = (int)e.NewValue;
-                    VolumeText.Text = $"{(int)e.NewValue}%";
                     
                     // 更新静音按钮状态
                     if (e.NewValue == 0)

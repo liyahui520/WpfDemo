@@ -16,6 +16,8 @@ using System.Windows.Media;
 using WpfAppNew.Controlls;
 using WpfAppNew.Module.PetModule;
 using WpfAppNew.Services;
+using DevExpress.XtraRichEdit.Model;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace WpfAppNew
 {
@@ -105,6 +107,7 @@ namespace WpfAppNew
                     this.Dispatcher.Invoke(() =>
                     {
                         this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                        TestLogic.Load(DateTime.Now.AddMonths(-1),DateTime.Now);
                         this.MainWindow = new MainWindow();
                         this.MainWindow.Show();
                     });

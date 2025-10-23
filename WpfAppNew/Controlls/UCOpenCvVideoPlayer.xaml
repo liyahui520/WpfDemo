@@ -13,7 +13,7 @@
           mc:Ignorable="d" 
           WindowStyle="None"
           Width="800"
-          Height="600"
+          Height="660"
           MinWidth="640"
           MinHeight="480"
           d:DesignHeight="450" 
@@ -74,7 +74,7 @@
 
         <!-- 进度条样式 -->
         <Style TargetType="Slider" x:Key="ProgressSliderStyle">
-            <Setter Property="Height" Value="8"/>
+            <Setter Property="Height" Value="20"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
             <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
             <Setter Property="Template">
@@ -82,12 +82,14 @@
                     <ControlTemplate TargetType="Slider">
                         <Grid>
                             <Border Background="{TemplateBinding Background}" 
-                                    Height="{TemplateBinding Height}" 
-                                    CornerRadius="4"/>
+                                    Height="8" 
+                                    CornerRadius="4"
+                                    VerticalAlignment="Center"/>
                             <Track Name="PART_Track" Orientation="Horizontal">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Background="{TemplateBinding Foreground}" 
-                                                  Height="{TemplateBinding Height}"
+                                                  Height="8"
+                                                  VerticalAlignment="Center"
                                                   Template="{x:Null}"/>
                                 </Track.DecreaseRepeatButton>
                                 <Track.IncreaseRepeatButton>
@@ -140,7 +142,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <!-- 标题栏 -->
@@ -154,7 +156,7 @@
                                FontWeight="Bold"/>
                 </StackPanel>
                 
-                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0" HorizontalAlignment="Right">
                     <Button Click="MaxButton_Click" 
                             Width="35" Height="35" 
                             Style="{StaticResource ControlButtonStyle}" 
@@ -175,11 +177,9 @@
         <Grid Grid.Row="1" x:Name="videoContainer" Background="Black">
             <!-- 视频容器 - 使用Viewbox实现等比例缩放 -->
             <Viewbox Stretch="Uniform" StretchDirection="Both">
-                <Grid MinWidth="640" MinHeight="480">
+                <Grid >
                     <!-- OpenCV 视频显示控件 -->
-                    <Image x:Name="videoImage" 
-                           Width="640"
-                           Height="480"
+                    <Image x:Name="videoImage"  
                            Stretch="Uniform"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
@@ -239,7 +239,7 @@
         <!-- 控制面板 -->
         <Grid Grid.Row="2" Background="{StaticResource BackgroundBrush}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="38"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
@@ -263,7 +263,7 @@
                         Minimum="0" Maximum="100" Value="0"
                         PreviewMouseDown="ProgressSlider_PreviewMouseDown"
                         PreviewMouseMove="ProgressSlider_PreviewMouseMove"
-                        PreviewMouseUp="ProgressSlider_PreviewMouseUp" Height="8"/>
+                        PreviewMouseUp="ProgressSlider_PreviewMouseUp"/>
 
                 <TextBlock x:Name="totalTimeText" 
                            Grid.Column="2"
@@ -303,7 +303,7 @@
                                VerticalAlignment="Center"
                                Margin="0,0,10,0"/>
 
-                    <Slider x:Name="volumeSlider" 
+                    <Slider x:Name="volumeSlider" Height="40"
                             Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="VolumeSlider_ValueChanged"
                             ToolTip="音量控制"/>
