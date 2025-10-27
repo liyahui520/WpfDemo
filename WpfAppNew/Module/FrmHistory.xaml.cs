@@ -35,7 +35,7 @@ namespace WpfAppNew.Module
         /// </summary>
         public FrmHistory()
         {
-            InitializeComponent();
+            InitializeComponent(); 
             Loaded += UserControl_Loaded;
         }
 

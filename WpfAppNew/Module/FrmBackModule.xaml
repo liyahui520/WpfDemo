@@ -5,19 +5,19 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
            xmlns:local="clr-namespace:WpfAppNew.Module"
            xmlns:hc="https://handyorg.github.io/handycontrol"
-           mc:Ignorable="d" MinWidth="1200"
-           MinHeight="750"
-           WindowStartupLocation="CenterScreen"   WindowStyle="None" WindowState="Maximized"
+           mc:Ignorable="d"
+           WindowStartupLocation="CenterScreen" WindowStyle="None" 
+           BorderThickness="0" Margin="0" Padding="0"
            d:DesignHeight="450" d:DesignWidth="800">
     <Window.Background>
         <ImageBrush ImageSource="pack://SiteOfOrigin:,,,/Static/Images/background.jpg"  Opacity="0.9"/>
     </Window.Background>
-    <Grid>
+    <Grid Margin="0" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" >
+        <Grid Grid.Row="0" Background="Transparent">
             <Grid.ColumnDefinitions> 
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -29,7 +29,7 @@
                 <Button Margin="5" Style="{StaticResource ButtonOpacityCustom}" Click="ButtonBase_OnClick" hc:IconElement.Geometry="{StaticResource LeftGeometry}" hc:BorderElement.CornerRadius="5" Foreground="White" Effect="{StaticResource EffectShadow5}" BorderThickness="0" Content="返回上一步"/> 
             </StackPanel> 
         </Grid>
-        <Border  Grid.Row="1" >
+        <Border Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="0" Padding="0">
             <UserControl x:Name="Control"></UserControl>
         </Border>
         <!--<petModule:FrmPet Grid.Row="1" />-->

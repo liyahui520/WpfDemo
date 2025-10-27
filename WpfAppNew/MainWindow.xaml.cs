@@ -78,7 +78,7 @@ namespace WpfAppNew
                 pet.Show();
             }
             e.Handled = true;
-            pet.WindowState = WindowState.Maximized;
+            //pet.WindowState = WindowState.Maximized;
             pet.Activate();
             //WindowState = WindowState.Minimized;
         }
