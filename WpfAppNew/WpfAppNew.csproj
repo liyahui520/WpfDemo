@@ -93,10 +93,12 @@
     <Reference Include="HandyControl">
       <HintPath>..\Libs\HandyControl.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.ValueTuple">
       <HintPath>..\..\..\05_Lis\Lis.core\Libs\System.ValueTuple.dll</HintPath>
     </Reference>

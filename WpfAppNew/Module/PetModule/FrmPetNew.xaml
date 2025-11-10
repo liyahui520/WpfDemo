@@ -9,6 +9,7 @@
              mc:Ignorable="d" 
              xmlns:wm="clr-namespace:WpfAppNew.Module" xmlns:controls2="clr-namespace:WpfAppNew.EmguPlugs"
              d:DesignHeight="450" d:DesignWidth="1800"
+             UseLayoutRounding="True" SnapsToDevicePixels="True"
              Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -167,10 +168,12 @@
                 
                 <!-- 主预览区域 - 优化：简化边框和背景效果 -->
                 <Border Grid.Row="0" CornerRadius="8" Name="VideoBorder" BorderThickness="2"
-                        BorderBrush="#4A90E2" Background="#2C3E50">
+                        BorderBrush="#4A90E2" Background="#2C3E50"
+                        RenderOptions.BitmapScalingMode="LowQuality" CacheMode="BitmapCache">
                     <Grid>
                         <!-- 工业相机控件容器 - 动态加载预加载的相机控件 -->
-                        <Border x:Name="CameraControlContainer" Margin="5" />
+                        <Border x:Name="CameraControlContainer" Margin="5"
+                                RenderOptions.BitmapScalingMode="LowQuality" CacheMode="BitmapCache" />
                         
                         <!-- 加载指示器 -->
                         <Border x:Name="CameraLoadingIndicator" Background="#2C3E50" CornerRadius="8" 

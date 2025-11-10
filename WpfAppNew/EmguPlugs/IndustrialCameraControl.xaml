@@ -126,13 +126,14 @@
                     
                     <!-- 图像预览区域 -->
                     <!-- 优化：移除滚动条，设置等比例显示并上下居中，使用Linear缩放提升性能 -->
-                    <Border Grid.Row="1" x:Name="PreviewContainer" Background="Black">
+                    <Border Grid.Row="1" x:Name="PreviewContainer" Background="Black"
+                            RenderOptions.BitmapScalingMode="LowQuality" CacheMode="BitmapCache">
                         <Image x:Name="PreviewImage" 
                                Source="{Binding PreviewImageSource}"
                                Stretch="Uniform"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
-                               RenderOptions.BitmapScalingMode="Linear"/>
+                               RenderOptions.BitmapScalingMode="LowQuality"/>
                     </Border>
                     
                     <!-- 预览信息栏 -->

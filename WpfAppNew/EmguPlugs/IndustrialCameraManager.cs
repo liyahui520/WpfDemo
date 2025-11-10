@@ -152,8 +152,8 @@ namespace WpfAppNew.EmguPlugs
         private readonly SemaphoreSlim _processingQueueSemaphore = new SemaphoreSlim(0);
         private CancellationTokenSource _processingCancellationToken;
         private Task[] _processingTasks;
-        private const int ProcessingThreadCount = 16; // 处理线程数量
-        private const int MaxProcessingQueueSize = 800; // 最大处理队列大小（增加容量）
+        private const int ProcessingThreadCount = 4; // 处理线程数量
+        private const int MaxProcessingQueueSize = 60; // 最大处理队列大小（增加容量）
         private const int MaxRecordingQueueSize = 5000; // 最大录像队列大小
 
         /// <summary>
@@ -467,10 +467,10 @@ namespace WpfAppNew.EmguPlugs
             _memoryManagementTimer = new Timer(PerformMemoryManagement, null, TimeSpan.FromSeconds(15), TimeSpan.FromSeconds(15));
 
             // 初始化UI更新节流器（100ms间隔）
-            _uiUpdateThrottler = new UIUpdateThrottler(Application.Current?.Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher, 100);
+            _uiUpdateThrottler = new UIUpdateThrottler(Application.Current?.Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher);
 
             // 初始化性能监控器
-            _performanceMonitor = new WpfAppNew.Utils.PerformanceMonitor(1000);
+            _performanceMonitor = new WpfAppNew.Utils.PerformanceMonitor(2000);
             _performanceMonitor.StatsUpdated += OnPerformanceStatsUpdated;
 
             LogUtil.Info("IndustrialCameraManager: 工业相机管理器初始化完成，已启用无锁双缓冲机制、异步处理流水线、内存管理、UI更新节流和性能监控");
@@ -540,6 +540,57 @@ namespace WpfAppNew.EmguPlugs
         }
 
         /// <summary>
+        /// 启用低配预览模式：降低分辨率与帧率，并设置UI节流间隔
+        /// </summary>
+        /// <param name="targetWidth">目标宽度，默认1280</param>
+        /// <param name="targetHeight">目标高度，默认720</param>
+        /// <param name="targetFps">目标帧率，默认15FPS</param>
+        /// <param name="uiThrottleMs">UI节流间隔毫秒，默认100ms</param>
+        /// <returns>是否应用成功</returns>
+        public bool EnableLowSpecPreviewMode(int targetWidth = 1280, int targetHeight = 720, double targetFps = 15.0, int uiThrottleMs = 100)
+        {
+            try
+            {
+                if (_camera == null || !_camera.IsOpened())
+                {
+                    LogUtil.Warning("IndustrialCameraManager: 相机未初始化，无法启用低配预览模式");
+                    return false;
+                }
+
+                // 设置相机采集参数
+                _camera.Set(VideoCaptureProperties.FrameWidth, targetWidth);
+                _camera.Set(VideoCaptureProperties.FrameHeight, targetHeight);
+                _camera.Set(VideoCaptureProperties.Fps, targetFps);
+
+                // 读取实际生效的参数
+                var actualWidth = (int)_camera.Get(VideoCaptureProperties.FrameWidth);
+                var actualHeight = (int)_camera.Get(VideoCaptureProperties.FrameHeight);
+                var actualFps = _camera.Get(VideoCaptureProperties.Fps);
+
+                CurrentResolution = new OpenCvSharp.Size(actualWidth, actualHeight);
+                CurrentFps = actualFps;
+
+                // 设置预览帧率与定时器
+                _previewFps = targetFps;
+                if (_previewTimer != null)
+                {
+                    _previewTimer.Interval = 1000.0 / _previewFps;
+                }
+
+                // 设置UI更新节流，避免UI线程压力过大
+                _uiUpdateThrottler?.SetInterval(uiThrottleMs);
+
+                LogUtil.Info($"IndustrialCameraManager: 已启用低配预览模式 - 分辨率{actualWidth}x{actualHeight}, FPS {actualFps:F1}, UI节流{uiThrottleMs}ms");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Warning($"IndustrialCameraManager: 启用低配预览模式失败 - {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 开始预览
         /// </summary>
         /// <returns>是否成功开始预览</returns>
@@ -568,6 +619,11 @@ namespace WpfAppNew.EmguPlugs
                 // 设置预览定时器间隔
                 _previewTimer.Interval = 1000.0 / _previewFps;
                 _previewTimer.Start();
+
+                // 根据预览帧率设置UI节流间隔，避免高帧率导致UI线程过载
+                var uiInterval = (int)Math.Max(15.0, 1000.0 / _previewFps);
+                _uiUpdateThrottler?.SetInterval(uiInterval);
+                LogUtil.Debug($"IndustrialCameraManager: UI节流间隔已设置为 {uiInterval}ms（预览FPS={_previewFps:F1}）");
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 _captureTask = Task.Run(() => CaptureLoop(_cancellationTokenSource.Token));
@@ -2032,16 +2088,16 @@ namespace WpfAppNew.EmguPlugs
                     kernel.Dispose();
                 }
 
-                // 降噪
+                // 降噪（参数与反编译版本保持一致：templateWindowSize=7, searchWindowSize=21）
                 if (_enhancementSettings.IsNoiseReductionEnabled && _enhancementSettings.NoiseReduction > 0)
                 {
                     if (enhanced.Channels() == 1)
                     {
-                        Cv2.FastNlMeansDenoising(enhanced, enhanced, _enhancementSettings.NoiseReduction);
+                        Cv2.FastNlMeansDenoising(enhanced, enhanced, _enhancementSettings.NoiseReduction, 7, 21);
                     }
                     else
                     {
-                        Cv2.FastNlMeansDenoisingColored(enhanced, enhanced, _enhancementSettings.NoiseReduction, _enhancementSettings.NoiseReduction);
+                        Cv2.FastNlMeansDenoisingColored(enhanced, enhanced, _enhancementSettings.NoiseReduction, _enhancementSettings.NoiseReduction, 7, 21);
                     }
                 }
 
@@ -2647,9 +2703,10 @@ namespace WpfAppNew.EmguPlugs
 
                 try
                 {
+                    return ApplyImageEnhancementOptimized(frame);
                     // 应用图像增强
-                    var enhancedFrame = ApplyImageEnhancement(frame);
-                    return enhancedFrame;
+                    //var enhancedFrame = ApplyImageEnhancement(frame);
+                    //return enhancedFrame;
                 }
                 catch (Exception ex)
                 {

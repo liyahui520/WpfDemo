@@ -17,7 +17,7 @@ namespace WpfAppNew.Utils
         #region 私有字段
 
         private readonly Dispatcher _dispatcher;
-        private readonly int _throttleIntervalMs;
+        private int _throttleIntervalMs;
         private readonly Timer _timer;
         private Action _pendingAction;
         private readonly object _lockObject = new object();
@@ -97,6 +97,29 @@ namespace WpfAppNew.Utils
                     // 在UI线程执行更新
                     ExecuteOnUIThread(action);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 设置节流间隔（毫秒）
+        /// </summary>
+        /// <param name="intervalMs">新的节流间隔，不能小于10ms</param>
+        /// <exception cref="ObjectDisposedException">对象已释放</exception>
+        /// <exception cref="ArgumentOutOfRangeException">间隔过小</exception>
+        public void SetInterval(int intervalMs)
+        {
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException(nameof(UIUpdateThrottler));
+            }
+            if (intervalMs < 10)
+            {
+                throw new ArgumentOutOfRangeException(nameof(intervalMs), "节流间隔不能小于10ms");
+            }
+            lock (_lockObject)
+            {
+                _throttleIntervalMs = intervalMs;
+                _timer.Change(_throttleIntervalMs, Timeout.Infinite);
             }
         }
 

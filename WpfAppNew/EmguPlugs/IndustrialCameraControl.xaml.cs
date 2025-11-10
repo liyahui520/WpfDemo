@@ -1129,6 +1129,13 @@ namespace WpfAppNew.EmguPlugs
                         IsConnected = true;
                         OperationStatus = $"设备 {SelectedDevice.Index}: {SelectedDevice.Name} 连接成功";
                         LogUtil.Info($"IndustrialCameraControl: 设备 {SelectedDevice.Index}: {SelectedDevice.Name} 连接成功");
+
+                        // 低配设备自动启用优化的预览参数
+                        if (IsLowSpecMachine())
+                        {
+                            var applied = _cameraManager?.EnableLowSpecPreviewMode() ?? false;
+                            LogUtil.Info("IndustrialCameraControl: 低配设备优化已" + (applied ? "应用" : "未应用"));
+                        }
                     }
                     else
                     {
@@ -1141,6 +1148,35 @@ namespace WpfAppNew.EmguPlugs
             {
                 LogUtil.Error($"IndustrialCameraControl: 连接操作失败 - {ex.Message}");
                 OperationStatus = "连接失败";
+            }
+        }
+
+        /// <summary>
+        /// 判断是否为低配机器：CPU核心数<=2 或 物理内存<=4GB
+        /// </summary>
+        /// <returns>低配则为true</returns>
+        private bool IsLowSpecMachine()
+        {
+            try
+            {
+                var processorCount = Environment.ProcessorCount;
+                var isLowCpu = processorCount <= 4;
+                var isLowMemory = false;
+
+                try
+                {
+                    // 使用Microsoft.VisualBasic获取物理内存（字节）
+                    var computerInfo = new Microsoft.VisualBasic.Devices.ComputerInfo();
+                    var totalMb = computerInfo.TotalPhysicalMemory / 1024.0 / 1024.0;
+                    isLowMemory = totalMb <= 5096.0; // 4GB
+                }
+                catch { }
+
+                return isLowCpu || isLowMemory;
+            }
+            catch
+            {
+                return false;
             }
         }
 
