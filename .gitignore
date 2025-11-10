@@ -42,3 +42,7 @@ OpenCv/bin/
 obj/
 Entity/bin/
 Log/
+/decompiled_WpfMain_project
+/WpfMain.exe
+/WpfMain.exe.config
+/decompiled_WpfMain
