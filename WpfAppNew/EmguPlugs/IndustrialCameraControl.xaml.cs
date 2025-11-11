@@ -1772,8 +1772,18 @@ namespace WpfAppNew.EmguPlugs
                     // 更新预览图像
                     if (e.Frame != null && !e.Frame.Empty())
                     {
-                        // 将OpenCV Mat转换为WPF ImageSource
-                        PreviewImageSource = ConvertMatToImageSource(e.Frame);
+                         // 将OpenCV Mat转换为WPF ImageSource
+                        // PreviewImageSource = ConvertMatToImageSource(e.Frame);
+                        // 优先使用管理器已生成的 BitmapSource，避免在UI线程重复转换
+                        if (e.BitmapSource != null)
+                        {
+                            PreviewImageSource = e.BitmapSource;
+                        }
+                        else
+                        {
+                            // 回退到高效转换（避免不必要的颜色空间转换和数组分配）
+                            PreviewImageSource = ImageConverter.MatToImageSource(e.Frame);
+                        }
                         
                         ImageResolution = $"{e.Frame.Width} x {e.Frame.Height}";
                         ImageFormat = e.Frame.Type().ToString();
