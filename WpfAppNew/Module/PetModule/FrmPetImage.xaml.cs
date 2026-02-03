@@ -3,6 +3,7 @@ using PacsCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -261,17 +262,32 @@ namespace WpfAppNew.Module.PetModule
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void ButtonBase_Print_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonBase_Print_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!System.IO.File.Exists(tInfos.TestPath))
+            try
             {
-                HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示"); 
-                return;
-            }
+                if (!System.IO.File.Exists(tInfos.TestPath))
+                {
+                    HandyControl.Controls.MessageBox.Error($"打印模板文件不存在！", "系统提示"); 
+                    return;
+                }
 
-            FrmModule f = new FrmModule(new UCPrintNotes(tInfos));
-            f.Title = "打印报告";
-            f.ShowDialog();
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    var printNotes = new UCPrintNotes(tInfos);
+                    FrmModule f = new FrmModule(printNotes);
+                    f.Title = "打印报告";
+                    f.ShowDialog();
+                });
+            }
+            catch (Exception ex)
+            {
+                // 确保错误消息在UI线程中显示
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    HandyControl.Controls.MessageBox.Error($"打印失败：{ex.Message}", "系统提示");
+                });
+            }
             return;
         }
 

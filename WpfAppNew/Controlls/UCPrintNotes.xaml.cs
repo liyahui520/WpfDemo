@@ -621,7 +621,22 @@ namespace WpfAppNew.Controlls
 
         private void Print_OnClick(object sender, RoutedEventArgs e)
         {
-            richEditControl1.Print();
+            try
+            {
+                // 确保在UI线程中执行打印操作
+                Dispatcher.Invoke(() =>
+                {
+                    richEditControl1.Print();
+                });
+            }
+            catch (Exception ex)
+            {
+                LogUtil.Error($"打印操作失败: {ex.Message}");
+                Dispatcher.Invoke(() =>
+                {
+                    HandyControl.Controls.MessageBox.Error($"打印失败：{ex.Message}", "系统提示");
+                });
+            }
         }
     }
     /// <summary>

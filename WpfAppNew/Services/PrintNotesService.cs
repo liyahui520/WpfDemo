@@ -75,26 +75,24 @@ namespace WpfAppNew.Services
             
             try
             {
-                await Task.Run(() =>
+                // 直接在UI线程上执行初始化，避免线程切换
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     LogUtil.Info("PrintNotesService: 开始异步初始化打印服务");
                     
                     // 预加载DevExpress RichEdit控件相关资源
-                    Application.Current.Dispatcher.Invoke(() =>
+                    try
                     {
-                        try
-                        {
-                            // 创建一个临时的RichEditControl来预热DevExpress组件
-                            var tempControl = new DevExpress.Xpf.RichEdit.RichEditControl();
-                            tempControl = null; // 释放临时控件
-                            
-                            LogUtil.Info("PrintNotesService: DevExpress RichEdit控件预热完成");
-                        }
-                        catch (Exception ex)
-                        {
-                            LogUtil.Error($"PrintNotesService: DevExpress控件预热失败: {ex.Message}");
-                        }
-                    });
+                        // 创建一个临时的RichEditControl来预热DevExpress组件
+                        var tempControl = new DevExpress.Xpf.RichEdit.RichEditControl();
+                        tempControl = null; // 释放临时控件
+                        
+                        LogUtil.Info("PrintNotesService: DevExpress RichEdit控件预热完成");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"PrintNotesService: DevExpress控件预热失败: {ex.Message}");
+                    }
                 });
                 
                 LogUtil.Info("PrintNotesService: 打印服务初始化完成");
@@ -126,26 +124,24 @@ namespace WpfAppNew.Services
             
             try
             {
-                await Task.Run(() =>
+                // 直接在UI线程上创建控件，无需Task.Run包装
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    try
                     {
-                        try
-                        {
-                            LogUtil.Info($"PrintNotesService: 开始预加载打印控件 - {testInfo.TestName}");
-                            
-                            var printNotes = new UCPrintNotes(testInfo);
-                            _preloadedControls.TryAdd(key, printNotes);
-                            
-                            LogUtil.Info($"PrintNotesService: 预加载完成 - {testInfo.TestName}");
-                            PreloadCompleted?.Invoke(this, key);
-                        }
-                        catch (Exception ex)
-                        {
-                            LogUtil.Error($"PrintNotesService: 预加载失败 - {testInfo.TestName}: {ex.Message}");
-                            PreloadFailed?.Invoke(this, ex);
-                        }
-                    });
+                        LogUtil.Info($"PrintNotesService: 开始预加载打印控件 - {testInfo.TestName}");
+                        
+                        var printNotes = new UCPrintNotes(testInfo);
+                        _preloadedControls.TryAdd(key, printNotes);
+                        
+                        LogUtil.Info($"PrintNotesService: 预加载完成 - {testInfo.TestName}");
+                        PreloadCompleted?.Invoke(this, key);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogUtil.Error($"PrintNotesService: 预加载失败 - {testInfo.TestName}: {ex.Message}");
+                        PreloadFailed?.Invoke(this, ex);
+                    }
                 });
             }
             catch (Exception ex)
@@ -174,9 +170,52 @@ namespace WpfAppNew.Services
                 return cachedControl;
             }
             
-            // 缓存中没有，创建新的
+            // 缓存中没有，创建新的（需要在UI线程上创建）
             LogUtil.Info($"PrintNotesService: 创建新的打印控件 - {testInfo.TestName}");
-            return new UCPrintNotes(testInfo);
+            if (Application.Current?.Dispatcher?.CheckAccess() == true)
+            {
+                // 当前线程就是UI线程
+                return new UCPrintNotes(testInfo);
+            }
+            else
+            {
+                // 在UI线程上创建控件
+                UCPrintNotes newControl = null;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    newControl = new UCPrintNotes(testInfo);
+                });
+                return newControl;
+            }
+        }
+
+        /// <summary>
+        /// 异步获取或创建UCPrintNotes控件
+        /// 优先返回预加载的控件，如果没有则创建新的
+        /// </summary>
+        /// <param name="testInfo">测试信息</param>
+        /// <returns>UCPrintNotes控件实例</returns>
+        public async Task<UCPrintNotes> GetOrCreatePrintNotesAsync(TestInfo testInfo)
+        {
+            if (testInfo == null) return null;
+            
+            string key = GetCacheKey(testInfo);
+            
+            // 尝试从缓存获取
+            if (_preloadedControls.TryRemove(key, out UCPrintNotes cachedControl))
+            {
+                LogUtil.Info($"PrintNotesService: 使用预加载的打印控件 - {testInfo.TestName}");
+                return cachedControl;
+            }
+            
+            // 缓存中没有，创建新的（需要在UI线程上创建）
+            LogUtil.Info($"PrintNotesService: 创建新的打印控件 - {testInfo.TestName}");
+            UCPrintNotes newControl = null;
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                newControl = new UCPrintNotes(testInfo);
+            });
+            return newControl;
         }
 
         /// <summary>

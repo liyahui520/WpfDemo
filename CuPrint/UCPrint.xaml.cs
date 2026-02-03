@@ -21,7 +21,7 @@ namespace CuPrint
         private void ShowPrintPreview(TestInfo dataList)
         {
             // 生成文档 
-            var print = new CustomerPrintHelper(dataList, new Size(784, 1103));
+            var print = new CustomerPrintHelper(dataList, new Size(784, 1103), Dispatcher);
             var doc = new FixedDocument();
             foreach (var page in print._pages)
             {

@@ -12,14 +12,18 @@ using System.Xml;
 using CuPrint.PrintControlls;
 using Entity.Entity;
 using Tools.Extend;
+using System.Windows.Threading;
 
 namespace CuPrint
 {
     public class CustomerPrintHelper : DocumentPaginator
     {
         public readonly List<FrameworkElement> _pages = new List<FrameworkElement>();
-        public CustomerPrintHelper(TestInfo data, Size pageSize)
+        private readonly Dispatcher _uiDispatcher;
+        
+        public CustomerPrintHelper(TestInfo data, Size pageSize, Dispatcher uiDispatcher = null)
         {
+            _uiDispatcher = uiDispatcher ?? Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
             CreateFixedDocument(data, pageSize);
         }
 
@@ -28,8 +32,9 @@ namespace CuPrint
             PageSize = pageSize;
             double currentHeight = 0;
             var currentPage = CreatePageContainer();
+            
             // 添加固定表头  
-            var cus_header = new PrintHeader(data);
+            var cus_header = CreateUIControl(() => new PrintHeader(data));
             cus_header.Measure(pageSize);
             currentPage.Children.Add(cus_header);
             currentHeight += cus_header.DesiredSize.Height;
@@ -38,11 +43,11 @@ namespace CuPrint
             List<PrintImg> panels = new List<PrintImg>();
             a.ForEach(o =>
             {
-                var img = new PrintImg(o);
+                var img = CreateUIControl(() => new PrintImg(o));
                 panels.Add(img);
             });
             int page = 1;
-            var cus_footer = new PrintFoot(data, page);
+            var cus_footer = CreateUIControl(() => new PrintFoot(data, page));
             cus_footer.Measure(pageSize);
             currentHeight += cus_footer.DesiredSize.Height;
             // 分页处理 
@@ -63,7 +68,7 @@ namespace CuPrint
                         currentPage.Children.Add(sp);
                     }
                     // 添加固定表尾  
-                    cus_footer = new PrintFoot(data, page);
+                    cus_footer = CreateUIControl(() => new PrintFoot(data, page));
                     cus_footer.Measure(pageSize);
                     currentPage.Children.Add(cus_footer);
                     FinalizePage(currentPage, pageSize);
@@ -71,7 +76,7 @@ namespace CuPrint
                     currentPage = CreatePageContainer();
                     currentHeight = 0;
                     // 添加固定表头 
-                    cus_header = new PrintHeader(data);
+                    cus_header = CreateUIControl(() => new PrintHeader(data));
                     cus_header.Measure(pageSize);
                     currentPage.Children.Add(cus_header);
                     currentHeight += cus_header.DesiredSize.Height + cus_footer.DesiredSize.Height;
@@ -80,7 +85,7 @@ namespace CuPrint
                 currentHeight += content.DesiredSize.Height;
             }
             // 添加固定表尾  
-            cus_footer = new PrintFoot(data, page);
+            cus_footer = CreateUIControl(() => new PrintFoot(data, page));
             cus_footer.Measure(pageSize);
             var panelHeight1 = (pageSize.Height - 10) - currentHeight - cus_footer.DesiredSize.Height;
             if (panelHeight1 > 0)
@@ -95,6 +100,28 @@ namespace CuPrint
             }
             currentPage.Children.Add(cus_footer);
             FinalizePage(currentPage, pageSize);
+        }
+        
+        /// <summary>
+        /// 在UI线程上创建UI控件
+        /// </summary>
+        /// <typeparam name="T">控件类型</typeparam>
+        /// <param name="controlFactory">控件创建工厂方法</param>
+        /// <returns>创建的控件</returns>
+        private T CreateUIControl<T>(Func<T> controlFactory) where T : FrameworkElement
+        {
+            T control;
+            if (_uiDispatcher.CheckAccess())
+            {
+                // 当前就在UI线程上
+                control = controlFactory();
+            }
+            else
+            {
+                // 切换到UI线程创建控件
+                control = (T)_uiDispatcher.Invoke(controlFactory);
+            }
+            return control;
         }
 
         // 预编译属性复制委托（示例）

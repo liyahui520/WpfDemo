@@ -186,40 +186,56 @@ namespace WpfAppNew.Module
                 // 显示报告查看窗口
                 try
                 {
+                    // 在后台线程保存数据
                     await Task.Run(() =>
                     {
                         TestLogic.Save(testInfo);
                     });
                      
-                    if (!System.IO.File.Exists(testInfo.TestPath))
+                    // 确保UI操作在UI线程中执行
+                    await Dispatcher.InvokeAsync(() =>
                     {
-                        HandyControl.Controls.MessageBox.Warning("打印模板文件不存在！", "系统提示");
-                        return;
-                    } 
+                        if (!System.IO.File.Exists(testInfo.TestPath))
+                        {
+                            HandyControl.Controls.MessageBox.Warning("打印模板文件不存在！", "系统提示");
+                            return;
+                        }
+                    });
 
                     // 异步预加载打印控件（如果还没有预加载）
                     await PrintNotesService.Instance.PreloadPrintNotesAsync(testInfo);
 
                     // 获取优化的UCPrintNotes实例
-                    var printNotes = PrintNotesService.Instance.GetOrCreatePrintNotes(testInfo);
+                    var printNotes = await PrintNotesService.Instance.GetOrCreatePrintNotesAsync(testInfo);
 
                     if (printNotes != null)
                     {
-                        FrmModule f = new FrmModule(printNotes);
-                        f.Title = "打印报告";
-                        f.ShowDialog();
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            FrmModule f = new FrmModule(printNotes);
+                            f.Title = "打印报告";
+                            f.ShowDialog();
+                        });
 
                         LogUtil.Info($"打印报告窗口已打开: {testInfo.TestName}");
                     }
                     else
                     {
-                        HandyControl.Controls.MessageBox.Error("创建打印控件失败！", "系统提示");
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            HandyControl.Controls.MessageBox.Error("创建打印控件失败！", "系统提示");
+                        });
                     }
                 }
                 catch (Exception ex)
                 {
                     LogUtil.Error($"打印按钮点击处理失败: {ex.Message}");
-                    HandyControl.Controls.MessageBox.Error($"打开打印报告失败：{ex.Message}", "系统提示");
+                    
+                    // 确保错误消息在UI线程中显示
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        HandyControl.Controls.MessageBox.Error($"打开打印报告失败：{ex.Message}", "系统提示");
+                    });
                 }
                 finally
                 { 

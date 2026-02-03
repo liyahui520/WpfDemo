@@ -782,58 +782,83 @@ namespace WpfAppNew.Module.PetModule
         /// </summary>
         private async void PrintButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            // 检查模板文件是否存在
+            if (!System.IO.File.Exists(tInfo.TestPath))
             {
-                await Task.Run(() =>
-                {
-                    TestLogic.Save(tInfo);
-                });
-
-                IndustrialCameraControl.StopPreviewCommand.Execute(null);
-                if (!System.IO.File.Exists(tInfo.TestPath))
+                await Dispatcher.InvokeAsync(() =>
                 {
                     HandyControl.Controls.MessageBox.Warning("打印模板文件不存在！", "系统提示");
-                    return;
-                }
+                });
+                return;
+            }
+            
+            try
+            {
 
-                // 显示加载指示器
-                if (DeviceLoadingIndicator != null)
+                // 在后台线程保存数据
+                //await Task.Run(() =>
+                //{
+                //    TestLogic.Save(tInfo);
+                //});
+                TestLogic.Save(tInfo);
+                // 确保UI操作在UI线程中执行
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    DeviceLoadingIndicator.Visibility = Visibility.Visible;
-                }
-
+                    IndustrialCameraControl.StopPreviewCommand.Execute(null);
+                    
+                    // 显示加载指示器
+                    if (DeviceLoadingIndicator != null)
+                    {
+                        DeviceLoadingIndicator.Visibility = Visibility.Visible;
+                    }
+                });
                 // 异步预加载打印控件（如果还没有预加载）
                 await PrintNotesService.Instance.PreloadPrintNotesAsync(tInfo);
 
                 // 获取优化的UCPrintNotes实例
-                var printNotes = PrintNotesService.Instance.GetOrCreatePrintNotes(tInfo);
+                var printNotes = await PrintNotesService.Instance.GetOrCreatePrintNotesAsync(tInfo);
 
                 if (printNotes != null)
                 {
-                    FrmModule f = new FrmModule(printNotes);
-                    f.Title = "打印报告";
-                    f.ShowDialog();
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        FrmModule f = new FrmModule(printNotes);
+                        f.Title = "打印报告";
+                        f.ShowDialog();
+                    });
 
                     LogUtil.Info($"打印报告窗口已打开: {tInfo.TestName}");
                 }
                 else
                 {
-                    HandyControl.Controls.MessageBox.Error("创建打印控件失败！", "系统提示");
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        HandyControl.Controls.MessageBox.Error("创建打印控件失败！", "系统提示");
+                    });
                 }
             }
             catch (Exception ex)
             {
                 LogUtil.Error($"打印按钮点击处理失败: {ex.Message}");
-                HandyControl.Controls.MessageBox.Error($"打开打印报告失败：{ex.Message}", "系统提示");
+                
+                // 确保错误消息框在UI线程中显示
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    HandyControl.Controls.MessageBox.Error($"打开打印报告失败：{ex.Message}", "系统提示");
+                });
             }
             finally
             {
-                // 隐藏加载指示器
-                if (DeviceLoadingIndicator != null)
+                // 确保UI操作在UI线程中执行
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    DeviceLoadingIndicator.Visibility = Visibility.Collapsed;
-                }
-                IndustrialCameraControl.StartPreviewCommand.Execute(null);
+                    // 隐藏加载指示器
+                    if (DeviceLoadingIndicator != null)
+                    {
+                        DeviceLoadingIndicator.Visibility = Visibility.Collapsed;
+                    }
+                    IndustrialCameraControl.StartPreviewCommand.Execute(null);
+                });
             }
         }
 
